@@ -1,0 +1,94 @@
+<aside class="aside">
+<block:filter>
+<form id="form_filter" action="/assignments" method="get">
+    <div class="filter">
+        <h2 class="filrer__name">Filtrēt pēc mācību priekšmeta:</h2>
+        <select id="select_filter_lesson" class="filter__select" name="filter[lesson_id]">
+            <option value=""></option>
+            <block:lesson_options>
+            <option value="<var:value>"<if:selected: selected:>><var:name></option>
+            </block:lesson_options>
+        </select>
+    </div>
+    <div class="filter">
+        <h2 class="filrer__name">Filtrēt pēc uzdevuma piederības:</h2>
+        <select id="select_filter_owner" class="filter__select" name="filter[assignment_owner]">
+            <option value=""></option>
+            <block:assignment_owner_options>
+            <option value="<var:value>"<if:selected: selected:>><var:name></option>
+            </block:assignment_owner_options>
+        </select>
+    </div>
+    <div class="filter">
+        <h2 class="filrer__name">Filtrēt pēc teksta:</h2>
+        <input class="filter__input" type="text" name="filter[assignment_description]" value="<var:assignment_description>">
+        <button>Submit</button>
+    </div>
+</form>
+</block:filter>
+</aside>
+<div class="content">
+    <table class="data" width="100%">
+        <thead class="data__thead">
+            <tr class="data__tr">
+                <!-- <th class="data__th" width="1%">#</th>
+                <th class="data__th" width="12%">Nod. laiks</th> -->
+                <block:header>
+                <th class="data__th">
+                    <if:path>
+                    <a class="<var:class_name>" href="<var:path>"><var:title></a>
+                    </if:path>
+                    <ifnot:path>
+                    <var:title>
+                    </ifnot:path>
+                </th>
+                </block:header>
+                <!-- <th class="data__th" width="10%">
+                    Nod. datums
+                    <a href="/assignments?sort=schedule_date.asc">Kartot</a>
+                </th> -->
+                <!-- <th class="data__th" width="10%">Pedagogs</th>
+                <th class="data__th" width="20%"> Priekšmets</th>
+                <th class="data__th" width="25%">Apraksts</th>
+                <th class="data__th" width="5%">Tips</th>
+                <th class="data__th" width="14%">Termiņš</th>
+                <th class="data__th" width="3%%">Vērtējums</th> -->
+            </tr>
+        </thead>
+        <block:assignments>
+        <tbody class="data__tbody">
+            <tr class="data__tr">
+                <td class="data__td"><var:assignment_row_number></td>
+                <td class="data__td"><var:lesson_time></td>
+                <td class="data__td"><var:schedule_date></td>
+                <td class="data__td"><var:user_fullname></td>
+                <td class="data__td"><var:lesson_name></td>
+                <td class="data__td"><var:assignment_description></td>
+                <td class="data__td">
+                    <a href="/assignments/<var:assignment_id>" class="js_modal"><var:assignment_type></a>
+                </td>
+                <td class="data__td">
+                    <div class="data-block">
+                        <var:assignment_end_datetime>
+                        <div class="data-block__description<if:assignment_expired: red:>">
+                            <var:assignment_days_count>
+                        </div>
+                    </div>
+                </td>
+                <td class="data__td"></td>
+            </tr>
+        </tbody>
+        </block:assignments>
+    </table>
+</div>
+<script>
+    // $('#select_filter_lesson').change(function() {
+    //     $('#form_filter').trigger('submit');
+    // });
+    $(document).ready(function() {
+        $('#select_filter_lesson, #select_filter_owner').change(function() {
+            $('#form_filter').submit();
+        });
+    });
+
+</script>

@@ -1,0 +1,591 @@
+action:
+  add: Pievienot
+  cancel: Atcelt
+  create: Pievienot
+  delete: Dzēst
+  download: Lejupielādēt
+  edit: Rediģēt
+  export_xlsx: Eksportēt XLSX
+  file_browse: Pievienot
+  find: Meklēt
+  next: Turpināt
+  request: Pasūtīt
+  remove: Noņemt
+  show_more: Parādīt vēl
+  submit: Saglabāt
+
+array:
+  last_word_connector: " un "
+  two_words_connector: " un "
+  words_connector: ", "
+
+authorization:
+  message:
+    error:
+      empty_email: Ievadiet e-pasta adresi
+      empty_password: Ievadiet paroli
+      fail: Autorizācijas kļūda
+
+certificate:
+  date: Sertifikāta datums
+  delete_confirm: Vai jūs tiešam vēlaties dzēst šo sertifikātu?
+  file: Fails
+  form_new: Jauns dokuments
+  link: Saite uz ārējo resursu
+  link_hint: Saite uz ražotāja vai iepakojuma izstrādātāja sertifikāta lapu internetā
+  message:
+    error:
+      create: Neizdevās pievienot sertifikātu
+      update: Neizdevās atjaunināt sertifikātu
+      delete: Neizdevās izdzēst sertifikātu
+  name: Sertifikāta nosaukums
+
+classifier:
+  components: Komponenti
+  recyclabilities: Pārstrādājamais īpatsvars
+
+cookie_confirm:
+  action:
+    remove: Aizvērt
+  message: |
+    Mēs izmantojam tikai tehniskās, nepieciešamās sīkdates, kuras nodrošina tīmekļa vietnes darbību un kuru izmantošanai nav nepieciešams iegūt lietotāja piekrišanu.
+  title: Sīkdatnes
+
+company:
+  address: Adrese
+  code: Reg.Nr.
+  nace: NACE
+  name: Nosaukums
+  search_hint: Nosaukums vai reģistrācijas numura
+
+component:
+  code: Kods
+  name: Komponente
+  recycle: Pārstrādājamais īpatsvars
+  laboratory_comment: Laboratorijas komentārs
+  product_type: Produkta / iepakojuma veida nosaukums
+  type: Pamatkomponentes veids
+
+confirm:
+  cancel: Atcelt
+  delete: Dzēst
+  message: Vai jūs esat pārliecināti?
+  ok: Labi
+
+date:
+  days:
+    one: diena
+    few: dienas
+    many: dienas
+  format:
+    default: d.m.Y.
+  month_names:
+  -
+  - January
+  - February
+  - March
+  - April
+  - May
+  - June
+  - July
+  - August
+  - September
+  - October
+  - November
+  - December
+  standalone_month_names:
+  -
+  - Janvāris
+  - Februāris
+  - Marts
+  - Aprīlis
+  - Maijs
+  - Jūnijs
+  - Jūlijs
+  - Augusts
+  - Septembris
+  - Oktobris
+  - Novembris
+  - Decembris
+  standalone_abbr_month_names:
+  -
+  - Janv
+  - Febr
+  - Marts
+  - Apr
+  - Maijs
+  - Jūn
+  - Jūl
+  - Aug
+  - Sept
+  - Okt
+  - Nov
+  - Dec
+  week_days_abbr:
+  -
+  - Pr
+  - Ot
+  - Tr
+  - Ce
+  - Pk
+  - Se
+  - Sv
+  month_year_in_words: '%{month} %{year}'
+  year_month: '%{month}.%{year}.'
+  year_month_in_words: '%{year}.gada %{month}'
+  year_month_day: '%{day}.%{month}.%{year}.'
+
+datetime:
+  format:
+    date: d.m.Y.
+    default: d.m.Y. H:i
+    month_day: d.m.
+    hour: H
+    minute: i
+  hours:
+    one: stunda
+    few: stundas
+    many: stundas
+  minutes:
+    one: minute
+    few: minutes
+    many: minutes
+  units:
+    hour: h
+
+document:
+  date: Dokumenta datums
+  date_small_short: datums
+  file: Fails
+  form_new: Jauns dokuments
+  link: Saite uz ārējo resursu
+  name: Dokumenta nosaukums
+  types:
+    certificate: Sertifikāts
+
+email_confirmation:
+  action:
+    send: Nosūtīt atkārtoti
+  title: Lūdzu, apstipriniet savu e-pasta adresi!
+  description: |
+    Lai uzsāktu e-pakalpojuma lietošanu, lūdzu, pārbaudiet savu e-pastu <b>%{email}</b> un aktivizējiet kontu!<br>
+    <b>Ja apstiprinājuma e-pasts nav pienācis ilgu laiku, lūdzu, pārbaudiet arī "Spam" sadaļā.</b>
+  mail:
+    subject: Life konta apstiprināšana
+    link_title: Aktivizēt manu kontu
+    body: |
+      Pateicamies par Life konta izveidošanu!<br>
+      Lai sāktu e-pakalpojuma lietošanu, lūdzu, aktivizējiet kontu.<br>
+    plain_text: |
+      Pateicamies par Life konta izveidošanu!
+      Lai sāktu e-pakalpojuma lietošanu, lūdzu, aktivizējiet kontu!
+      To var veikt, sekojot saitei zemāk:
+      %{url}
+  message:
+    error:
+      mail: Kļūda! Neizdevās nosūtīt norādījumus konta apstiprināšanai
+    notice:
+      mail: Pāris minūšu laikā uz Jūsu e-pastu tiks nosūtīti norādījumi konta apstiprināšanai
+
+error:
+  authorization: Autorizācijas kļūda
+  blank: ir jābūt aizpildītam
+  datetime_format: nepareizs datuma formāts
+  error: kļūda
+  format: ir nepareizs formāts
+  greater_than: ir jābūt lielākam par %{count}
+  greater_than_date: ir jābūt lielākam par %{date}
+  greater_than_or_equal_to: ir jābūt lielākam vai vienādam ar %{count}
+  greater_than_or_equal_to_date: ir jābūt lielākam vai vienādam ar %{date}
+  greater_than_zero: ir jābūt lielākai par nulli
+  invalid: nav derīgs
+  invalid_date_format: nepareizs datuma formāts
+  less_than: ir jābūt mazākam par %{count}
+  less_than_or_equal_to: ir jābūt mazākam vai vienādam ar %{count}
+  message: Kļūda, lūdzu pārbaudiet
+  system: Sistēmas kļūda
+  not_a_number: nav skaitlis
+  not_an_integer: ir jābūt veselam skaitlim
+  not_found: nav atrasts
+  numeric: ir jābūt skaitlim
+  zero: nedrīkst būt nulle
+  recovery: Nevar mainīt paroli
+  unknown: Kļūda
+  uniq: nav unikāls
+  url: ir nepareizs formāts
+  too_long:
+    one: ir par garu, maksimums ir %{count} simbols
+    few: ir par garu, maksimums ir %{count} simboli
+    many: ir par garu, maksimums ir %{count} simboli
+  too_short:
+    one: ir par īsu, minimums ir %{count} simbols
+    few: ir par īsu, minimums ir %{count} simboli
+    many: ir par īsu, minimums ir %{count} simboli
+  wrong_length:
+    one: ir nepareizs garums, jābūt %{count} simbols
+    few: ir nepareizs garums, jābūt %{count} simboli
+    many: ir nepareizs garums, jābūt %{count} simboli
+  email:
+    empty: E-pasts nevar būt tukšs
+    format: ir nepareizs formāts
+    exists: ir jau aizņemts, mēģiniet ielogoties
+  password:
+    complexity: izmantojiet lielos un mazos burtus, ciparus un simbolus
+    confirm: nesakrīt ar paroli
+    empty: parole nevar būt tukšs
+    min:
+      one: vismaz %{count} simbols
+      few: vismaz %{count} simboli
+      many: vismaz %{count} simboli
+    max:
+      one: maksimums %{count} simbols
+      few: maksimums %{count} simboli
+      many: maksimums %{count} simboli
+    not_equal_to_current: Nepareizi norādīta esošā parole
+    not_equal_to_new: Paroles apstiprinājums nesakrīt ar jaunu paroli
+  file:
+    max_size: pārsniedz maksimālo faila lielumu
+    upload: augšupielādes kļūda
+    no_file: nav faila
+    type: neatbalstīts faila tips
+  json:
+    debth: maximum stack depth exceeded
+    state_mismatch: underflow or the modes mismatch
+    ctrl_char: unexpected control character found
+    syntax: syntax error, malformed JSON
+    utf8: malformed UTF-8 characters, possibly incorrectly encoded
+    unknown_error: unknown JSON error
+  upload:
+    ini_size: Augšupielādētā faila izmērs pārsniedz maksimālo faila lielumu
+    ini_size_max: Augšupielādētā faila izmērs pārsniedz maksimālo faila lielumu %{max}
+    form_size: Augšupielādētā faila izmērs pārsniedz maksimālo faila lielumu
+    form_size_max: Augšupielādētā faila izmērs pārsniedz maksimālo faila lielumu %{max}
+    partial: Augšupielādes fails tika saņemts tikai daļēji
+    no_file: Fails netika augšupielādēts
+    no_tmp_dir: Fails netika augšupielādēts
+    cant_write: Fails netika augšupielādēts
+    extension: Fails netika augšupielādēts
+
+footer:
+  copyright: Vides aizsardzības un reģionālās attīstības ministrija, publicētā satura visas tiesības aizsargātas.
+  navigation:
+    classifiers: Klasifikatori
+    privacy_policy: Personas datu apstrādes noteikumi
+    support: Atbalsts
+    terms: Reģistra lietošanas noteikumi
+
+http_error:
+  error_500:
+    meta_title: Kaut kas nogāja greizi
+    title: Kaut kas nogāja greizi
+    description: |
+      Lūdzu, pēc dažām minūtēm mēģiniet vēlreiz. <a href="/">Atgriezieties sākumlapā</a>.
+  error_400:
+    meta_title: Nederīgs pieprasījums
+    title: Nederīgs pieprasījums
+    description: |
+      Jūsu pārlūkprogramma nosūtīja pieprasījumu, kuru šis serveris nesaprot. <a href="/">Atgriezieties sākumlapā</a>.
+  error_404:
+    meta_title: Nepareizs pieprasījums
+    title: Nepareizs pieprasījums
+    description: |
+      Serveris nevar apstrādāt pieprasījumu, jo tas ir nepareizi veidots. <a href="/">Atgriezieties sākumlapā</a>.
+  error_404:
+    meta_title: Lapa nav atrasta
+    title: Lapa nav atrasta
+    description: |
+      Jūsu pieprasītā lapa netika atrasta. Var būt Jūs atradīsiet meklēto informāciju <a href="/">sākuma lapā</a>.
+  error_403:
+    meta_title: Pieeja liegta
+    title: Pieeja liegta
+    description: |
+      Pieeja pieprasītajai lapai ir aizliegta. <a href="/">Atgriezieties sākumlapā</a>.
+
+laboratory:
+  search_placeholder: Meklēt laboratoriju
+  tests: Testi
+  tests_blank: Nav informācijas par veiktajiem testiem
+
+laboratory_file:
+  date: Dokumenta datums
+  delete_confirm: Vai jūs tiešam vēlaties dzēst šo dokumentu?
+  file: Fails
+  form_new: Jauns dokuments
+  url: Saite uz ārējo resursu
+  message:
+    error:
+      create: Neizdevās pievienot dokumentu
+      update: Neizdevās atjaunināt dokumentu
+      delete: Neizdevās izdzēst dokumentu
+  name: Dokumenta nosaukums
+
+mail:
+  footer: Ja Jūs neveicāt reģistrēšanos Life e-pakalpojumā, lūdzu, ignorējiet šo ziņu.
+
+manufacturer:
+  search_placeholder: Meklēt ražotāju
+  products: Produkti
+  products_blank: Nav informācijas par produktiem
+
+meta:
+  description:
+    classifiers: Informācija par vietnes lietotajiem klasifikatoriem
+    laboratories: Laboratoriju saraksts
+    main: Plastmasas izstrādājumu pārstrādājamības reģistrs
+    manufacturers: Ražotāju saraksts
+
+navigation:
+  signin: Pieslēgties
+  signup: Reģistrēties
+  signout: Beigt darbu
+  products: Produkti
+  laboratories: Laboratorijas
+  manufacturers: Ražotāji
+
+notification:
+  mail:
+    confirmation:
+      subject: Jauns reģistrēšanās pieteikums
+      link_title: Apskatīt
+      body: |
+        Pieteikums no <b>%{fullname}</b>, <b>%{email}</b> gaida apstiprināšanu.
+      plain_text: |
+        Pieteikums no %{fullname}, %{email} gaida apstiprināšanu.
+        To var apskatīt, sekojot saitei zemāk:
+        %{url}
+    test_request:
+      subject: Pieteikums laboratorisko izmeklējumu veikšanai
+      link_title: Apskatīt
+      plain_text: |
+        Pieteikumu var apskatīt, sekojot saitei zemāk:
+        %{url}
+      products: Produkti
+      customer: Testa pasūtītājs
+
+number:
+  currency:
+    separator: ','
+    delimiter: ' '
+  measure:
+    units:
+      day: dien.
+      degree_celsius: °C
+      euro: EUR
+      flat: dzīv.
+      g: g
+      GJ: GJ
+      kg: kg
+      km: km
+      kWh: kWh
+      l: l
+      m2: m²
+      m3: m³
+      men: mēn.
+      ml: ml
+      MWh: MWh
+      pc: vien.
+      persons: cilv.
+      unit: gab.
+  storage:
+    units:
+      b: B
+      kb: kB
+      gb: GB
+      mb: MB
+      tb: TB
+
+product:
+  action:
+    ext_search: paplašināta meklēšana
+    new: Pievienot jaunu produktu
+  certificates: Pievienotie dokumenti
+  company: Ražotājs
+  ean: EAN
+  error:
+    product_ean_exists: ir aizņemts
+    photo_file_not_image: ir jābūt jpeg, jpg vai png formātā
+  form_edit: Produkta rediģēšana
+  form_ean: Ievadiet produkta EAN kodu
+  form_new: Pievienot produktu
+  is_package: Iepakpojums
+  kind: Produkta veids
+  nace: NACE kods
+  name: Produkta nosaukums
+  name_and_ean: Produkts, EAN
+  manufacturer: Ražotāja nosaukums
+  maincomponent_type: Pamatkomponentes materiāla veids
+  maincomponent: Pamatkomponents
+  message:
+    error:
+      create: Neizdevās pievienot produktu
+      update: Neizdevās atjaunināt produktu
+  package_weight: Iepakojuma svars (g)
+  photo: Produkta foto
+  recyclability_from_to: Pārstrādājamais īpatsvars % no - līdz
+  recyclability: Pārstrādājamais īpatsvars
+  recyclability_short: Pārstrādājamība
+  search_title:
+    one: Atrasts %{count} ieraksts
+    few: Atrasti %{count} ieraksti
+    many: Atrasti %{count} ieraksti
+  search_placeholder: Meklēt produktu
+  search_hint: Ievadiet produkta EAN kodu vai nosaukumu
+  test: Testēšanas pārskats
+  test_products: Saistītie produkti
+  test_requests: Testēšanas pieteikumi
+  test_results: Laboratorijas testa rezultāti
+  type: Produkta tips
+  types:
+    all: Visi
+    package: Iepakojums
+    product: Izstrādājums
+  types_small:
+    package: iepakojums
+    product: izstrādājums
+  volume: Produkta tilpums (ml)
+  volume_short: Tilpums
+  weight: Produkta svars (g)
+  weight_short: Svars
+  package: Fasējums / pamatkomponents
+  component_material: Pamatkomponentes materiāla veids
+  weight_volume: Svars / tilpums
+  documents: Pievienotie dokumenti
+
+recyclability:
+  name: Pārstrādājamais īpatsvars
+  description: Paskaidrojums
+
+search:
+  not_found: Nav atrasti dati atbilstoši ievadītajiem meklēšanas parametriem
+
+signin:
+  action:
+    recovery: Mainīt paroli
+    sent_recovery: Aizmirsu paroli
+    submit: Pieslēgties
+  email: Lietotājvārds (e-pasta adrese)
+  password: Parole
+
+signup:
+  action:
+    submit: Nosūtīt pieteikumu
+  description:
+    Jūsu reģistrēšanās pieteikums tiks nosūtīts uz Vides aizsardzības un reģionālās attīstības ministriju un izskatīts tuvākajā laikā.
+  company_code: Uzņēmuma reģ. numurs
+  company_name: Uzņēmuma nosaukums
+  email: Lietotājvārds (e-pasta adrese)
+  gdpr: Piekrītu reģistra lietošanas un personas datu apstrādes noteikumiem
+  firstname: Jūsu vārds
+  password: Parole (vismaz 8 simboli)
+  password_confirm: Atkārtojiet paroli
+  lastname: Uzvārds
+  error:
+    company_uuid: uzņēmums nav atrasts
+  message:
+    error:
+      create: Neizdevās nosūtīt pieteikumu
+      email_exists: Lietotājs jau eksistē, mēģiniet ielogoties
+      gdpr: Vajag piekrīst lietošanas noteikumiem
+
+suggestion:
+  message:
+    no_company: Uzņēmums nav atrasts
+    no_customer: Uzņēmums nav atrasts
+    no_laboratory: Laboratorija nav atrasta
+    no_manufacturer: Ražotājs nav atrasts
+    no_nace: NACE nav atrasts
+    no_product: Produkts nav atrasts
+
+test:
+  action:
+    new: Pievienot testu
+    new_request: Pasūtīt testu
+  agreement: Līgums
+  completed: Testēšana pabeigta
+  components: Pārbaudītās komponentes
+  customer: Testa pasūtītājs
+  date: Testa datums
+  error:
+    date: ir jābūt lielākam par līguma datumu
+    product: nav pievienots produkts
+  extcomponent: Testējamās papildus komponentes
+  form_edit: Laboratorijas testa rezultāta rediģēšana
+  form_new: Pievienot laboratorijas testa rezultātu
+  form_new_request: Laboratorisko izmeklējumu pieteikums
+  inprocess: Testēšana nav pabeigta
+  laboratory: Laboratorija
+  laboratory_note: Laboratorijas komentārs
+  maincomponent: Testējamā pamatkomponente
+  message:
+    error:
+      create: Neizdevās pievienot testu
+      uniq: Tests jau ir pievienots
+  product: Produkts
+  products: Testējamie produkti
+  product_name: Produkta nosaukums
+  product_search_placeholder: Pievienot produktu
+  contract_date: Līguma datums
+  contract_number: Līguma numurs
+  result_recyclability: Pārstrādājamais īpatsvars
+  waiting: Gaida testēšanu
+
+title: Plastmasas izstrādājumu pārstrādājamības reģistrs
+
+user_activation:
+  title: Gaida apstiprināšanu!
+  description: |
+    Jūsu reģistrēšanās pieteikums tiks nosūtīts uz Vides aizsardzības un reģionālās attīstības ministriju un izskatīts tuvākajā laikā.
+
+user_notification:
+  mail:
+    subject: Jūsu pieteikums ir apstiprināts
+    link_title: Apskatīt
+    body: |
+      Jūsu reģistrēšanās pieteikums ir apstiprināts
+    plain_text: |
+      Jūsu reģistrēšanās pieteikums ir apstiprināts.
+      Apskatīt:
+      %{url}
+
+user_recovery:
+  action:
+    create: Nosūtīt norādījumus
+    update: Atjaunot
+  email: E-pasts
+  description_new: |
+    Ja Jūsu e-pasts ir mūsu datubāzē, uz Jūsu e-pastu tiks nosūtīti norādījumi paroles atjaunošanai.
+  description_edit: |
+    Ludzu ievadiet jauno paroli.
+  mail:
+    subject: Life paroles atjaunošana
+    link_title: Mainīt paroli
+    body: |
+      Kāds ir nosūtijis pieprasijumu, Jūsu paroles maiņai.<br>
+      Ja Jūs neveicāt šo pieprasījumu, lūdzu, ignorējiet šo ziņu.<br>
+      Jūsu parole netiks mainīta, ja Jūs neizveidosiet jaunu.<br>
+    plain_text: |
+      Kāds ir nosūtijis pieprasijumu Jūsu paroles maiņai.
+      Sekojiet saitei, lai nomainītu paroli:
+      %{url}
+      Ja Jūs neveicāt šo pieprasījumu, lūdzu, ignorējiet šo ziņu.
+  message:
+    error:
+      mail: Kļūda! Neizdevās nosūtīt norādījumus paroles atjaunošanai
+    notice:
+      mail: Ja Jūsu e-pasts eksistē mūsu datubāzē, tad Jums tiks nosūtīti norādījumi paroles atjaunošanai
+  password: Parole (vismaz 8 simboli)
+  password_confirm: Atkārtojiet paroli
+
+
+
+assignment:
+  expired: Nokavēts
+  days_left: Atlīkušas
+  days:
+    one: '%{count} diena'
+    few: '%{count} dienas'
+    many: '%{count} dienas'
+  types:
+    test: PD
+    work: Nodarbība 
+

@@ -1,0 +1,51 @@
+<aside class="aside">
+  <div class="conversations">
+    <div class="conversations__header">
+      <h1 class="conversations__title">Saziņa</h1>
+      <a href="/conversations/new" class="conversations__action button button_new">Jauna vēstule</a>
+    </div>
+    <form class="conversations__search conversation-search">
+      <input class="conversation-search__input" name="q" placeholder="Meklēt">
+      <button class="conversation-search__submit"></button>
+    </form>
+    <ul class="conversations__list conversations-list">
+      <block:conversations>
+      <li class="conversations-list__item">
+        <a class="conversation<if:active: active:>" href="<var:path>">
+          <div class="conversation__avatar"><img src="<var:avatar>" height="40"></div>
+          <div class="conversation__name"><var:name></div>
+          <div class="conversation__time"><var:time></div>
+          <div class="conversation__text"><var:text></div>
+        </a>
+      </li>
+      </block:conversations>
+    </ul>
+  </div>
+</aside>
+<div class="messages">
+  <div class="messages__header">
+    <div class="messages__title"><var:name></div> 
+  </div>
+  <div class="messages__content">
+  	<ul class="messages">
+  		<block:messages>
+  		<li class="messages__item">
+  			<div class="message message_<if:incoming:left:right>">
+          <if:incoming>
+            <div class="avatar__left">
+              <img src="/img/avatar.jpeg" height="24">
+            </div>
+          </if:incoming>
+          <div class="message__username"><var:username></div>
+  				<var:text>
+          <!-- <div class="message__time"><var:time></div> -->
+  			</div>
+  		</li>
+  		</block:messages>
+  	</ul>
+  </div>
+  <form class="message-form" method="post">
+    <textarea class="message-form__inupt" name="message" autofocus></textarea>
+    <button class="message-form__submit"></button>
+  </form>
+</div>

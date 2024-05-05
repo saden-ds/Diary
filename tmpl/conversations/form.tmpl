@@ -1,0 +1,152 @@
+<aside class="aside">
+    <div class="conversations">
+        <div class="conversations__header">
+          <h1 class="conversations__title">Saziņa</h1>
+          <a href="/conversations/new" class="conversations__action button button_new">Jauna vēstule</a>
+        </div>
+        <form class="conversations__search conversation-search">
+          <input class="conversation-search__input" name="q" placeholder="Meklēt">
+          <button class="conversation-search__submit"></button>
+        </form>
+        <ul class="conversations__list conversations-list">
+          <block:conversations>
+          <li class="conversations-list__item">
+            <a class="conversation<if:active: active:>" href="<var:path>">
+              <div class="conversation__avatar"><img src="<var:avatar>" height="40"></div>
+              <div class="conversation__name"><var:name></div>
+              <div class="conversation__time"><var:time></div>
+              <div class="conversation__text"><var:text></div>
+            </a>
+          </li>
+          </block:conversations>
+        </ul>
+    </div>
+</aside>
+
+<form class="conversation-form" method="post" action="<var:path>">
+    <div class="conversation-form__header">
+        <div class="conversation-form__title">Jauna sazina</div>
+        <if:error>
+        <div class="erorr">
+            <var:error>
+        </div>
+        </if:error>
+        <input class="conversation-form__input" type="text" name="name" value="<var:text>" placeholder="Nosaukums">
+    </div>
+    <div class="conversation-form__body">
+        <ul class="user-select">
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Deniss Samsonovs</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Andrej</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+            <li class="user-select__item">
+                <label class="user user_modified user_hover">
+                    <div class="user__avatar">
+                        <img src="/img/avatar.jpeg" height="40">
+                    </div>
+                    <div class="user__title">Reinis</div>
+                    <input class="user__checkbox" type="checkbox" name="user_id[]" value="1">
+                </label>
+            </li>
+        </ul>
+    </div>
+    <div class="conversation-form__footer">
+        <a class="button_cancel" href="/conversations">Atcelt</a>
+        <button class="button button_submit">Izveidot</button>
+    </div>
+</form>

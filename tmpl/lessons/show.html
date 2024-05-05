@@ -1,0 +1,76 @@
+<aside class="aside">
+    <div class="resource">
+        <div class="resource__header">
+            <h1 class="resource__title">Priekšmeti</h1>
+            <a href="/lessons/new" class="js_modal resource__action button button_new">Jauns priekšmets</a>
+        </div>
+        <ul class="resource__list">
+            <block:lessons>
+            <li class="resource__item">
+                <a class="resource__anchor<if:active: resource__anchor_active:>" href="<var:lesson_path>"><var:lesson_name></a>
+            </li>
+            </block:lessons>
+        </ul>
+    </div>
+</aside>
+<div class="box">
+<if:lesson_id>
+<div class="box__header box-header">
+    <div class="box-header__main">
+        <div class="box-header__title"><var:lesson_name></div>
+        <div class="box-header__description"><var:lesson_description></div>
+    </div>
+    <if:actions>
+    <div class="box-header__actions">
+        <block:actions>
+        <a href="<var:path>" class="<var:class_name> button_action"><var:title></a>
+        </block:actions>
+    </div>
+    </if:actions>
+</div>
+<div class="box__content">
+    <if:lesson_invites>
+    <h2 class="content__header">Uzaicināti cilvēki</h2>
+    <ul>
+        <block:lesson_invites> 
+            <li class="user user_modified user_modified_color">
+                <div class="user__avatar">
+                    <img src="/img/avatar.jpeg" height="40">
+                </div>
+                <div class="user__title">
+                    <if:user_id>
+                    <var:user_firstname>
+                    <var:user_lastname>
+                    </if:user_id>
+                    <var:user_email> 
+                </div>
+            </li>
+        </block:lesson_invites>
+    </ul>
+    </if:lesson_invites>
+    <h2 class="content__header">Cilvēki mācību priekšmētā</h2>
+    <if:lesson_users>
+    <ul>
+        <block:lesson_users>
+            <li class="user user_modified">
+                <div class="user__avatar">
+                    <img src="/img/avatar.jpeg" height="40">
+                </div>
+                <div class="user__title">
+                    <if:user_id>
+                    <var:user_firstname>
+                    <var:user_lastname>
+                    </if:user_id>
+                    <var:user_email> 
+                </div>
+                <if:lesson_user_delete_path>
+                <a href="<var:lesson_user_delete_path>" class="delete_button"><img src="/img/delete.png" height="22"></a>
+                </if:lesson_user_delete_path>
+                <!-- <a href="/lessons/users/<var:lesson_user_id>/delete" class="delete_button"><img src="/img/delete.png" height="22"></a> -->
+            </li>
+        </block:lesson_users>
+    </ul>
+    </if:lesson_users>
+</div>
+</if:lesson_id>
+</div> 

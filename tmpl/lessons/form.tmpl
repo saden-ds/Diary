@@ -1,0 +1,21 @@
+<form id="lesson_form" class="main-form" method="post">
+  <h2 class="main-form__header">Priekšmets</h2>
+  <div class="field">
+    <input class="field__input" type="text" name="lesson_name" placeholder="Nosaukums" value="<var:lesson_name>">
+  </div>
+  <div class="field">
+    <input class="field__input" type="text" name="lesson_description" placeholder="Apraksts" value="<var:lesson_description>">
+  </div>
+  <button class="main-form__button">Saglabat</button>
+</form>
+<script>
+(function(){
+  new app.Form('#lesson_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

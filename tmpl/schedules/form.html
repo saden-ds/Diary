@@ -1,0 +1,37 @@
+<form id="shedule_form" class="main-form" method="post">
+  <h2 class="main-form__header">Nodarbību grafiks</h2>
+  <div class="field">
+    <input class="field__input field__input_datepicker" type="text" name="schedule_date" placeholder="Datums" value="<var:schedule_date>">
+  </div>
+  <div class="field">
+    <select class="field__input field__input_select" name="lesson_id">
+      <option value="">Izvēlēties mācību priekšmetu</option>
+      <block:lesson_options>
+      <option value="<var:value>"<if:selected: selected:>><var:name></option>
+      </block:lesson_options>
+    </select>
+  </div>
+  <div class="field">
+    <select class="field__input field__input_select" name="lesson_time_id">
+      <option value="">Izvēlēties laiku</option>
+      <block:lesson_time_options>
+      <option value="<var:value>"<if:selected: selected:>><var:name></option>
+      </block:lesson_time_options>
+    </select>
+  </div>
+  <div class="field">
+    <input class="field__input" type="text" name="schedule_name" placeholder="Mācību priekšmeta tēma" value="<var:schedule_name>">
+  </div>
+  <button class="main-form__button">Saglabat</button>
+</form>
+<script>
+(function(){
+  new app.Form('#shedule_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

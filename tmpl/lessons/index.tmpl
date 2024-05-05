@@ -1,0 +1,18 @@
+<aside class="aside">
+    <div class="resource">
+        <div class="resource__header">
+            <h1 class="resource__title">Priekšmeti</h1>
+            <a href="/lessons/new" class="js_modal resource__action button button_new">Jauns priekšmets</a>
+        </div>
+        <ul class="resource__list">
+            <block:lessons>
+            <li class="resource__item">
+                <a class="resource__anchor<if:active: resource__anchor_active:>" href="<var:lesson_path>"><var:lesson_name></a>
+            </li>
+            </block:lessons>
+        </ul>
+    </div>
+</aside>
+<div class="content">
+  <div class="empty empty_lesson_list">Nav izvēlētas neviens mācību priekšmets</div>
+</div>

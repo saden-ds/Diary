@@ -1,0 +1,130 @@
+.modal {
+  position: absolute; top: 0; left: 0; z-index: 100;
+  width: 100%; height: 100%;
+}
+.modal__container { vertical-align: middle; }
+.modal__wrapper { margin: 0 auto; }
+.modal__scrollable {
+  position: relative;
+  overflow: auto;
+}
+.modal__window {
+  position: relative;
+  border-radius: 4px;
+  background: #FFF;
+
+  -webkit-box-shadow: 0 0 0 1px #D5C7BC;
+          box-shadow: 0 0 0 1px #D5C7BC;
+}
+.modal__tools { display: none; }
+.modal__close {
+  position: absolute; top: 16px; right: 16px; z-index: 101;
+  width: 32px; height: 32px;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+
+  -webkit-transition: -webkit-transform .3s;
+          transition: transform .3s;
+}
+.modal__close::after,
+.modal__close::before {
+  content: '';
+  display: block;
+  position: absolute; top: 15px; left: 4px;
+  width: 24px; height: 2px;
+  background: #7C6C6C;
+}
+.modal__close::after {
+  -webkit-transform: rotate(315deg);
+          transform: rotate(315deg);
+}
+.modal__close::before {
+  -webkit-transform: rotate(225deg);
+          transform: rotate(225deg);
+}
+
+.modal__close:hover {
+  -webkit-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+.modal__close:focus::after,
+.modal__close:focus::before {
+  background: #eee;
+}
+
+.modal_scrollable { position: fixed; }
+
+.modal-overlay {
+  position: fixed; top: 0; left: 0; z-index: 100;
+  width: 100%; height: 100%;
+  background: rgba(87, 78, 67, .6);
+}
+
+.modal-disable-scroll { overflow: hidden !important; }
+
+.modal .responsive_480 {
+  width: 480px;
+}
+.modal .responsive_640 {
+  width: 640px;
+}
+.modal .responsive_800 {
+  width: 800px;
+}
+.modal .responsive__wrapper {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+.modal .responsive__header {
+  padding: 20px 64px 19px 32px;
+  border-radius: 4px 4px 0 0;
+  background: #DFDDDA;
+}
+.modal .responsive__title {
+  font-size: 18px;
+  line-height: 24px;
+}
+.modal .responsive__body {
+  padding: 16px 32px;
+}
+.modal .responsive__footer {
+  padding: 8px 32px;
+  background: #DFDDDA;
+  border-radius: 0 0 4px 4px;
+  text-align: right;
+}
+.modal .responsive__footer .button { margin-left: 4px; }
+
+@media only screen and (max-width: 800px) {
+
+  .modal .responsive_640,
+  .modal .responsive_720,
+  .modal .responsive_800 {
+    width: calc(100vw - 16px);
+  }
+
+  .modal .responsive__header {
+    padding-right: 48px;
+    padding-left: 19px;
+  }
+  .modal .responsive__body {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+  .modal .responsive__footer {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+}
+
+@media only screen and (max-width: 640px) {
+
+  .modal .responsive_480 {
+    width: calc(100vw - 16px);
+  }
+
+}

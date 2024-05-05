@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Base\Exceptions\ForbiddenException;
+use App\Base\Exceptions\NotFoundException;
+use App\Base\View;
+use App\Base\DataStore;
+use App\Models\Lesson;
+use App\Models\LessonInvite;
+use App\Models\LessonUser;
+
+class LessonInvitesController extends PrivateController
+{
+
+    public function newAction(): ?View
+    {
+        $lesson = $this->getLesson();
+
+        return View::init('tmpl/lesson_invites/form.html', [
+            'lesson_id' => $lesson->lesson_id,
+            'lesson_name' => $lesson->lesson_name,
+            'email' => null,
+            'path' => '/lessons/invites/create'
+        ]);  
+    }
+
+    public function createAction(): ?View
+    {
+        $lesson = $this->getLesson();
+        $invite = new LessonInvite([
+            'lesson_id' => $lesson->lesson_id,
+            'user_email' => $this->request->get('user_email')
+        ]);
+        $view = new View();
+
+        if ($invite->user_email === $this->current_user->email) {
+            $invite->addError("base", "Jūs nevarat uzaicināt sevi");
+        }
+
+        if ($invite->create()) {
+            return $view->data([
+                'lesson_invite_id' => $invite->lesson_invite_id
+            ]);
+        } else {
+            return $this->recordError($invite);
+        } 
+    }
+
+    public function acceptAction(): ?View
+    {
+        $invite = LessonInvite::find($this->request->get('id'));
+
+        if (!$invite) {
+            throw new NotFoundException();
+        }
+
+        if ($invite->user_email != $this->current_user->email) {
+            throw new ForbiddenException();
+        }
+
+        $lesson_user = new LessonUser([
+            'lesson_id' => $invite->lesson_id,
+            'user_id' => $this->current_user->id
+        ]);
+
+        if (!$lesson_user->create()) {
+            return $this->recordError($lesson_user);
+        }
+
+        $invite->delete();
+
+        return $this->redirect('/lessons/' . $lesson_user->lesson_id);
+    }
+
+    public function declineAction(): ?View
+    {
+        $invite = LessonInvite::find($this->request->get('id'));
+
+        if (!$invite) {
+            throw new NotFoundException();
+        }
+
+        if ($invite->user_email != $this->current_user->email) {
+            throw new ForbiddenException();
+        }
+
+        $invite->delete();
+
+        return $this->redirect('/');
+    }
+
+
+    private function getLesson(): Lesson
+    {
+        $lesson = Lesson::find($this->request->get('lesson_id'));
+
+        if (!$lesson) {
+            throw new NotFoundException();
+        }
+
+        if ($lesson->user_id != $this->current_user->id) {
+            throw new ForbiddenException();
+        }
+
+        return $lesson;
+    }
+
+} 

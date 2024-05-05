@@ -1,0 +1,28 @@
+
+<form id="profile_form"class="main-form" method="get">
+  <h2 class="main-form__header">Mainīt manus datus</h2>
+  <div class="field">
+    <input class="field__input" type="text" name="user_firstname" placeholder="Vārds" value="<var:user_firstname>">
+  </div>
+  <div class="field">
+    <input class="field__input" type="text" name="user_lasttname" placeholder="Uzvārds" value="<var:user_lastname>">
+  </div>
+  <div class="field">
+    <input class="field__input" type="password" name="user_password" placeholder="Parole">
+  </div>
+  <div class="field">
+    <input class="field__input" type="password" name="user_password_repeat" placeholder="Apstiprini paroli">
+  </div>
+  <button class="main-form__button">Saglabat</button>
+</form>
+<script>
+(function(){
+  new app.Form('#profile_form', {
+    url: '/profile/update',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

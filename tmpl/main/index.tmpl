@@ -1,0 +1,27 @@
+<header class="main-header">
+  <a href="/" class="main-header__logo">Logo</a>
+  <nav class="main-header__nav">
+    <a href="/signup" class="main-header__button">Sign up</a>
+  </nav>
+</header>
+<form id="signin" class="main-form" method="post" action="/signin">
+  <h2 class="main-form__header">Pieslēgties</h2>
+  <div class="field">
+    <input class="field__input" type="text" name="email" placeholder="E-pasts">
+  </div>
+  <div class="field">
+    <input class="field__input" type="password" name="password" placeholder="Parole">
+  </div>
+  <button class="main-form__button">LOG IN</button>
+</form>
+<script>
+(function(){
+  new app.Form('#signin', {
+    url: '/signin',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

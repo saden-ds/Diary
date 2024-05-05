@@ -1,0 +1,27 @@
+<aside class="aside">
+  <div class="conversations">
+    <div class="conversations__header">
+      <h1 class="conversations__title">Saziņa</h1>
+      <a href="/conversations/new" class="button button_new">Jauna vēstule</a>
+    </div>
+    <form class="conversations__search conversation-search">
+      <input class="conversation-search__input" name="q" placeholder="Meklēt">
+      <button class="conversation-search__submit"></button>
+    </form>
+    <ul class="conversations__list conversations-list">
+      <block:conversations>
+      <li class="conversations-list__item">
+        <a class="conversation<if:active: active:>" href="<var:path>">
+          <div class="conversation__avatar"><img src="<var:avatar>" height="40"></div>
+          <div class="conversation__name"><var:name></div>
+          <div class="conversation__time"><var:time></div>
+          <div class="conversation__text"><var:text></div>
+        </a>
+      </li>
+      </block:conversations>
+    </ul>
+  </div>
+</aside>
+<div class="content">
+  <div class="empty empty_conversation">Nav izvēlēta neviena sarakste</div>
+</div>

@@ -1,0 +1,83 @@
+<div class="content">
+  <section class="box">
+    <div class="header__box">
+      <ul class="header__title">
+        <li class="title__item">
+          <a href="/schedules/<var:previous_year>/<var:previous_month>/<var:previous_day>">
+            <img src="/img/left2.png" height="18">
+          </a>
+        </li>
+        <li class="title__item">
+          <h1 class="box__title"><var:datetime_start> - <var:datetime_end></h1>
+        </li>
+        <li class="title__item">
+          <a href="/schedules/<var:year>/<var:month>/<var:day>">
+            <img src="/img/right.png" height="18">
+          </a>
+        </li>
+        <!-- <li class="title__item">
+          <a href="/schedules/new" class="js_modal button">Izveidot grafiku</a>
+        </li> -->
+      </ul>
+      <a href="/schedules/new" class="js_modal button">Izveidot grafiku</a>
+    </div>
+    <block:schedule>
+    <div class="date"><var:date></div>
+    <table class="data" width="100%">
+      <thead class="data__thead">
+        <tr class="data__tr">
+          <th class="data__th" width="1%">#</th>
+          <th class="data__th" width="10%">Laiks</th>
+          <th class="data__th" width="30%">Priekšmets, Klases telpa, pedagogs </th>
+          <th class="data__th" width="5%">Vērtējumi </th>
+          <th class="data__th" width="4%">Apmeklējumi</th>
+          <th class="data__th" width="10%">Uzdevumi</th>
+          <th class="data__th" width="30%">Tēma</th>
+          <th class="data__th" width="10%">Rediģēt</th>
+        </tr>
+      </thead>
+      <tbody class="data__tbody">
+        <block:lessons>
+        <tr class="data__tr">
+          <td class="data__td"><var:lesson_time_number>.</td>
+          <td class="data__td"><var:lesson_time_start_at> - <var:lesson_time_end_at></td>
+          <td class="data__td">
+            <a href="/schedules/<var:schedule_id>" class="js_modal"><var:lesson_name> <if:user_fullname> (<var:user_fullname>)</if:user_fullname></a>
+          </td>
+          <td class="data__td"></td>
+          <td class="data__td"></td>
+          <td class="data__td">
+            <block:assignments>
+            <a href="/assignments/<var:assignment_id>" class="js_modal"><var:assignment_type></a>
+            </block:assignments>
+            <!-- <a href=" "><var:assignment_type></a> -->
+            <!-- <if:assignment_new_path>
+            <a href="<var:assignment_new_path>" class="js_modal button">Pievienot</a>
+            </if:assignment_new_path> -->
+          </td>
+          <td class="data__td"><var:schedule_name></td>
+          <td class="data__td">
+            <!-- <if:is_owner:xxxx:yyyy> -->
+            <if:schedule_edit_path>
+            <ul class="actions-list">
+              <li class="js_menu_parent actions-list__item">
+                <a class="js_menu action action_icon i i_menu i_only" href="#menu">Menu</a>
+                <ul class="menu menu_hidden">
+                  <li class="menu__item">
+                    <a href="<var:schedule_edit_path>" class="menu__anchor js_modal">Rediģēt grafiku</a>
+                  </li>
+                  <li class="menu__item">
+                    <a href="<var:assignment_new_path>" class="menu__anchor js_modal">Pievienot uzdevumu</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            </if:schedule_edit_path>
+          </td>
+        </tr>
+        </block:lessons>
+      </tbody>
+    </table>
+    </block:schedule>
+  </section>
+</div>

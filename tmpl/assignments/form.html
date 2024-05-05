@@ -1,0 +1,30 @@
+<form id="assignment_form" class="main-form" method="post">
+  <input type="hidden" name="schedule_id" value="<var:schedule_id>">
+  <h2 class="main-form__header">Jauns uzdevums</h2>
+  <div class="field">
+    <select class="field__input" name="assignment_type">
+      <option value="">Izvelies darba veidu</option>
+      <block:assignment_type_option>
+      <option value="<var:value>"<if:selected: selected:>><var:name></option>
+      </block:assignment_type_option>
+    </select>
+  </div>
+  <div class="field">
+    <input class="field__input" type="text" name="assignment_description" placeholder="Uzdevuma apraksts" value="<var:assignment_description>">
+  </div>
+  <div class="field">
+    <input class="field__input" type="text" name="assignment_end_datetime" placeholder="Izpildes termiņš" value="<var:assignment_end_datetime>">
+  </div>
+  <button class="main-form__button">Saglabat</button>
+</form>
+<script>
+(function(){
+  new app.Form('#assignment_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>
