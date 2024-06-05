@@ -589,3 +589,7 @@ assignment:
     test: PD
     work: Nodarbība 
 
+schedule:
+  message:
+    error:
+      exists: Dotais mācību priekšmets jau eksistē

@@ -54,6 +54,13 @@
     </div>
     </block:current_user>
     <nav class="aside-nav"> 
+      <ul class="aside-nav__nav">
+        <block:header_nav>
+        <li class="aside-nav__item">
+          <a href="<var:path>" class="aside-nav__anchor<if:active: active:>"><var:name></a>
+        </li>
+        </block:header_nav>
+      </ul>
       <ul class="aside-nav__list">
         <li class="aside-nav__item">
           <a href="/conversations" class="aside-nav__anchor aside-nav__anchor_icon icon icon_mail">Saziņa</a>
@@ -63,7 +70,7 @@
         </li>
         <li class="aside-nav__item">
           <a id="notification_badge" href="#notification_lates" class="aside-nav__anchor aside-nav__anchor_icon icon icon_notification" data-url="/notifications/latest">Notifikācijas<if:lesson_invites:*:></a>
-          <div id="notification_lates" class="nontification-tabs hidden-">
+          <div id="notification_lates" class="nontification-tabs hidden">
             <ul class="tabs">
               <li class="tabs__item">
                 <a href="#nontification_grades" class="tabs__anchor active">Jaunākās atīmes</a>

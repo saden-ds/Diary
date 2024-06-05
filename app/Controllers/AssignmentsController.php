@@ -160,9 +160,6 @@ class AssignmentsController extends PrivateController
     {
         $path = null;
 
-        // var_dump($this->msg->l('2024-04-05'));
-        // var_dump($this->msg->date('2024-04-05'));
-
         if ($assignment->assignment_id) {  
             $path = '/assignments/' . $assignment->assignment_id . '/update';
         } else {
@@ -197,51 +194,7 @@ class AssignmentsController extends PrivateController
     private function getAssignments(): ?array
     {
         $sort_param = $this->getSortParam();
-        // $order = '';
-
-        // switch ($sort_param[0]) {
-        //     case 'schedule_date':
-        //         $order = 'order by s.schedule_date '.$sort_param[1];
-        //         break;
-        //     case 'assignment_end_datetime':
-        //         $order = 'order by a.assignment_end_datetime '.$sort_param[1];
-        //         break;
-        // }
-
-        // $db = DataStore::init();
-        // $data = $db->data('
-        //     select 
-        //         a.*,
-        //         u.user_firstname, 
-        //         u.user_lastname, 
-        //         s.schedule_date,
-        //         lt.lesson_time_start_at,
-        //         lt.lesson_time_end_at,
-        //         l.lesson_name
-        //     from assignment as a
-        //     left join user as u on u.user_id = a.user_id
-        //     left join schedule as s on s.schedule_id = a.schedule_id
-        //     left join lesson_time as lt on lt.lesson_time_id = s.lesson_time_id
-        //     left join lesson as l on l.lesson_id = s.lesson_id '.$order.'
-        // ');
-
-        // $result = null;
-
-        // foreach ($data as $key => $value) {
-        //     $result[] = [
-        //         'assignment_id'=> $key + 1,
-        //         'user_fullname' => $value['user_firstname'] . '  ' . $value['user_lastname'],
-        //         'assignment_description' => $value['assignment_description'],
-        //         'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
-        //         'assignment_end_datetime' => $value['assignment_end_datetime'],
-        //         'schedule_date' => $value['schedule_date'],
-        //         'lesson_time' => $value['lesson_time_start_at'] . ' - ' . $value['lesson_time_end_at'],
-        //         'lesson_name' => $value['lesson_name']
-        //     ];
-        // }
-
-        // return $result;
-
+        
         $query = new DataQuery();
 
         $query
@@ -276,17 +229,6 @@ class AssignmentsController extends PrivateController
         if ($this->request->get('filter.assignment_description')) {
           $query->where('a.assignment_description like ?', '%'.$this->request->get('filter.assignment_description').'%');
         }
-
-        // ----
-
-        
-        // $params = $this->request->get('filter');
-
-        // error_log(print_r($params, true));
-
-        // if (!$params) {
-        //     $query->where('(l.user_id = ? or lu.user_id = ?)', [$this->current_user->id, $this->current_user->id]);
-        // }
 
         switch ($sort_param[0]) {
             case 'schedule_date':
@@ -333,8 +275,6 @@ class AssignmentsController extends PrivateController
             ];
         }
 
-        // error_log(print_r($result, true));
-
         return $result;
     }
 
@@ -344,8 +284,6 @@ class AssignmentsController extends PrivateController
         $sort_column = null;
         $sort_direction = null;
         $sort_param = $this->request->get('filter.sort');
-
-        // error_log(print_r($sort_param, true));
 
         if ($sort_param && strpos($sort_param, '.') !== false) {
             list($sort_column, $sort_direction) = explode('.', $sort_param);
@@ -441,7 +379,6 @@ class AssignmentsController extends PrivateController
             ];
         }
 
-        // error_log(print_r($options, true));
         return $options;
     }
 

@@ -13,8 +13,6 @@ daemon:
   threads: 4
   lock_time: 10
 
-laboratory_lookup_min_count: 20
-
 databases:
   default: Diary
   Diary:

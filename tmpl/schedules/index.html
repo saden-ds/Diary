@@ -1,6 +1,18 @@
+<style>
+  @media only screen and (max-width: 640px) {
+    #assignments .data__td:nth-child(2)::before { content: 'Laiks' }
+    #assignments .data__td:nth-child(3)::before { content: 'Priekšmets, Klases telpa, pedagogs' }
+    #assignments .data__td:nth-child(4)::before { content: 'Vērtējumi' }
+    #assignments .data__td:nth-child(5)::before { content: 'Apmeklējumi' }
+    #assignments .data__td:nth-child(6)::before { content: 'Uzdevumi' }
+    #assignments .data__td:nth-child(7)::before { content: 'Tēma' }
+    #assignments .data__td:nth-child(8)::before { content: 'Rediģēt' }
+  }
+</style>
 <div class="content">
   <section class="box">
     <div class="header__box">
+      <a href="/schedules/new" class="js_modal button">Izveidot grafiku</a>
       <ul class="header__title">
         <li class="title__item">
           <a href="/schedules/<var:previous_year>/<var:previous_month>/<var:previous_day>">
@@ -19,7 +31,6 @@
           <a href="/schedules/new" class="js_modal button">Izveidot grafiku</a>
         </li> -->
       </ul>
-      <a href="/schedules/new" class="js_modal button">Izveidot grafiku</a>
     </div>
     <block:schedule>
     <div class="date"><var:date></div>
@@ -36,17 +47,26 @@
           <th class="data__th" width="10%">Rediģēt</th>
         </tr>
       </thead>
-      <tbody class="data__tbody">
+      <tbody id="assignments" class="data__tbody">
         <block:lessons>
         <tr class="data__tr">
-          <td class="data__td"><var:lesson_time_number>.</td>
+          <td class="data__td">
+            <div class="data__mbadge"><var:lesson_time_number>.</div>
+          </td>
           <td class="data__td"><var:lesson_time_start_at> - <var:lesson_time_end_at></td>
           <td class="data__td">
+            <if:lesson_name>
             <a href="/schedules/<var:schedule_id>" class="js_modal"><var:lesson_name> <if:user_fullname> (<var:user_fullname>)</if:user_fullname></a>
+            </if:lesson_name>
+            <ifnot:lesson_name>
+            <div class="data__empty">
+              Nav mācību priekšmeta
+            </div>
+            </ifnot:lesson_name>
           </td>
-          <td class="data__td"></td>
-          <td class="data__td"></td>
-          <td class="data__td">
+          <td class="data__td data__td_empty"></td>
+          <td class="data__td data__td_empty"></td>
+          <td class="data__td<if:assignments:: data__td_empty>">
             <block:assignments>
             <a href="/assignments/<var:assignment_id>" class="js_modal"><var:assignment_type></a>
             </block:assignments>
@@ -55,13 +75,13 @@
             <a href="<var:assignment_new_path>" class="js_modal button">Pievienot</a>
             </if:assignment_new_path> -->
           </td>
-          <td class="data__td"><var:schedule_name></td>
-          <td class="data__td">
+          <td class="data__td<if:schedule_name:: data__td_empty>"><var:schedule_name></td>
+          <td class="data__td<if:schedule_edit_path:: data__td_empty>">
             <!-- <if:is_owner:xxxx:yyyy> -->
             <if:schedule_edit_path>
             <ul class="actions-list">
               <li class="js_menu_parent actions-list__item">
-                <a class="js_menu action action_icon i i_menu i_only" href="#menu">Menu</a>
+                <a class="js_menu action- action_icon i i_menu i_only" href="#menu">Menu</a>
                 <ul class="menu menu_hidden">
                   <li class="menu__item">
                     <a href="<var:schedule_edit_path>" class="menu__anchor js_modal">Rediģēt grafiku</a>

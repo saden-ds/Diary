@@ -1,6 +1,17 @@
 eDiary
 ====
 
+## Requirements
+
+* php 8.1
+* mysql 8.1.0
+* memcached 3.2.0
+* yaml 2.2.3
+
+## Data Base Configuration 
+
+SQL dump is stored in the directory db
+
 ## Config
 /config/{env name}.yml
 
@@ -18,8 +29,14 @@ dir: /var/www/html/web
 data_dir: /var/www/data
 tmp_dir: /var/www/data/tmp
 secret: [secret]
-salt: [7 random symbols]
 title: eDiary
+
+databases:
+  default: database_name
+  database_name:
+    host: localhost
+    username: [username]
+    password: [password]
 
 memcache:
   host: memcached
@@ -27,7 +44,7 @@ memcache:
 
 session:
   name: ediary
-  expire: 604800
+  expire: 7200
 
 user:
   password:

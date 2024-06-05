@@ -53,7 +53,7 @@ $router->get('/signout', [SessionsController::class, 'deleteAction']);
 
 $router->get('/grades', [GradesController::class, 'indexAction']);
 
-$router->get('/visits', [VisitsContynceroller::class, 'indexAction']);
+// $router->get('/visits', [VisitsContynceroller::class, 'indexAction']);
 
 $router->get('/lessons', [LessonsController::class, 'indexAction']);
 $router->get('/lessons/new', [LessonsController::class, 'newAction']);

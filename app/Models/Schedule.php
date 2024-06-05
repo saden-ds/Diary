@@ -42,6 +42,31 @@ class Schedule extends Model
         if ($this->schedule_date && date_create($this->schedule_date) === false) {
             $this->addError('schedule_date', $this->msg->t('error.invalid_date_format'));
         }
+
+        if (!$this->hasErrors()) {
+            $this->validateUniquiness();
+        }
+    }
+
+
+    private function validateUniquiness(): void
+    {
+        $query = new DataQuery();
+
+        $query
+            ->select('schedule_id')
+            ->from('schedule')
+            ->where('lesson_id = ?', $this->lesson_id)
+            ->where('schedule_date = ?', $this->formatDate($this->schedule_date))
+            ->where('lesson_time_id = ?', $this->lesson_time_id);
+
+        if ($this->schedule_id) {
+            $query->where('schedule_id != ?', $this->schedule_id);
+        }
+
+        if ($query->first()) {
+            $this->addError('base', $this->msg->t('schedule.message.error.exists'));
+        }
     }
 
 }

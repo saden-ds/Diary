@@ -1,7 +1,7 @@
 <form id="shedule_form" class="main-form" method="post">
   <h2 class="main-form__header">Nodarbību grafiks</h2>
   <div class="field">
-    <input class="field__input field__input_datepicker" type="text" name="schedule_date" placeholder="Datums" value="<var:schedule_date>">
+    <input class="field__input field__input_datepicker" type="text" name="schedule_date" placeholder="Datums" value="<var:schedule_date>" autofocus>
   </div>
   <div class="field">
     <select class="field__input field__input_select" name="lesson_id">
@@ -23,6 +23,7 @@
     <input class="field__input" type="text" name="schedule_name" placeholder="Mācību priekšmeta tēma" value="<var:schedule_name>">
   </div>
   <button class="main-form__button">Saglabat</button>
+  <!-- <button class="js_modal_close main-form__button" type="button">Cancel</button> -->
 </form>
 <script>
 (function(){

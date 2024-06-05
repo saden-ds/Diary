@@ -206,7 +206,7 @@ class SchedulesController extends ApplicationController
 
         foreach (range(1, 7) as $i) {
             $row = [
-                'date' => $datetime_end->format('m.d.Y.'),
+                'date' => $datetime_end->format($this->msg->t('datetime.format.date')),
                 'lessons' => null
             ];
 
