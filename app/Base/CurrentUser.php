@@ -2,12 +2,16 @@
 
 namespace App\Base;
 
+use App\Base\DataQuery;
 use App\Middleware\SyncDog\Client;
 use App\Models\User;
 use Exception;
 
 class CurrentUser
-{
+{   
+    public ?string $organization_user_role = null;
+    public ?int $organization_id = null;
+    public ?string $organization_name = null;
     private static ?CurrentUser $instance = null;
     protected Config $config;
     protected Message $msg;
@@ -104,6 +108,55 @@ class CurrentUser
         return !!$this->error;
     }
 
+    public function selectOrganizationById(?int $organization_id): bool
+    {
+        $query = new DataQuery();
+
+        $query
+            ->select(
+                'o.organization_id',
+                'o.organization_name',
+                'ou.organization_user_role'
+            )
+            ->from('organization o')
+            ->join('organization_user ou on ou.organization_id = o.organization_id')
+            ->where('o.organization_id = ?', $organization_id)
+            ->where('ou.user_id = ?', $this->id);
+
+        if ($organization_id && $data = $query->fetch()) {
+            $this->organization_id = $data['organization_id'];
+            $this->organization_name = $data['organization_name'];
+            $this->organization_user_role = $data['organization_user_role'];
+        } else {
+            $this->organization_id = null;
+            $this->organization_name = null;
+            $this->organization_user_role = null;
+        }
+
+        $this->session->set('user', [
+            'id' => $this->id,
+            'email' => $this->email,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'confirmed' => $this->confirmed,
+            'organization_user_role' => $this->organization_user_role,
+            'organization_id' => $this->organization_id,
+            'organization_name' => $this->organization_name
+        ]);
+
+        return $this->createFromSession();
+    }
+
+    public function canAdmin($organization_id = null): bool
+    {
+        if ($organization_id === null) {
+            return true;
+        }
+
+        return $organization_id == $this->organization_id &&
+            $this->organization_user_role === 'admin';
+    }
+
     public function signIn(string $email, string $password): bool
     {
         if (empty($email)) {
@@ -143,7 +196,12 @@ class CurrentUser
             'email' => $this->email,
             'firstname' => $this->firstname,
             'lastname' => $this->lastname,
-            'confirmed' => $this->confirmed
+            'confirmed' => $this->confirmed,
+            'organization_user_role' => $this->organization_user_role,
+            'organization_id' => $this->organization_id,
+            'organization_name' => $this->organization_name,
+            'initials' => $this->getInitials(),
+            'fulname_digit' => $this->getFullnameDigit()
         ];
     }
 
@@ -153,12 +211,33 @@ class CurrentUser
             return false;
         }
 
+        $query = new DataQuery();
+
+        $query
+            ->select('ou.organization_user_role, ou.organization_id, o.organization_name')
+            ->from('organization_user as ou')
+            ->join('organization as o on o.organization_id = ou.organization_id')
+            ->where('ou.user_id = ?', $user->user_id);
+
+        if ($r = $query->first()) {
+            $organization_user_role = $r['organization_user_role'];
+            $organization_id = $r['organization_id'];    
+            $organization_name = $r['organization_name'];    
+        } else {
+            $organization_user_role = null;
+            $organization_id = null;
+            $organization_name = null;
+        }
+
         $this->session->set('user', [
             'id' => $user->user_id,
             'email' => $user->user_email,
             'firstname' => $user->user_firstname,
             'lastname' => $user->user_lastname,
-            'confirmed' => $user->user_confirmed_at
+            'confirmed' => $user->user_confirmed_at,
+            'organization_user_role' => $organization_user_role,
+            'organization_id' => $organization_id,
+            'organization_name' => $organization_name
         ]);
         
         return $this->createFromSession();
@@ -175,6 +254,43 @@ class CurrentUser
         $this->is_signed_in = !$this->session->destroy();
 
         return $this->is_signed_in;
+    }
+
+    public function fetchOrganizations(): ?array
+    {
+        $query = new DataQuery();
+
+        $query
+            ->select('o.*')
+            ->from('organization_user as ou')
+            ->join('organization as o on o.organization_id = ou.organization_id')
+            ->where('ou.user_id = ?', $this->id);
+
+        if ($data = $query->fetchAll()) {
+            return $data;
+        }
+
+        return null;
+    }
+
+    private function getInitials(): string
+    {
+        $user = new User([
+            'user_firstname' => $this->firstname,
+            'user_lastname' => $this->lastname
+        ], true);
+        
+        return $user->user_initials;
+    }
+
+    private function getFullnameDigit(): string
+    {
+        $user = new User([
+            'user_firstname' => $this->firstname,
+            'user_lastname' => $this->lastname
+        ], true);
+        
+        return $user->user_digit;
     }
 
 
@@ -204,6 +320,9 @@ class CurrentUser
         $this->lastname = $user['lastname'] ?? null;
         $this->confirmed = $user['confirmed'] ?? false;
         $this->active = $user['active'] ?? false;
+        $this->organization_user_role = $user['organization_user_role'] ?? null;
+        $this->organization_id = $user['organization_id'] ?? null;
+        $this->organization_name = $user['organization_name'] ?? null;
 
         return $this->is_signed_in;    
     }

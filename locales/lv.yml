@@ -394,62 +394,6 @@ number:
       mb: MB
       tb: TB
 
-product:
-  action:
-    ext_search: paplašināta meklēšana
-    new: Pievienot jaunu produktu
-  certificates: Pievienotie dokumenti
-  company: Ražotājs
-  ean: EAN
-  error:
-    product_ean_exists: ir aizņemts
-    photo_file_not_image: ir jābūt jpeg, jpg vai png formātā
-  form_edit: Produkta rediģēšana
-  form_ean: Ievadiet produkta EAN kodu
-  form_new: Pievienot produktu
-  is_package: Iepakpojums
-  kind: Produkta veids
-  nace: NACE kods
-  name: Produkta nosaukums
-  name_and_ean: Produkts, EAN
-  manufacturer: Ražotāja nosaukums
-  maincomponent_type: Pamatkomponentes materiāla veids
-  maincomponent: Pamatkomponents
-  message:
-    error:
-      create: Neizdevās pievienot produktu
-      update: Neizdevās atjaunināt produktu
-  package_weight: Iepakojuma svars (g)
-  photo: Produkta foto
-  recyclability_from_to: Pārstrādājamais īpatsvars % no - līdz
-  recyclability: Pārstrādājamais īpatsvars
-  recyclability_short: Pārstrādājamība
-  search_title:
-    one: Atrasts %{count} ieraksts
-    few: Atrasti %{count} ieraksti
-    many: Atrasti %{count} ieraksti
-  search_placeholder: Meklēt produktu
-  search_hint: Ievadiet produkta EAN kodu vai nosaukumu
-  test: Testēšanas pārskats
-  test_products: Saistītie produkti
-  test_requests: Testēšanas pieteikumi
-  test_results: Laboratorijas testa rezultāti
-  type: Produkta tips
-  types:
-    all: Visi
-    package: Iepakojums
-    product: Izstrādājums
-  types_small:
-    package: iepakojums
-    product: izstrādājums
-  volume: Produkta tilpums (ml)
-  volume_short: Tilpums
-  weight: Produkta svars (g)
-  weight_short: Svars
-  package: Fasējums / pamatkomponents
-  component_material: Pamatkomponentes materiāla veids
-  weight_volume: Svars / tilpums
-  documents: Pievienotie dokumenti
 
 recyclability:
   name: Pārstrādājamais īpatsvars
@@ -593,3 +537,14 @@ schedule:
   message:
     error:
       exists: Dotais mācību priekšmets jau eksistē
+
+organization_user:
+  roles:
+    teacher: Skolotājs
+    admin: Administrators
+
+
+
+
+
+

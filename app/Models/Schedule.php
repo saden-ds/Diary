@@ -12,8 +12,10 @@ class Schedule extends Model
         'schedule_id' => ['type' => 'integer'],
         'schedule_date' => ['type' => 'date'],
         'schedule_name' => ['type' => 'string'],
+        'group_id' => ['type' => 'integer'],
         'lesson_id' => ['type' => 'integer'],
-        'lesson_time_id' => ['type' => 'integer']
+        'lesson_time_id' => ['type' => 'integer'],
+        'schedule_active' => ['type' => 'boolean', 'default' => false]
     ];
 
     protected static ?string $table_name = 'schedule';
@@ -30,6 +32,18 @@ class Schedule extends Model
     {
         return $this->validateAndUpdateRecord($attributes);
     }
+
+    public function delete(): bool
+    {
+        return !!$this->db->query('
+            delete s
+            from schedule s
+            left join assignment a on a.schedule_id = s.schedule_id
+            left join grade g on g.assignment_id = a.assignment_id
+            where s.schedule_id = ?
+        ', $this->schedule_id);
+    }
+
 
     protected function validate(): void
     {

@@ -78,7 +78,11 @@ class View
 
     public function main(array $value): View
     {
-        $this->main = $value;
+        if ($this->main) {
+            $this->main = array_merge($value, $this->main);
+        } else {
+            $this->main = $value;
+        }
 
         return $this;
     }

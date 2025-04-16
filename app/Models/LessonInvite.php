@@ -10,8 +10,8 @@ class LessonInvite extends Model
 {
     static $attributes_mapping = [
         'lesson_invite_id' => ['type' => 'integer'],
+        'lesson_invite_email' => ['type' => 'string'],
         'lesson_id' => ['type' => 'integer'],
-        'user_email' => ['type' => 'string']
     ];
 
     protected static ?string $table_name = 'lesson_invite';
@@ -36,7 +36,7 @@ class LessonInvite extends Model
     protected function validate(): void
     {
         $presence = new ValidatorPresence([
-            'lesson_id', 'user_email'
+            'lesson_id', 'lesson_invite_email'
         ]);
 
         $presence->validate($this);
@@ -56,7 +56,7 @@ class LessonInvite extends Model
             where lu.lesson_id = ? and u.user_email = ?
         ", [
             $this->lesson_id,
-            $this->user_email
+            $this->lesson_invite_email
         ])) {
             $this->addError("base", "Šis lietotājs jau ir uzaicināts");
         }

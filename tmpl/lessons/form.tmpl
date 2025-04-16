@@ -1,12 +1,34 @@
-<form id="lesson_form" class="main-form" method="post">
-  <h2 class="main-form__header">Priekšmets</h2>
-  <div class="field">
-    <input class="field__input" type="text" name="lesson_name" placeholder="Nosaukums" value="<var:lesson_name>" autofocus>
-  </div>
-  <div class="field">
-    <input class="field__input" type="text" name="lesson_description" placeholder="Apraksts" value="<var:lesson_description>">
-  </div>
-  <button class="main-form__button">Saglabat</button>
+<form id="lesson_form" class="modal-section modal-section_480" method="post">
+    <div class="modal-section__header _modal_no _modal_holder">
+        <h2 class="modal-section__title">Jauns priekšmets</h2>
+    </div>
+
+    <div class="modal-section__body _modal_o">
+        <div class="field-block field-block_label">
+            <input id="lesson_form_name" class="field field_stretch field-block__field" type="text" name="lesson_name" value="<var:lesson_name>">
+            <label for="lesson_form_name" class="field-block__label">Nosaukums</label>
+        </div>
+        <div class="field-block field-block_label">
+            <input id="lesson_form_description" class="field field_stretch field-block__field" type="text" name="lesson_description" value="<var:lesson_description>">
+            <label for="lesson_form_description" class="field-block__label">Apraksts</label>
+        </div>
+        <if:organization_users_options>
+        <div class="field-block field-block_label">
+            <select id="lesson_form_user" class="field field_select field_stretch field-block__field" name="user_id" autofocus>
+                <option value=""></option>
+                <block:organization_users_options>
+                <option value="<var:value>"<if:selected: selected:>><var:name></option>
+                </block:organization_users_options>
+            </select>
+            <label for="lesson_form_user" class="field-block__label">Skolotājs</label>
+        </div>
+        </if:organization_users_options>
+    </div>
+
+    <div class="modal-section__footer _modal_no">
+        <a id="lesson_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit">Saglabat</button>
+    </div>
 </form>
 <script>
 (function(){

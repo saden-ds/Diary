@@ -39,6 +39,14 @@ class User extends Model
         return new self($data, true);
     }
 
+    public function setUserFullname($value): void
+    {
+        $parts = explode(' ',$value);
+
+        $this->user_firstname = $parts[0] ?? null;
+        $this->user_lastname = $parts[1] ?? null;
+    }
+
     public function getUserFullname() {
         $fullname = $this->user_firstname;
 
@@ -47,6 +55,38 @@ class User extends Model
         }
 
         return $fullname;
+    }
+
+    public function getUserInitials(): string
+    {
+        $name = $this->getUserFullname();
+        
+        if (!$name) {
+            return '';
+        }
+
+        $name = trim(preg_replace('/\(.*\)/', '', $name));
+        $words = explode(' ', $name, 2);
+        $initials = '';
+
+        if ($words) {
+            foreach ($words as $w) {
+                $initials .= mb_substr($w, 0, 1);
+            }
+        }
+
+        return mb_strtoupper($initials);
+    }
+
+    public function getUserDigit(): int
+    {
+        $name = $this->getUserFullname();
+
+        if (!$name) {
+            return null;
+        }
+
+        return crc32($name) % 10;
     }
 
     public function update($attributes = null): bool

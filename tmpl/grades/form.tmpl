@@ -1,0 +1,71 @@
+<form id="grade_form" class="modal-section modal-section_640">
+  <div class="modal-section__header _modal_no _modal_holder">
+    <h2 class="modal-section__title">Jauns uzdevums</h2>
+  </div>
+  <div class="modal-section__overflow _modal_o">
+    <div class="modal-section__body">
+      <div class="field-block field-block_label">
+        <select id="grade_form_type" class="field field_select field_stretch field-block__field" name="grade_type" autofocus>
+          <option value=""></option>
+          <block:grade_type_options>
+          <option value="<var:value>"<if:selected: selected:>><var:name></option>
+          </block:grade_type_options>
+        </select>
+        <label for="grade_form_type" class="field-block__label">Atzimes veids</label>
+      </div>
+    </div>
+    <table class="data-options" width="100%">
+      <thead>
+        <tr>
+          <td class="data-options__th data-options__th_first data-options__th_last" colspan="2">
+            Atzimes
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <block:users>
+        <tr class="data_row data-options__tr">
+          <td class="data-options__td data-options__td_first data-options__td_title">
+            <var:user_firstname> <var:user_lastname>
+          </td>
+          <td class="data-options__td data-options__td_last data-options__td_input" width="20%">
+            <input id="grade_form_grade" type="text" class="field field_stretch" name="grades[<var:user_id>]" value="<var:user_grade>">
+            <select id="grade_form_grade_options" class="field field_select field_stretch hidden" name="grades[<var:user_id>]" value="<var:user_grade>" disabled>
+              <block:grade_included_options>
+              <option value="<var:value>"<if:selected: selected:>><var:name></option>
+              </block:grade_included_options>
+            </select>
+          </td>
+        </tr>
+        </block:users>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-section__footer _modal_no">
+    <a id="grade_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+    <button class="button button_submit" type="submit">Saglabat</button>
+  </div>
+</form>
+<script>
+(function(){
+  $('#grade_form_type').on('change pick', function(){
+    var type = $(this).val();
+
+    if (type === 'included') {
+      $('#grade_form_grade').prop('disabled', true).addClass('hidden');
+      $('#grade_form_grade_options').prop('disabled', false).removeClass('hidden');
+    } else {
+      $('#grade_form_grade').prop('disabled', false).removeClass('hidden');
+      $('#grade_form_grade_options').prop('disabled', true).addClass('hidden');
+    }
+  }).trigger('pick');
+
+  new app.Form('#grade_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

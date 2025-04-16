@@ -115,7 +115,7 @@ class Query {
         return $this;
     }
 
-    public function leftJoin(string $join, ?array $values = null): Query
+    public function leftJoin(string $join, $values = null): Query
     {
         $this->joins[] = 'left join ' . $join;
         $this->add('joins_values', $values);

@@ -1,0 +1,170 @@
+<div id="aside" class="layout__aside aside">
+    <div id="filter" class="aside-filter">
+        <div class="aside-filter__body">
+            <div class="aside-search">
+                <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:flat.search_placeholder>" autocomplete="off" autofocus>
+                <button class="aside-search__submit i i_search" type="submit"></button>
+            </div>
+        </div>
+    </div>
+    <ul id="aside_nav" class="aside-nav">
+        <var:index:r>
+    </ul>
+</div>
+
+<div id="content" class="layout__content">
+    <header class="content-header">
+        <h1 class="content-header__h1"><var:group_name></h1>
+        <div class="breadcrumbs">
+            / <a class="breadcrumbs__anchor inherit" href="/groups">Grupas</a>
+        </div>
+        <if:actions>
+        <ul class="actions-list content-header__actions">
+          <li class="js_menu_parent actions-list__item">
+            <a href="#menu" class="js_menu action action_icon i i_menu i_only"></a>
+            <ul class="menu menu_hidden">
+                <block:actions>
+                <li class="menu__item">
+                    <a class="menu__anchor<if:class_name: :><var:class_name>" href="<var:path>"><var:title></a>
+                </li>
+                </block:actions>
+            </ul>
+          </li>
+        </ul>
+        </if:actions>
+    </header>
+
+    <section class="box-section">
+        <div class="js_toggle_parent box-section__header active">
+            <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#group_users">Grupas dalībnieki</a></h2>
+        </div>
+        <div id="group_users" class="box box_data">
+            <if:group_users>
+            <table class="data-table" width="100%">
+                <thead class="data-table__thead">
+                    <tr class="data-table__tr">
+                        <th class="data-table__th data-table__th_first" width="50%">Skolēns</th>
+                        <th class="data-table__th" width="49%">Statuss</th>
+                        <th class="data-table__th data-table__th_last" width="1%"></th>
+                    </tr>
+                </thead>
+                <tbody class="data-table__tbody">
+                    <block:group_users> 
+                    <tr class="data-table__tr">
+                        <td class="data-table__td data-table__td_first">
+                            <div class="user">
+                                <div class="user__avatar avatar avatar_<var:group_user_digit>">
+                                  <var:group_user_initials>
+                                </div>
+                                <div class="user__title">
+                                    <var:group_user_name>
+                                </div>
+                                <div class="user__description">
+                                    <var:group_user_email>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="data-table__td">
+                            <if:status>
+                            reģistrēts
+                            </if:status>
+                            <ifnot:status>
+                            nav reģistrēts
+                            </ifnot:status>
+                        </td>
+                        <td class="data-table__td data-table__td_last <if:actions:: data-table__td_empty>">
+                            <if:actions>
+                            <ul class="actions-list">
+                                <li class="js_menu_parent actions-list__item">
+                                    <a class="js_menu action- action_icon i i_menu i_only" href="#menu"></a>
+                                    <ul class="menu menu_hidden">
+                                        <block:actions>
+                                        <li class="menu__item">
+                                            <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                                        </li>
+                                        </block:actions>
+                                    </ul>
+                                </li>
+                            </ul>
+                            </if:actions>
+                        </td>
+                    </tr>
+                    </block:group_users>
+                </tbody>
+            </table>
+            </if:group_users>
+            <ifnot:group_users>
+            <div class="empty-block">Nav datu</div>
+            </ifnot:group_users>
+        </div>
+    </section>
+
+    <section class="box-section">
+        <div class="js_toggle_parent box-section__header active">
+            <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#group_lessons">Grupas mācību priekšmeti</a></h2>
+        </div>
+        <div id="group_lessons" class="box box_data">
+            <block:lessons>
+            <if:items>
+            <table class="data-table" width="100%">
+                <thead class="data-table__thead">
+                    <tr class="data-table__tr">
+                        <th class="data-table__th data-table__th_first" width="50%">Skolotājs</th>
+                        <th class="data-table__th" width="49%">Nosaukums</th>
+                        <th class="data-table__th data-table__th_last" width="1%"></th>
+                    </tr>
+                </thead>
+                <tbody class="data-table__tbody">
+                    <block:items> 
+                    <tr class="data-table__tr">
+                        <td class="data-table__td data-table__td_first">
+                            <div class="user">
+                                <div class="user__avatar avatar avatar_<var:user_digit>">
+                                  <var:user_initials>
+                                </div>
+                                <div class="user__title">
+                                    <var:user_fullname>
+                                </div>
+                                <div class="user__description">
+                                    <var:user_email>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="data-table__td"><var:lesson_name></td>
+                        <td class="data-table__td data-table__td_last <if:actions:: data-table__td_empty>">
+                            <if:actions>
+                            <ul class="actions-list">
+                                <li class="js_menu_parent actions-list__item">
+                                    <a class="js_menu action- action_icon i i_menu i_only" href="#menu"></a>
+                                    <ul class="menu menu_hidden">
+                                        <block:actions>
+                                        <li class="menu__item">
+                                            <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                                        </li>
+                                        </block:actions>
+                                    </ul>
+                                </li>
+                            </ul>
+                            </if:actions>
+                        </td>
+                    </tr>
+                    </block:items>
+                </tbody>
+            </table>
+            </if:items>
+            <ifnot:items>
+            <div class="empty-block">Nav datu</div>
+            </ifnot:items>
+            </block:lessons>
+        </div>
+    </section>
+</div>
+<script>
+    (function(){
+        new app.Lookup('#filter_suggest', {
+            onSelect: function($selected, selectedIndex) {
+                window.location.href = $selected.prop('href');
+            }
+        });
+    })();
+</script>

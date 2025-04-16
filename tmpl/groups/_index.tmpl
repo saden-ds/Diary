@@ -1,0 +1,12 @@
+<block:groups>
+<li class="aside-nav__item<if:active: active:>">
+    <a class="js_aside_nav_item aside-nav__anchor" href="/groups/<var:group_id>">
+        <div class="nav-item">
+            <div class="nav-item__title"><var:group_name></div>
+        </div>
+    </a>
+</li>
+</block:groups>
+<ifnot:groups>
+<li class="aside-nav__empty"><msg:search.not_found></li>
+</ifnot:groups>

@@ -27,7 +27,7 @@ class MainController extends ApplicationController
     //     // ');
 
     //     return View::init('tmpl/main/index.tmpl')
-    //         ->layout('tmpl/blank.tmpl')
+    //         ->layout('blank')
     //         ->data([
     //             // 'user_name' => $user['name']
     //         ])

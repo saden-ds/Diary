@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Base\Exceptions\NotFoundException;
 use App\Base\Exceptions\ForbiddenException;
 use App\Base\View;
+use App\Base\DataQuery;
 use App\Base\DataStore;
 use App\Models\Schedule;
 use App\Models\Lesson;
@@ -21,7 +22,7 @@ class SchedulesController extends ApplicationController
         }
 
         return View::init('tmpl/main/index.tmpl')
-            ->layout('tmpl/blank.tmpl')
+            ->layout('blank')
             ->data([
                 // 'user_name' => $user['name']
             ])
@@ -131,7 +132,7 @@ class SchedulesController extends ApplicationController
                 lesson_id,
                 lesson_name
             from lesson 
-            where user_id = ?
+            where user_id = ? and organization_id is null
         ', [
             $this->current_user->id
         ]);
@@ -180,7 +181,7 @@ class SchedulesController extends ApplicationController
     }
 
     private function renderSchedule(): ?View
-    {   
+    {
         $db = DataStore::init();
 
         if ($this->request->get('day')) {
@@ -207,6 +208,7 @@ class SchedulesController extends ApplicationController
         foreach (range(1, 7) as $i) {
             $row = [
                 'date' => $datetime_end->format($this->msg->t('datetime.format.date')),
+                'date_raw' => $datetime_end->format('Y-m-d'),
                 'lessons' => null
             ];
 
@@ -232,29 +234,56 @@ class SchedulesController extends ApplicationController
             $datetime_previous_week->modify('-1 day');
         }
 
-        
-        $schedule_data = $db->data('
-            select
-                s.*,
-                lt.*,
-                l.lesson_name,
-                l.user_id,
-                u.user_firstname,
-                u.user_lastname
-            from schedule as s
-            join lesson as l on l.lesson_id = s.lesson_id
-            left join lesson_user as lu on lu.lesson_id = l.lesson_id
-            join lesson_time as lt on lt.lesson_time_id = s.lesson_time_id
-            left join user as u on u.user_id = l.user_id
-            where (lu.user_id = ? or l.user_id = ?)
-                and s.schedule_date between ? and ?
-            order by s.lesson_time_id
-        ', [
-            $this->current_user->id,
-            $this->current_user->id,
-            $firstday = $datetime_start->format('Y-m-d'),
-            $lastday = $datetime_end->format('Y-m-d')
-        ]);
+        if ($this->current_user->organization_id) {
+            $schedule_data = $db->data('
+                select
+                    s.*, 
+                    lt.*, 
+                    l.lesson_name, 
+                    l.user_id, 
+                    g.group_name
+                from schedule s
+                join lesson l on l.lesson_id = s.lesson_id
+                join lesson_time lt on lt.lesson_time_id = s.lesson_time_id
+                join organization o on o.organization_id = l.organization_id
+                left join group_lesson gl on gl.lesson_id = l.lesson_id
+                left join `group` g on g.group_id = gl.group_id
+                where l.user_id = ?
+                    and s.schedule_active = 1
+                    and s.schedule_date between ? and ?
+                order by s.lesson_time_id
+            ', [
+                $this->current_user->id,
+                $firstday = $datetime_start->format('Y-m-d'),
+                $lastday = $datetime_end->format('Y-m-d')
+            ]);
+        } else {
+            $schedule_data = $db->data('
+                select
+                    s.*,
+                    lt.*,
+                    l.lesson_name,
+                    l.user_id,
+                    u.user_firstname,
+                    u.user_lastname
+                from schedule as s
+                join lesson as l on l.lesson_id = s.lesson_id
+                left join group_lesson gl on gl.lesson_id = l.lesson_id
+                left join group_user gu on gu.group_id = gl.group_id
+                left join lesson_user as lu on lu.lesson_id = l.lesson_id
+                join lesson_time as lt on lt.lesson_time_id = s.lesson_time_id
+                left join user as u on u.user_id = l.user_id
+                where (u.user_id = ? or ifnull(gu.user_id,lu.user_id) = ?)
+                    and s.schedule_date between ? and ?
+                    and s.schedule_active = 1
+                order by s.lesson_time_id
+            ', [
+                $this->current_user->id,
+                $this->current_user->id,
+                $firstday = $datetime_start->format('Y-m-d'),
+                $lastday = $datetime_end->format('Y-m-d')
+            ]);
+        }
 
         $schedules_assignments = null;
 
@@ -279,8 +308,12 @@ class SchedulesController extends ApplicationController
 
                 }
 
-                if ($value['user_firstname']) {
-                    $value['user_fullname'] = $value['user_firstname'] . '  ' . $value['user_lastname'];
+                if ($this->current_user->organization_id) {
+                    $value['lesson_participant'] = $value['group_name'] ?? null;
+                } else {
+                    if ($value['user_firstname']) {
+                        $value['lesson_participant'] = $value['user_firstname'] . '  ' . $value['user_lastname'];
+                    }
                 }
 
                 $value['assignments'] = $schedules_assignments[$value['schedule_id']] ?? null;
@@ -289,6 +322,14 @@ class SchedulesController extends ApplicationController
 
             }
         }
+
+        $actions = null;
+
+        $actions[] = [
+            'title' => 'Izveidot grafiku',
+            'path' => '/schedules/new',
+            'class_name' => 'js_modal'
+        ];
 
         return View::init('tmpl/schedules/index.html')
             ->data([
@@ -300,7 +341,8 @@ class SchedulesController extends ApplicationController
                 'day' => $datetime_new_week->format('d'),
                 'previous_year' => $datetime_previous_week->format('Y'),
                 'previous_month' => $datetime_previous_week->format('m'),
-                'previous_day' => $datetime_previous_week->format('d')
+                'previous_day' => $datetime_previous_week->format('d'),
+                'actions' => $actions
             ]);
     }
 
@@ -310,22 +352,38 @@ class SchedulesController extends ApplicationController
             return $assignments;
         }
         
-        $db = DataStore::init();
+        $query = new DataQuery();
 
-        $data = $db->data('
-            select *
-            from assignment
-            where schedule_id in ('.$db->placeholders($assignments).')
-        ', array_keys($assignments));
+        $query
+            ->select(
+                'a.*',
+                'g.grade_id',
+                'g.grade_type',
+                'g.grade_numeric',
+                'g.grade_percent',
+                'g.grade_included',
+                'ifnull(g.grade_numeric,ifnull(g.grade_percent,g.grade_included)) as user_grade'
+            )
+            ->from('assignment a')
+            ->leftJoin(
+                'grade g on g.assignment_id = a.assignment_id' .
+                ' and g.user_id = ?',
+                $this->current_user->id
+            )
+            ->where(
+                'a.schedule_id in ('.$query->placeholders($assignments).')',
+                array_keys($assignments)
+            );
 
-        if (!$data) {
+        if (!$data = $query->fetchAll()) {
             return $assignments;    
         }
 
         foreach ($data as $value) {
             $assignments[$value['schedule_id']][] = [
                 'assignment_id' => $value['assignment_id'],
-                'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type'])
+                'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
+                'user_grade' => $value['user_grade']
             ];
         }
 

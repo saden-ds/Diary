@@ -30,11 +30,11 @@ class LessonInvitesController extends PrivateController
         $lesson = $this->getLesson();
         $invite = new LessonInvite([
             'lesson_id' => $lesson->lesson_id,
-            'user_email' => $this->request->get('user_email')
+            'lesson_invite_email' => $this->request->get('lesson_invite_email')
         ]);
         $view = new View();
 
-        if ($invite->user_email === $this->current_user->email) {
+        if ($invite->lesson_invite_email === $this->current_user->email) {
             $invite->addError("base", "Jūs nevarat uzaicināt sevi");
         }
 
@@ -55,7 +55,7 @@ class LessonInvitesController extends PrivateController
             throw new NotFoundException();
         }
 
-        if ($invite->user_email != $this->current_user->email) {
+        if ($invite->lesson_invite_email != $this->current_user->email) {
             throw new ForbiddenException();
         }
 
@@ -81,7 +81,7 @@ class LessonInvitesController extends PrivateController
             throw new NotFoundException();
         }
 
-        if ($invite->user_email != $this->current_user->email) {
+        if ($invite->lesson_invite_email != $this->current_user->email) {
             throw new ForbiddenException();
         }
 
@@ -99,7 +99,10 @@ class LessonInvitesController extends PrivateController
             throw new NotFoundException();
         }
 
-        if ($lesson->user_id != $this->current_user->id) {
+        if (
+            $lesson->organization_id ||
+            $lesson->user_id != $this->current_user->id
+        ) {
             throw new ForbiddenException();
         }
 

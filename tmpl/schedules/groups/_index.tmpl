@@ -1,0 +1,15 @@
+<block:lessons>
+<div class="aside-nav__item">
+    <div class="aside-nav__item_padding">
+        <div class="nav-item">
+            <div class="nav-item__title aside-draggable" data-id="<var:lesson_id>" data-groups="<var:group_ids>"><var:lesson_name></div>
+            <div class="nav-item__description">
+                <var:user_fullname>
+            </div>
+        </div>
+    </div>
+</div>
+</block:lessons>
+<ifnot:lessons>
+<li class="aside-nav__empty"><msg:search.not_found></li>
+</ifnot:lessons>

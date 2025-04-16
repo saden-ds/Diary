@@ -1,0 +1,32 @@
+<form id="group_user_form" class="modal-section modal-section_480" method="post">
+    <div class="modal-section__header _modal_no _modal_holder">
+        <h2 class="modal-section__title">Jauns skolēns</h2>
+    </div>
+
+    <div class="modal-section__body _modal_o">
+        <div class="field-block field-block_label">
+            <input id="group_user_form_name" class="field field_stretch field-block__field" type="text" name="group_user_name">
+            <label for="group_user_form_name" class="field-block__label">Skolēna vārds, uzvārds</label>
+        </div>
+        <div class="field-block field-block_label">
+            <input id="group_user_form_email" class="field field_stretch field-block__field" type="text" name="group_user_email">
+            <label for="group_user_form_email" class="field-block__label">Skolēna e-pasts</label>
+        </div>
+    </div>
+
+    <div class="modal-section__footer _modal_no">
+        <a id="group_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit">Saglabat</button>
+    </div>
+</form>
+<script>
+(function(){
+  new app.Form('#group_user_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

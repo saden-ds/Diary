@@ -3,16 +3,32 @@
 namespace App\Controllers;
 
 use App\Base\Exceptions\NotFoundException;
+use App\Base\Exceptions\ForbiddenException;
 use App\Base\View;
 use App\Base\DataStore;
+use App\Base\DataQuery;
+use App\Base\Tmpl;
 use App\Models\Lesson;
+use App\Models\User;
 
 class LessonsController extends PrivateController
 {
     public function indexAction(): ?View
     {
+        if ($this->request->isXhr()) {
+            return View::init('tmpl/lessons/_index.tmpl', [
+                'lessons' => $this->getLessons()
+            ]);
+        }
+
+        $tmpl = Tmpl::init();
+
         return View::init('tmpl/lessons/index.tmpl', [
-            'lessons' => $this->getLessons()
+            'index' => $tmpl->file('tmpl/lessons/_index.tmpl', [
+                'lessons' => $this->getLessons(),
+            ])
+        ])->main([
+            'compact' => true
         ]);
             
     }
@@ -27,33 +43,59 @@ class LessonsController extends PrivateController
 
         $actions = null;
 
-        if ($lesson->user_id == $this->current_user->id) {
+        if ($this->current_user->canAdmin($lesson->organization_id)) {
             $actions[] = [
                 'title' => 'Rediģēt',
                 'path' => '/lessons/' . $lesson->lesson_id . '/edit',
                 'class_name' => 'js_modal'
             ];
             $actions[] = [
-                'title' => 'Uzaicināt',
-                'path' => '/lessons/' . $lesson->lesson_id . '/invites/new',
+                'title' => 'Jauns priekšmets',
+                'path' => '/lessons/new',
                 'class_name' => 'js_modal'
             ];
         }
+
+        if ($lesson->user_id == $this->current_user->id) {
+            if (empty($lesson->organization_id)) {
+                $actions[] = [
+                    'title' => 'Uzaicināt',
+                    'path' => '/lessons/' . $lesson->lesson_id . '/invites/new',
+                    'class_name' => 'js_modal'
+                ];
+            }
+        }
+
+        if ($this->request->isXhr()) {
+            return View::init('tmpl/lessons/_index.tmpl', [
+                'lessons' => $this->getLessons()
+            ]);
+        }
+
+        $tmpl = Tmpl::init();
         
         return View::init('tmpl/lessons/show.html', [
-            'lessons'     => $this->getLessons($lesson->lesson_id),
+            'index' => $tmpl->file('tmpl/lessons/_index.tmpl', [
+                'lessons'     => $this->getLessons($lesson->lesson_id),
+            ]),
             'lesson_id'   => $lesson->lesson_id,
             'lesson_name' => $lesson->lesson_name,
             'lesson_description' => $lesson->lesson_description,
             'lesson_invites' => $this->getLessonInvites($lesson),
             'lesson_users' => $this->getLessonUsers($lesson),
             'actions' => $actions
+        ])->main([
+            'compact' => true
         ]);
             
     }
 
     public function newAction(): ?View
     {
+        if (!$this->current_user->canAdmin()) {
+            throw new ForbiddenException();
+        }
+
         $lesson = new Lesson();
 
         return $this->renderForm($lesson);    
@@ -61,12 +103,21 @@ class LessonsController extends PrivateController
 
     public function createAction(): ?View
     {
+        if (!$this->current_user->canAdmin()) {
+            throw new ForbiddenException();
+        }
+
         $lesson = new Lesson($this->request->permit([
             'lesson_name', 'lesson_description'
         ]));
         $view = new View();
 
-        $lesson->user_id = $this->current_user->id;
+        if ($this->current_user->organization_id) {
+            $lesson->user_id = $this->request->get('user_id');
+            $lesson->organization_id = $this->current_user->organization_id;
+        } else {
+            $lesson->user_id = $this->current_user->id;
+        }
 
         if ($lesson->create()) {
             return $view->data([
@@ -79,9 +130,16 @@ class LessonsController extends PrivateController
 
     public function editAction(): ?View
     {
+        if (!$this->current_user->canAdmin()) {
+            throw new ForbiddenException();
+        }
+
         $lesson = Lesson::find($this->request->get('id'));
 
-        if ($lesson->user_id != $this->current_user->id) {
+        if (
+            $lesson->user_id != $this->current_user->id && 
+            !$this->current_user->canAdmin($lesson->organization_id)
+        ) {
             throw new ForbiddenException();
         }
 
@@ -90,8 +148,23 @@ class LessonsController extends PrivateController
 
     public function updateAction(): ?View
     {
+        if (!$this->current_user->canAdmin()) {
+            throw new ForbiddenException();
+        }
+        
         $lesson = Lesson::find($this->request->get('id'));
         $view = new View();
+
+        if (!$lesson) {
+            throw new NotFoundException();
+        }
+
+        if (
+            $lesson->user_id != $this->current_user->id && 
+            !$this->current_user->canAdmin($lesson->organization_id)
+        ) {
+            throw new ForbiddenException();
+        }
 
         $lesson->setAttributes($this->request->permit([
             'lesson_name', 'lesson_description'
@@ -109,19 +182,28 @@ class LessonsController extends PrivateController
 
     private function getLessons(?int $id = null): ?array
     {
-        $db = DataStore::init();
-        $data = $db->data('
-            select
-                l.lesson_id,
-                l.lesson_name
-            from lesson as l
-            join user as u on u.user_id = l.user_id
-            where u.user_id = ?
-        ', [
-            $this->current_user->id
-        ]);
+        $query = new DataQuery();
+        $query
+            ->select(
+                'l.lesson_id',
+                'l.lesson_name',
+                'concat(u.user_firstname, " ", u.user_lastname) as user_fullname'
+            )
+            ->from('lesson as l')
+            ->join('user as u on u.user_id = l.user_id');
 
-        if (!$data) {
+        if ($value = $this->request->get('q')) {
+            $query->where('l.lesson_name like ?', '%' . $value . '%');
+        }
+
+        if ($this->current_user->organization_id) {
+           $query
+                ->where('l.organization_id = ?', $this->current_user->organization_id);
+        } else {
+            $query->where('l.user_id = ?', $this->current_user->id);
+        }
+
+        if (!$data = $query->fetchAll()) {
             return null;
         }
 
@@ -131,6 +213,7 @@ class LessonsController extends PrivateController
             $lessons[] = [
                 'lesson_name' => $r['lesson_name'],
                 'lesson_path' => '/lessons/' . intval($r['lesson_id']),
+                'user_fullname' => $r['user_fullname'],
                 'active'      => $r['lesson_id'] == $id
             ];
         }
@@ -151,6 +234,7 @@ class LessonsController extends PrivateController
         return View::init('tmpl/lessons/form.tmpl', [
             'lesson_name' => $lesson->lesson_name,
             'lesson_description' => $lesson->lesson_description,
+            'organization_users_options' => $this->getLessonOrganizationUsersOptions($lesson),
             'path' => $path
         ]);
     }
@@ -160,12 +244,12 @@ class LessonsController extends PrivateController
         $db = DataStore::init();
         $data = $db->data('
             select
-                li.user_email,
                 u.user_id,
+                u.user_email,
                 u.user_firstname,
                 u.user_lastname
             from lesson_invite as li
-            left join user as u on u.user_email = li.user_email
+            left join user as u on u.user_email = li.lesson_invite_email
             join lesson as l on l.lesson_id = li.lesson_id
             where li.lesson_id = ? 
                 and l.user_id = ?
@@ -173,6 +257,19 @@ class LessonsController extends PrivateController
             $lesson->lesson_id,
             $this->current_user->id
         ]);
+
+        if (empty($data)) {
+            return null;
+        }
+        
+        foreach ($data as $k => $v) {
+            $user = new User($v, true);
+
+            $v['user_digit'] = $user->user_digit;
+            $v['user_initials'] = $user->user_initials;
+
+            $data[$k] = $v;
+        }
 
         return $data;
     }
@@ -197,16 +294,55 @@ class LessonsController extends PrivateController
             $lesson->lesson_id
         ]);
 
-        foreach ($data as $key => $value) {
-            if ($value['owner_id'] == $this->current_user->id) {
-                $data[$key]['lesson_user_delete_path'] = '/lessons/users/' . intval($value['lesson_user_id']) . '/delete';
-            } else {
-                $data[$key]['lesson_user_delete_path'] = null;
-            }
+        if (empty($data)) {
+            return null;
+        }
+        
+        foreach ($data as $k => $v) {
+            $user = new User($v, true);
 
+            $v['user_digit'] = $user->user_digit;
+            $v['user_initials'] = $user->user_initials;
+
+            $data[$k] = $v;
         }
 
         return $data;
+    }
+
+    private function getLessonOrganizationUsersOptions(Lesson $lesson): ?array
+    {
+        $options = null;
+
+        if (empty($this->current_user->organization_id)) {
+            return $options;
+        }
+
+        $query = new DataQuery();
+
+        $query
+            ->select('ou.user_id', 'u.user_firstname', 'u.user_lastname')
+            ->from('organization_user as ou')
+            ->leftJoin('user as u on u.user_id = ou.user_id')
+            ->where('ou.organization_id = ?', $this->current_user->organization_id)
+            ->where('ou.organization_user_role = ?', 'teacher');
+
+        $data = $query->fetchAll();
+
+        if (empty($data)) {
+            return $options;
+        }
+
+        foreach ($data as $r) {
+            $options[] = [
+                'name' => $r['user_firstname'] . ' ' . $r['user_lastname'],
+                'value' => $r['user_id'],
+                'selected' => $r['user_id'] = $lesson->user_id
+            ];
+        }
+
+        return $options;
+
     }
 
 }

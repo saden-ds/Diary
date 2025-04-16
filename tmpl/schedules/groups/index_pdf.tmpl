@@ -1,0 +1,31 @@
+<block:groups>
+<var:group_name>
+<table width="100%" style="font-size: 12px">
+    <tr>
+        <td width="40%">Laiks</td>
+        <td>Priekšmets</td>
+    </tr>
+    <block:dates>
+    <tr>
+        <td><var:date></td>
+        <td></td>
+    </tr>
+    <block:time>
+    <tr>
+        <td>
+            <table width="100%">
+                <tr>
+                    <td width="20"><var:lesson_time_number></td>
+                    <td><var:lesson_time_start_at> - <var:lesson_time_end_at></td>
+                </tr>
+            </table>
+        </td>
+        <td>
+            <var:lesson_name>
+        </td>
+    </tr>
+    </block:time>
+    </block:dates>
+</table>
+<hr>
+</block:groups>

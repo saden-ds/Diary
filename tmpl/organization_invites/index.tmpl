@@ -1,0 +1,128 @@
+<button id="toggle_aside" class="floating-action floating-action_hide" type="button">
+    <span class="floating-action__icon"></span>
+</button>
+<div id="content" class="layout__content">
+
+    <header class="content-header">
+        <h1 class="content-header__h1">Pārstāvji</h1>
+        <if:actions>
+        <ul class="actions-list content-header__actions">
+          <li class="js_menu_parent actions-list__item">
+            <a href="#menu" class="js_menu action action_icon i i_menu i_only"></a>
+            <ul class="menu menu_hidden">
+                <block:actions>
+                <li class="menu__item">
+                    <a class="menu__anchor<if:class_name: :><var:class_name>" href="<var:path>"><var:title></a>
+                </li>
+                </block:actions>
+            </ul>
+          </li>
+        </ul>
+        </if:actions>
+    </header>
+    
+    <section class="box-section">
+        <div class="js_toggle_parent box-section__header active">
+            <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#representatives">Organizācijas pārstāvji</a></h2>
+        </div>
+        <div id="representatives" class="box box_data">
+            <table class="data-table" width="100%">
+                <thead class="data-table__thead">
+                    <tr class="data-table__tr">
+                        <th class="data-table__th data-table__th_first" width="50%">Pārstāvis</th>
+                        <th class="data-table__th" width="49%">Loma</th>
+                        <th class="data-table__th data-table__th_last" width="1%"></th>
+                    </tr>
+                </thead>
+                <tbody id="organization_users" class="data-table__tbody">
+                    <block:organization_users>
+                    <tr class="data-table__tr">
+                        <td class="data-table__td data-table__td_first">
+                            <div class="user">
+                                <div class="user__avatar avatar avatar_<var:user_digit>">
+                                  <var:user_initials>
+                                </div>
+                                <div class="user__title">
+                                    <var:user_firstname> <var:user_lastname>
+                                </div>
+                                <div class="user__description">
+                                    <var:user_email>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="data-table__td"><var:organization_user_role></td>
+                        <td class="data-table__td data-table__td_last <if:actions:: data-table__td_empty>">
+                            <if:actions>
+                            <ul class="actions-list">
+                                <li class="js_menu_parent actions-list__item">
+                                    <a class="js_menu action- action_icon i i_menu i_only" href="#menu"></a>
+                                    <ul class="menu menu_hidden">
+                                        <block:actions>
+                                        <li class="menu__item">
+                                            <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                                        </li>
+                                        </block:actions>
+                                    </ul>
+                                </li>
+                            </ul>
+                            </if:actions>
+                        </td>
+                    </tr>
+                    </block:organization_users>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="box-section">
+        <div class="js_toggle_parent box-section__header active">
+            <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#invited_representatives">Uzaicināti</a></h2>
+        </div>
+        <div id="invited_representatives" class="box box_data">
+            <table class="data-table" width="100%">
+                <thead class="data-table__thead">
+                    <tr class="data-table__tr">
+                        <th class="data-table__th data-table__th_first" width="50%">Pārstāvis</th>
+                        <th class="data-table__th" width="49%">Loma</th>
+                        <th class="data-table__th data-table__th_last" width="1%"></th>
+                    </tr>
+                </thead>
+                <tbody id="organization_invites" class="data-table__tbody">
+                    <block:organization_invites>
+                    <tr class="data-table__tr">
+                        <td class="data-table__td data-table__td_first">
+                            <div class="user">
+                                <div class="user__avatar avatar avatar_<var:user_digit>">
+                                  <var:user_initials>
+                                </div>
+                                <div class="user__title">
+                                    <var:user_firstname> <var:user_lastname>
+                                </div>
+                                <div class="user__description">
+                                    <var:user_email>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="data-table__td"><var:organization_invite_role></td>
+                        <td class="data-table__td data-table__td_last">
+                          <ul class="actions-list">
+                            <li class="js_menu_parent actions-list__item">
+                                <a class="js_menu action- action_icon i i_menu i_only" href="#menu"></a>
+                                <ul class="menu menu_hidden">
+                                    <li class="menu__item">
+                                        <a href="#" class="menu__anchor js_modal">Rediģēt</a>
+                                    </li>
+                                    <li class="menu__item">
+                                        <a href="<var:schedule_edit_path>" class="menu__anchor js_modal">Dzēst</a>
+                                    </li>
+                                </ul>
+                            </li>
+                          </ul>
+                        </td>
+                    </tr>
+                    </block:organization_invites>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

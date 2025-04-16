@@ -1,22 +1,27 @@
-<header class="main-header">
-  <a href="/" class="main-header__logo">Logo</a>
-  <nav class="main-header__nav">
-    <a href="/signup" class="main-header__button">Sign up</a>
-  </nav>
-</header>
-<form id="signin" class="main-form" method="post" action="/signin">
-  <h2 class="main-form__header">Pieslēgties</h2>
-  <div class="field">
-    <input class="field__input" type="text" name="email" placeholder="E-pasts">
-  </div>
-  <div class="field">
-    <input class="field__input" type="password" name="password" placeholder="Parole">
-  </div>
-  <button class="main-form__button">LOG IN</button>
-</form>
+<div class="shield">
+  <form id="signin_form" class="shield__container" method="post">
+    <div class="shield__header">
+      <h1 class="logo"><var:title></h1>
+    </div>
+    <div class="shield__body">
+      <div class="field-block">
+        <input id="signin_user" class="field field_stretch field-block__field" type="text" name="email" value="" autocomplete="off" autofocus>
+        <label for="signin_user" class="field-block__label"><msg:signin.email></label>
+      </div>
+      <div class="field-block">
+        <input id="signin_pass" class="field field_stretch field-block__field" type="password" name="password" autocomplete="off">
+        <label for="signin_pass" class="field-block__label"><msg:signin.password></label>
+      </div>
+    </div>
+    <div class="shield__footer">
+      <button class="button button_commit" type="submit"><msg:signin.submit></button>
+      <a href="/signup" class="button button_simple">Sign up</a>
+    </div>
+  </form>
+</div>
 <script>
 (function(){
-  new app.Form('#signin', {
+  new app.Form('#signin_form', {
     url: '/signin',
     keepOverlay: true,
     onSuccess: function(form, response){

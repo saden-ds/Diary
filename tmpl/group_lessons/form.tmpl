@@ -1,0 +1,33 @@
+<form id="group_lesson_form" class="modal-section modal-section_480" method="post">
+    <div class="modal-section__header _modal_no _modal_holder">
+        <h2 class="modal-section__title">Pievienot mācību priekšmetu grupai <var:group_name></h2>
+    </div>
+
+    <div class="modal-section__body _modal_o">
+        <div class="field-block field-block_label">
+            <select id="lesson_form_name" class="field field_select field_stretch field-block__field" name="lesson_id" autofocus>
+                <option value=""></option>
+                <block:lesson_options>
+                <option value="<var:value>"<if:selected: selected:>><var:name></option>
+                </block:lesson_options>
+            </select>
+            <label for="lesson_form_name" class="field-block__label">Mācību priekšmets</label>
+        </div>
+    </div>
+
+    <div class="modal-section__footer _modal_no">
+        <a id="group_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit">Saglabat</button>
+    </div>
+</form>
+<script>
+(function(){
+  new app.Form('#group_lesson_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

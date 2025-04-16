@@ -12,7 +12,8 @@ class Lesson extends Model
         'lesson_id' => ['type' => 'integer'],
         'lesson_name' => ['type' => 'string'],
         'lesson_description' => ['type' => 'string'],
-        'user_id' => ['type' => 'integer']
+        'user_id' => ['type' => 'integer'],
+        'organization_id' => ['type' => 'integer']
     ];
 
     protected static ?string $table_name = 'lesson';
@@ -33,7 +34,7 @@ class Lesson extends Model
     protected function validate(): void
     {
         $presence = new ValidatorPresence([
-            'lesson_name', 'lesson_description'
+            'lesson_name', 'lesson_description', 'user_id'
         ]);
 
         $presence->validate($this);

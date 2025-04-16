@@ -1,0 +1,39 @@
+<form id="organization_invite_form" class="modal-section modal-section_480" method="post">
+    <div class="modal-section__header _modal_no _modal_holder">
+        <h2 class="modal-section__title">Ielūgums</h2>
+    </div>
+
+    <div class="modal-section__body _modal_o">
+        <div class="field-block field-block_label">
+            <input id="organization_invite_form_email" class="field field_stretch field-block__field" type="text" name="organization_invite_email" autofocus>
+            <label for="organization_invite_form_email" class="field-block__label">E-pasts</label>
+        </div>
+        <if:role_options>
+        <div class="field-block field-block_label">
+            <select id="organization_invite_form_role" class="field field_select field_stretch field-block__field" name="organization_invite_role" autofocus>
+                <option value=""></option>
+                <block:role_options>
+                <option value="<var:value>"><var:name></option>
+                </block:role_options>
+            </select>
+            <label for="organization_invite_form_role" class="field-block__label">Loma</label>
+        </div>
+        </if:role_options>
+    </div>
+
+    <div class="modal-section__footer _modal_no">
+        <a id="organization_invite_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit">Nosūtīt</button>
+    </div>
+</form>
+<script>
+(function(){
+  new app.Form('#organization_invite_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

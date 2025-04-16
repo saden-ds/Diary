@@ -1,19 +1,29 @@
-
-<form id="profile_form"class="main-form" method="get">
-  <h2 class="main-form__header">Mainīt manus datus</h2>
-  <div class="field">
-    <input class="field__input" type="text" name="user_firstname" placeholder="Vārds" value="<var:user_firstname>">
+<form id="profile_form" class="modal-section modal-section_640">
+  <div class="modal-section__header _modal_no _modal_holder">
+    <h2 class="modal-section__title">Mainīt manus datus</h2>
   </div>
-  <div class="field">
-    <input class="field__input" type="text" name="user_lasttname" placeholder="Uzvārds" value="<var:user_lastname>">
+  <div class="modal-section__body _modal_o">
+    <div class="field-block field-block_label">
+      <input id="profile_form_firstname" class="field field_stretch field-block__field" type="text" name="user_firstname" value="<var:user_firstname>">
+      <label for="profile_form_firstname" class="field-block__label">Vārds</label>
+    </div>
+    <div class="field-block field-block_label">
+      <input id="profile_form_lastname" class="field field_stretch field-block__field" type="text" name="user_lastname" value="<var:user_lastname>">
+      <label for="profile_form_lastname" class="field-block__label">Uzvārds</label>
+    </div>
+    <div class="field-block field-block_label">
+      <input id="profile_form_password" class="field field_stretch field-block__field" type="password" name="user_password">
+      <label for="profile_form_password" class="field-block__label">Parole</label>
+    </div>
+    <div class="field-block field-block_label">
+      <input id="profile_form_confirm" class="field field_stretch field-block__field" type="password" name="user_password_repeat">
+      <label for="profile_form_confirm" class="field-block__label">Apstiprini paroli</label>
+    </div>
   </div>
-  <div class="field">
-    <input class="field__input" type="password" name="user_password" placeholder="Parole">
+  <div class="modal-section__footer _modal_no">
+    <a id="profile_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+    <button class="button button_submit" type="submit">Saglabat</button>
   </div>
-  <div class="field">
-    <input class="field__input" type="password" name="user_password_repeat" placeholder="Apstiprini paroli">
-  </div>
-  <button class="main-form__button">Saglabat</button>
 </form>
 <script>
 (function(){

@@ -9,35 +9,21 @@ use App\Base\DataStore;
 use App\Base\DataQuery;
 use App\Models\Assignment;
 use App\Models\Schedule;
+use App\Services\Assignment\FilesCollection;
 
 class AssignmentsController extends PrivateController
 {
     public function indexAction(): ?View
     {   
         $header = [
-          [
-            'title' => '#',
-            'path' => null
-          ],[
-            'title' => 'Nod. laiks',
-            'path' => null
-          ],
-          $this->getSortBlock('schedule_date', 'Nod. datums'),
-          [
-            'title' => 'Pedagogs',
-            'path' => null
-          ],[
-            'title' => 'Priekšmets',
-            'path' => null
-          ],[
-            'title' => 'Apraksts',
-            'path' => null
-          ],[
-            'title' => 'Tips',
-            'path' => null
-          ],
           $this->getSortBlock('assignment_end_datetime', 'Termiņš'),
           [
+            'title' => 'Priekšmets',
+            'path' => null
+          ], [
+            'title' => 'Apraksts',
+            'path' => null
+          ], [
             'title' => 'Vērtējums',
             'path' => null
           ]
@@ -96,21 +82,10 @@ class AssignmentsController extends PrivateController
         }
 
         if ($assignment->user_id == $this->current_user->id) {
-            $assignment_edit_path = '/assignments/' . $assignment->assignment_id . '/edit';
-            $assignment_delete_path = '/assignments/' . $assignment->assignment_id . '/delete';
+            return $this->renderShow($assignment);
         } else {
-            $assignment_edit_path = null;
-            $assignment_delete_path = null;
+            return $this->renderUserShow($assignment);
         }
-        
-        return View::init('tmpl/assignments/show.html', [
-            'assignment_id' => $assignment->assignment_id,
-            'assignment_type' => $this->msg->t('assignment.types.'.$assignment->assignment_type),
-            'assignment_description' => $assignment->assignment_description,
-            'assignment_end_datetime' => $assignment->assignment_end_datetime,
-            'assignment_edit_path' => $assignment_edit_path,
-            'assignment_delete_path' => $assignment_delete_path
-        ]);
     }
 
     public function editAction(): ?View
@@ -176,6 +151,50 @@ class AssignmentsController extends PrivateController
         ]);
     }
 
+    private function renderShow(Assignment $assignment): View
+    {
+        return View::init('tmpl/assignments/show.tmpl', [
+            'assignment_id' => $assignment->assignment_id,
+            'assignment_type' => $this->msg->t('assignment.types.'.$assignment->assignment_type),
+            'assignment_description' => $assignment->assignment_description,
+            'assignment_end_datetime' => $assignment->assignment_end_datetime,
+            'assignment_edit_path' => '/assignments/' . $assignment->assignment_id . '/edit',
+            'assignment_delete_path' => '/assignments/' . $assignment->assignment_id . '/delete',
+            'assignment_grade_path' => '/assignments/' . $assignment->assignment_id . '/grades/new',
+            'assignment_files' => FilesCollection::renderAssignmentFiles($assignment, [
+                'user_id' => $assignment->user_id,
+                'current_user_id' => $this->current_user->id
+            ]),
+            'assignment_user_files' => FilesCollection::renderAssignmentFiles($assignment, [
+                'except_user_id' => $assignment->user_id,
+                'current_user_id' => $this->current_user->id
+            ]),
+            'assignment_file_create_path' => '/assignments/' . $assignment->assignment_id . '/files/create'
+        ]);
+    }
+
+    private function renderUserShow(Assignment $assignment): View
+    {
+        return View::init('tmpl/assignments/show_user.tmpl', [
+            'assignment_id' => $assignment->assignment_id,
+            'assignment_type' => $this->msg->t('assignment.types.'.$assignment->assignment_type),
+            'assignment_description' => $assignment->assignment_description,
+            'assignment_end_datetime' => $assignment->assignment_end_datetime,
+            'assignment_edit_path' => null,
+            'assignment_delete_path' => null,
+            'assignment_grade_path' => null,
+            'assignment_files' => FilesCollection::renderAssignmentFiles($assignment, [
+                'user_id' => $assignment->user_id,
+                'current_user_id' => $this->current_user->id
+            ]),
+            'assignment_user_files' => FilesCollection::renderAssignmentFiles($assignment, [
+                'user_id' => $this->current_user->id,
+                'current_user_id' => $this->current_user->id
+            ]),
+            'assignment_file_create_path' => '/assignments/' . $assignment->assignment_id . '/files/create'
+        ]);
+    }
+
     private function getTypeOptions($assignment): ?array
     {   
         $options = null;
@@ -198,23 +217,33 @@ class AssignmentsController extends PrivateController
         $query = new DataQuery();
 
         $query
-          ->select(
-            'a.*',
-            'u.user_firstname', 
-            'u.user_lastname', 
-            's.schedule_date',
-            'lt.lesson_time_start_at',
-            'lt.lesson_time_end_at',
-            'l.lesson_name'
-          )
-          ->from('assignment as a')
-          ->join('user as u on u.user_id = a.user_id')
-          ->join('schedule as s on s.schedule_id = a.schedule_id')
-          ->join('lesson_time as lt on lt.lesson_time_id = s.lesson_time_id')
-          ->join('lesson as l on l.lesson_id = s.lesson_id')
-          ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
-          ->where('(l.user_id = ? or lu.user_id = ?)', [$this->current_user->id, $this->current_user->id]) // --
-          ->group('a.assignment_id');
+            ->select(
+                'a.*',
+                'u.user_firstname', 
+                'u.user_lastname', 
+                's.schedule_date',
+                'lt.lesson_time_start_at',
+                'lt.lesson_time_end_at',
+                'l.lesson_name'
+            )
+            ->from('assignment as a')
+            ->join('user as u on u.user_id = a.user_id')
+            ->join('schedule as s on s.schedule_id = a.schedule_id')
+            ->join('lesson_time as lt on lt.lesson_time_id = s.lesson_time_id')
+            ->join('lesson as l on l.lesson_id = s.lesson_id')
+            ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
+            ->leftJoin('group_lesson as gl on gl.lesson_id = l.lesson_id')
+            ->leftJoin('group_user as gu on gu.group_id = gl.group_id')
+            ->where('(
+                    l.user_id = ? 
+                    or lu.user_id = ?
+                    or gu.user_id = ?
+                )', [
+                $this->current_user->id, 
+                $this->current_user->id,
+                $this->current_user->id
+            ]) // --
+            ->group('a.assignment_id');
 
         if ($this->request->get('filter.lesson_id')) {
           $query->where('l.lesson_id = ?', $this->request->get('filter.lesson_id'));
@@ -266,7 +295,7 @@ class AssignmentsController extends PrivateController
                 'user_fullname' => $value['user_firstname'] . '  ' . $value['user_lastname'],
                 'assignment_description' => $value['assignment_description'],
                 'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
-                'assignment_end_datetime' => $value['assignment_end_datetime'],
+                'assignment_end_datetime' => $this->msg->l($value['assignment_end_datetime']),
                 'schedule_date' => $value['schedule_date'],
                 'lesson_time' => $value['lesson_time_start_at'] . ' - ' . $value['lesson_time_end_at'],
                 'lesson_name' => $value['lesson_name'],
@@ -277,7 +306,6 @@ class AssignmentsController extends PrivateController
 
         return $result;
     }
-
 
     private function getSortParam() 
     {

@@ -19,6 +19,7 @@ class Assignment extends Model
         'assignment_type' => ['type' => 'string'],
         'assignment_description' => ['type' => 'string'],
         'assignment_end_datetime' => ['type' => 'datetime'],
+        'assignment_created_at' => ['type' => 'datetime'],
         'schedule_id' => ['type' => 'integer'],
         'user_id' => ['type' => 'integer']
     ];
@@ -27,6 +28,34 @@ class Assignment extends Model
     protected static ?string $primary_key = 'assignment_id';
 
 
+    public static function findAssignmentByIdAndUserIdAndOrganiztionId(
+        int $id,
+        int $user_id
+    ): ?Assignment
+    {
+        $query = new DataQuery();
+
+        $query
+            ->select('a.*')
+            ->from('assignment as a')
+            ->join('schedule as s on s.schedule_id = a.schedule_id')
+            ->join('lesson as l on l.lesson_id = s.lesson_id')
+            ->leftJoin('group_user as gu on gu.group_id = s.group_id')
+            ->leftJoin('lesson_user as lu on lu.lesson_id = s.lesson_id')
+            ->join('user as u on u.user_id = ifnull(gu.user_id,lu.user_id)')
+            ->where('a.assignment_id = ?', $id);
+
+        $query->where('(l.user_id = ? or u.user_id = ?)', [
+            $user_id,
+            $user_id
+        ]);
+
+        if (!$id || !$user_id || !$r = $query->fetch()) {
+            return null;
+        }
+
+        return new Assignment($r, true);
+    }
 
     public function create($attributes = null): bool
     {
@@ -43,8 +72,10 @@ class Assignment extends Model
         $db = DataStore::init();
 
         return !!$db->query('
-            delete from assignment
-            where assignment_id = ? 
+            delete a, g
+            from assignment a
+            left grade g on g.assignment_id = a.assignment_id
+            where a.assignment_id = ? 
         ', $this->assignment_id);
     }
 

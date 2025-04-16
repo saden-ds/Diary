@@ -1,28 +1,36 @@
-<header class="main-header">
-  <a href="/" class="main-header__logo">Logo</a>
-  <!-- <nav class="main-header__nav">
-    <a href="/" class="main-header__button">Sign in</a>
-  </nav> -->
-</header>
-<form id="registration_form" class="main-form" method="post">
-  <h2 class="main-form__header">Reģistrēties</h2>
-  <div class="field">
-    <input class="field__input" type="text" name="user_firstname" placeholder="Vārds">
-  </div>
-  <div class="field">
-    <input class="field__input" type="text" name="user_lastname" placeholder="Uzvārds">
-  </div>
-  <div class="field">
-    <input class="field__input" type="text" name="user_email" placeholder="E-pasts">
-  </div>
-  <div class="field">
-    <input class="field__input" type="password" name="user_password" placeholder="Parole">
-  </div>
-  <div class="field">
-    <input class="field__input" type="password" name="user_password_repeat" placeholder="Apstiprini paroli">
-  </div>
-  <button class="main-form__button">LOG IN</button>
-</form>
+<div class="shield">
+    <form id="registration_form" class="shield__container" method="post">
+        <div class="shield__header">
+            <h1 class="logo">Reģistrēties</h1>
+        </div>
+        <div class="shield__body">
+            <div class="field-block">
+                <input id="signup_firstname" class="field field_stretch field-block__field" type="text" name="user_firstname" value="" autocomplete="off" autofocus>
+                <label for="signup_firstname" class="field-block__label"><msg:signup.firstname></label>
+            </div>
+            <div class="field-block">
+                <input id="signup_lastname" class="field field_stretch field-block__field" type="text" name="user_lastname" value="" autocomplete="off" autofocus>
+                <label for="signup_lastname" class="field-block__label"><msg:signup.lastname></label>
+            </div>
+            <div class="field-block">
+                <input id="signup_email" class="field field_stretch field-block__field" type="text" name="user_email" value="" autocomplete="off" autofocus>
+                <label for="signup_email" class="field-block__label"><msg:signup.email></label>
+            </div>
+            <div class="field-block">
+                <input id="signup_pass" class="field field_stretch field-block__field" type="password" name="user_password" autocomplete="off">
+                <label for="signup_pass" class="field-block__label"><msg:signup.password></label>
+            </div>
+            <div class="field-block">
+                <input id="signup_pass_confirm" class="field field_stretch field-block__field" type="password" name="user_password_repeat" autocomplete="off">
+                <label for="signup_pass_confirm" class="field-block__label"><msg:signup.password_confirm></label>
+            </div>
+        </div>
+        <div class="shield__footer">
+            <button class="button button_commit" type="submit"><msg:signup.submit></button>
+            <a href="/" class="button button_simple">Sign in</a>
+        </div>
+    </form>
+</div>
 <script>
 (function(){
   new app.Form('#registration_form', {

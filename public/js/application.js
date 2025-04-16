@@ -332,6 +332,163 @@ namespace('app');
 })(app);
 
 (function(app){
+  function Lookup(selector, options) {
+    var self = this;
+
+    self.options = $.extend({
+      scrollableSelector: '#aside',
+      containerSelector: '#aside_nav',
+      anchorSelector: '.js_aside_nav_item',
+      emptySelector: null,
+      onSelect: function ($selected, selected) {
+        navTo(selected);
+      }
+    }, options);
+
+    self.$input      = $(selector),
+    self.$container  = $(self.options.containerSelector),
+    self.$anchors    = self.$container.find(self.options.anchorSelector),
+    self.selected    = -1,
+    self.valueWas    = self.$input.val(),
+    self.defaultHtml = self.options.emptySelector ? '' : self.$container.html();
+
+    if (!self.options.paramName) {
+      self.options.paramName = self.$input.attr('name');
+    }
+
+    self.$input.on('focus pick', function(event){
+      $anchors = self.$container.find(self.options.anchorSelector);
+    });
+
+    self.$input.on('paste', function(event){
+      self.onChangeInterval = setTimeout(function(){
+        self.search(self.$input.val());
+      }, 100);
+    });
+
+    self.$input.keydown(function(event){
+      var $selected,
+          keyCode = event.keyCode;
+
+      if (keyCode === 13) {
+        event.preventDefault();
+      }
+
+      if (keyCode === 38) {
+        self.selected = Math.max(-1, self.selected - 1);
+        self.$anchors.removeClass('focus');
+
+        if (self.selected === -1) return;
+
+        $selected = self.$anchors.eq(self.selected);
+        $selected.addClass('focus');
+        self.adjustScroll($selected);
+      }
+
+      if (keyCode === 40) {
+        self.selected = Math.min($anchors.length - 1, self.selected + 1);
+        $selected = self.$anchors.eq(self.selected);
+        self.$anchors.removeClass('focus');
+        $selected.addClass('focus');
+        self.adjustScroll($selected);
+      }
+    });
+
+    self.$input.keyup(function(event){
+      var value   = this.value,
+          keyCode = event.keyCode;
+
+      if (value === self.valueWas) {
+        if (keyCode === 13) {
+          self.$anchors.removeClass('focus');
+          self.selected = self.selected === -1 ? 0 : self.selected;
+          $selected = self.$anchors.eq(self.selected);
+
+          if (typeof(self.options.onSelect) === 'function') {
+            self.options.onSelect($selected, self.selected);
+          }
+        }
+
+        return;
+      }
+
+      self.search(value);
+    });
+  }
+
+  Lookup.prototype.search = function(value) {
+    var self = this,
+        data = {};
+
+    data[self.options.paramName] = value;
+    self.valueWas = value;
+
+    clearTimeout(self.onChangeInterval);
+
+    if (value.length > 1) {
+      self.$container.unhighlight();
+      self.$container.highlight(value.split(' '));
+
+      self.onChangeInterval = setTimeout(function(){
+        if (self.request) {
+          self.request.abort();
+        }
+
+        if (typeof(self.options.setDataBeforeSend) === 'function') {
+          data = self.options.setDataBeforeSend(data);
+        }
+
+        self.request = $.ajax({ url: self.options.url, data: data, dataType: 'html' }).done(function (html) {
+          self.request = null;
+
+          self.$container.html(html).highlight(value.split(' '));
+          self.$anchors = self.$container.find(self.options.anchorSelector);
+          self.selected = -1;
+
+          $(self.options.scrollableSelector).scrollTop(0);
+          $(self.options.emptySelector).addClass('hidden');
+
+          if (typeof(self.options.onComplete) === 'function') {
+            self.options.onComplete();
+          }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+        });
+      }, 100);
+    } else if (self.options.emptySelector) {
+      self.$container.empty();
+      $(self.options.emptySelector).removeClass('hidden');
+    } else {
+      self.$container.html(self.defaultHtml);
+      self.$anchors = self.$container.find(self.options.anchorSelector);
+
+      if (typeof(self.options.onComplete) === 'function') {
+        self.options.onComplete();
+      }
+    }
+  };
+
+  Lookup.prototype.adjustScroll = function($selected) {
+    if (!$selected.length) return;
+
+    var $scrollable         = $(this.options.scrollableSelector),
+        scrollableScrollTop = $scrollable.scrollTop(),
+        scrollableTop       = $scrollable.offset().top,
+        scrollableHeight    = $scrollable.height(),
+        containerTop        = $(this.options.containerSelector).offset().top - scrollableTop + scrollableScrollTop,
+        selectedTop         = $selected.offset().top - scrollableTop,
+        selectedHeight      = $selected.outerHeight();
+
+    if (selectedTop < containerTop) {
+      $scrollable.scrollTop(scrollableScrollTop + selectedTop - containerTop);
+    } else if (selectedTop + selectedHeight > scrollableHeight) {
+      $scrollable.scrollTop(scrollableScrollTop + selectedTop - scrollableHeight + selectedHeight);
+    }
+  };
+
+  app.Lookup = Lookup;
+})(app);
+
+(function(app){
   function CookieConfirm(container) {
     var self = this;
 
@@ -790,6 +947,254 @@ namespace('app');
 
 })(app);
 
+(function(app){
+
+  function FileUpload(file, options) {
+    this.options = $.extend({
+      url: null,
+      tmpl: null
+    }, options);
+
+    this.upload(file);
+  }
+
+  FileUpload.prototype.upload = function(file) {
+    var self        = this,
+        formData    = new FormData(),
+        ajaxOptions = {
+          type: 'POST',
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          url: self.options.url
+        };
+
+    formData.set('file', file);
+
+    ajaxOptions.data = formData;
+
+    if (self.options.tmpl) {
+      self.add(file);
+    }
+
+    if (typeof(self.options.onProgress) === 'function') {
+      ajaxOptions.xhr = function(){
+        var xhr = $.ajaxSettings.xhr();
+
+        xhr.upload.addEventListener('progress', function(event){
+          if (event.lengthComputable) {
+            self.options.onProgress.call(self, Math.round(event.loaded / event.total * 100));
+          }
+        });
+
+        return xhr;
+      }
+    }
+
+    $.ajax(ajaxOptions).done(function(response) {
+      if (response.error_code) {
+        if (typeof(self.options.onError) === 'function') {
+          self.options.onError.call(self, response);
+        }  else {
+          app.flash.error(response.error);
+        }
+      } else {
+        if (typeof(self.options.onSuccess) === 'function') {
+          self.options.onSuccess.call(self, response);
+        }
+      }
+    }).fail(function(jqXHR, textStatus, errorThrown){
+      if (typeof(self.options.onError) === 'function') {
+        self.options.onError.call(self, jqXHR.responseJSON);
+      } else {
+        app.flash.error(jqXHR.responseJSON ? jqXHR.responseJSON.error : null);
+      }
+    });
+  };
+
+  FileUpload.prototype.add = function(file) {
+    var self = this;
+
+    self.$file = $(Mustache.render(self.options.tmpl, file));
+
+    if (self.options.before) {
+      self.$file.insertBefore(self.options.before);
+    } else if (self.options.append) {
+      self.$file.appendTo(self.options.before);
+    } else if (self.options.prepend) {
+      self.$file.prependTo(self.options.prepend);
+    }
+
+    self.$file.find('a').click(function(event){
+      event.preventDefault
+
+      self.$file.fadeOut('fast', function(){
+        self.$file.remove();
+      })
+    })
+  };
+
+  FileUpload.prototype.find = function(selector) {
+    return $(this.$file).find(selector);
+  };
+
+  FileUpload.prototype.replace = function(html) {
+    $(this.$file).replaceWith(html);
+  };
+
+  app.FileUpload = FileUpload;
+
+})(app);
+
+(function(app, document){
+
+  var resources = {};
+
+  function Resource(name, options) {
+    this.options = $.extend({
+      container: null,
+      filter: null,
+      ident: '#' + name,
+      mask: null,
+      onBeforeChange: null,
+      onChange: null,
+      onReload: null,
+      reload: null,
+      url: null
+    }, options);
+
+    this.name = name;
+    this.ident = this.options.ident;
+
+    this.cleanup();
+    this.push();
+  }
+
+  Resource.prototype.push = function() {
+    if (!resources[this.name]) {
+      resources[this.name] = {};
+    }
+
+    resources[this.name][this.ident] = this;
+  };
+
+  Resource.prototype.cleanup = function() {
+    var items = resources[this.name];
+
+    if (!items) {
+      return;
+    }
+
+    for (var key in items) {
+      var container = items[key].options.container;
+
+      if (container && !$(container).length) {
+        delete items[key];
+      }
+    };
+  };
+
+  Resource.prototype.getIdName = function() {
+    if (!this.options.mask) {
+      return null;
+    }
+
+    var m = this.options.mask.match(/{{(.+)}}/);
+
+    if (m) {
+      return m[1];
+    }
+
+    return null;
+  };
+
+  Resource.prototype.getId = function(data, name) {
+    return data[name] || null;
+  };
+
+  Resource.prototype.getSelector = function(id) {
+    if (!this.options.mask) {
+      return null;
+    }
+
+    return this.options.mask.replace(/{{(.+)}}/, id);
+  };
+
+  Resource.prototype.reload = function(data) {
+    var self     = this,
+        params   = [],
+        idName   = self.getIdName(),
+        id       = self.getId(data, idName),
+        selector = self.getSelector(id);
+
+    if (typeof(self.options.reload) === 'function') {
+      self.options.reload.call(self, data);
+
+      return;
+    }
+
+    if (!self.options.url) {
+      return;
+    }
+
+    if (self.options.filter) {
+      params = $(self.options.filter).serializeArray();
+    }
+
+    if (id) {
+      params.push({
+        name: idName,
+        value: id
+      });
+    }
+
+    if (typeof(self.options.onBeforeChange) === 'function') {
+      self.options.onBeforeChange.call(self, $(selector), data);
+    }
+
+    $.ajax({
+      type: self.options.filter ? 'post' : 'get',
+      url: self.options.url,
+      data: params
+    }).done(function(html) {
+      if (typeof(self.options.onReload) === 'function') {
+        self.options.onReload.call(self, $(selector), html, data);
+      } else if ($(selector).length) {
+        $(selector).replaceWith(html);
+      } else if (self.options.container) {
+        $(self.options.container).prepend(html);
+      }
+
+      if (typeof(self.options.onChange) === 'function') {
+        self.options.onChange.call(self, $(selector), data);
+      }
+    });
+  };
+
+  function reload(name, data) {
+    var items = resources[name];
+
+    if (!items) {
+      return;
+    }
+
+    for (var key in items) {
+      var resource  = items[key];
+          container = resource.options.container;
+
+      if (container && !$(container).length) {
+        delete items[key];
+      } else {
+        resource.reload(data);
+      }
+    };
+  }
+
+  app.Resource = Resource;
+  app.reload = reload;
+
+})(app);
+
 app.flash = (function(){
   function message(text, options) {
     options = $.extend({
@@ -849,17 +1254,12 @@ app.flash = (function(){
 
 (function(app, document){
 
-  function Observer(action, options) {
-    this.deleteAction(options);
-  }
-
-  Observer.prototype.deleteAction = function(options) {
+  function Delete(options) {
     var self = this;
 
     self.options = $.extend({
       container: document,
       selector: '.js_delete',
-      tickerParentSelector: null,
       message: 'Are you sure you want to delete this record?',
       yes: 'Ok',
       no: 'Cancel',
@@ -869,10 +1269,8 @@ app.flash = (function(){
     $(self.options.container).on('click', self.options.selector, function(event){
       event.preventDefault();
 
-      var $this         = $(this),
-          url           = $this.data('url') || this.href,
-          $tickerParent = self.options.tickerParentSelector ?
-            $this.closest(self.options.tickerParentSelector) : $();
+      var $this = $(this),
+          url   = $this.data('url') || this.href;
 
       if ($this.hasClass('active')) {
         return;
@@ -880,7 +1278,6 @@ app.flash = (function(){
 
       new app.Dialog(function(){
         $this.addClass('active');
-        $tickerParent.ticker();
 
         $.getJSON(url, function(response){
           if (response.error_code) {
@@ -906,7 +1303,6 @@ app.flash = (function(){
           }
         }).always(function(){
           $this.removeClass('active');
-          $tickerParent.ticker('remove');
         });
       }, {
         message: self.options.message,
@@ -915,9 +1311,9 @@ app.flash = (function(){
         type: self.options.type
       });
     });
-  };
+  }
 
-  app.Observer = Observer;
+  app.Delete = Delete;
 
 })(app, document);
 
@@ -1151,7 +1547,7 @@ app.script = (function(){
 
   function datepicker(parent, locale) {
     if ($.datepicker) {
-      $('.field__input_datepicker', parent).each(function(){
+      $('.field_datepicker', parent).each(function(){
         var options,
             $this   = $(this),
             data    = $this.data();
@@ -1450,4 +1846,21 @@ $(document).on('click', function(event){
       }
     });
   }
+});
+
+$(function(){
+
+  $('#toggle_aside').click(function(){
+    var $this = $(this);
+
+    if ($this.hasClass('active')) {
+      $('#sidebar').removeClass('compact');
+      $this.removeClass('active');
+    } else {
+      $('#sidebar').addClass('compact');
+      $this.addClass('active');
+    }
+    
+  });
+
 });

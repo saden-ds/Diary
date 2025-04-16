@@ -1,0 +1,149 @@
+<div id="assignment" class="modal-section modal-section_640">
+    <div class="modal-section__header modal-section__header_compact _modal_no _modal_holder">
+        <h2 class="modal-section__title">
+            Latviesu valoda / 
+            <var:assignment_type>
+        </h2>
+        <div class="modal-section__description">
+            Termiņš: <var:assignment_end_datetime>,
+            izveidots: <var:assignment_created_at>
+        </div>
+    </div>
+    <div class="modal-section__overflow _modal_o">
+        <div class="modal-section__body">
+            <var:assignment_description>
+        </div>
+
+        <if:assignment_files>
+        <form class="section" enctype="multipart/form-data">
+            <div class="js_toggle_parent section__header active">
+                <h3 class="section__title section__title_inline toggle-title">
+                    <a class="js_toggle toggle-title__toggle active" href="#assignment_files">Uzdevumam pievienoti faili</a>
+                </h3>
+            </div>
+            <div id="assignment_files" class="section__body">
+                <div class="section__content">
+                    <ul class="files-list">
+                        <var:assignment_files:r>
+                    </ul>
+                </div>
+            </div>
+        </form>
+        </if:assignment_files>
+
+        <form class="section" enctype="multipart/form-data">
+            <div class="js_toggle_parent section__header active">
+                <h3 class="section__title section__title_inline toggle-title">
+                    <a class="js_toggle toggle-title__toggle active" href="#assignment_results">Iesniegti faili</a>
+                </h3>
+                <ul class="section__actions actions-list invisible">
+                    <li class="actions-list__item">
+                        <span class="upload-action upload-action_icon i i_new">
+                            <input class="js_upload_file upload-action__input" type="file" name="file" data-url="<var:assignment_file_create_path>" multiple>
+                            <span class="upload-action__label"><msg:action.add></span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div id="assignment_results" class="section__body">
+                <div class="section__content">
+                    <ul class="files-list">
+                        <var:assignment_user_files:r>
+                        <li id="task_files_action" class="files-list__add">
+                            <span class="upload-action upload-action_icon i i_add_file">
+                                <input class="js_upload_file upload-action__input" type="file" name="file" data-url="<var:assignment_file_create_path>" multiple>
+                                <span class="upload-action__label">Pievienot</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+    <if:assignment_edit_path>
+    <div class="modal-section__footer _modal_no">
+        <a href="<var:assignment_grade_path>" class="js_modal button">Vērtējums</a>
+        <a href="<var:assignment_edit_path>" class="js_modal button">Rediģēt</a>
+        <a href="<var:assignment_delete_path>" class="button">Dzēst</a>
+    </div>
+    </if:assignment_edit_path>
+</div>
+<script id="upload_tmpl" type="x-tmpl-mustache">
+<li class="files-list__item files-list__item_hoverable">
+  <ul class="actions-list files-list__action">
+    <li class="actions-list__item">
+      <a class="action action_icon i i_only i_remove" href="#remove" title="<msg:action.remove>"></a>
+    </li>
+  </ul>
+  <div class="files-list__title i i_file">{{name}}</div>
+  <div class="progress progress_file_list"><div class="progress__bar"></div></div>
+</li>
+</script>
+<script>
+(function(){
+
+    $('#assignment_results .js_upload_file').change(function(){
+      var $this = $(this),
+          $parent = $(this.parentNode.parentNode),
+          files = this.files;
+
+      if (!files) {
+        $this.val('');
+
+        return;
+      }
+
+      for (var i = 0, l = files.length; i < l; i++) {
+        new app.FileUpload(files.item(i), {
+          url: $this.data('url'),
+          tmpl: $('#upload_tmpl').html(),
+          before: '#task_files_action',
+          onProgress: function(progress) {
+            if (progress === 100) {
+              this.find('.progress').replaceWith(
+                '<div class="files-list__description">' +
+                  '<msg:document_file.processing:j>' +
+                '</div>'
+              );
+            } else {
+              this.find('.progress__bar').width(progress + '%');
+            }
+          },
+          onError: function(response) {
+            var message = response.error || '<msg:document_file.upload_error:j>';
+
+            this.find('.progress, .files-list__description').replaceWith(
+              '<div class="files-list__description files-list__description_error">' +
+                message +
+              '</div>'
+            );
+          },
+          onSuccess: function(response) {
+            var self   = this,
+                params = {assignment_file_id: response.assignment_file_id};
+
+            $.get('/assignments/' + response.assignment_id + '/files', params, function(html){
+                self.replace(html);
+            });
+          }
+        });
+      }
+
+      $this.val('');
+    });
+
+    new app.Delete({
+      selector: '.js_file_delete',
+      container: '#assignment_results',
+      message: '<msg:confirm.delete_confirm:j>',
+      yes: '<msg:confirm.delete:j>',
+      no: '<msg:confirm.cancel:j>',
+      onSuccess: function(response, $this) {
+        $this.closest('.files-list__item').fadeOut('fast', function(){
+            $(this).remove();
+        });
+      }
+    });
+
+})();
+</script>

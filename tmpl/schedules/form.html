@@ -1,29 +1,47 @@
-<form id="shedule_form" class="main-form" method="post">
-  <h2 class="main-form__header">Nodarbību grafiks</h2>
-  <div class="field">
-    <input class="field__input field__input_datepicker" type="text" name="schedule_date" placeholder="Datums" value="<var:schedule_date>" autofocus>
-  </div>
-  <div class="field">
-    <select class="field__input field__input_select" name="lesson_id">
-      <option value="">Izvēlēties mācību priekšmetu</option>
-      <block:lesson_options>
-      <option value="<var:value>"<if:selected: selected:>><var:name></option>
-      </block:lesson_options>
-    </select>
-  </div>
-  <div class="field">
-    <select class="field__input field__input_select" name="lesson_time_id">
-      <option value="">Izvēlēties laiku</option>
-      <block:lesson_time_options>
-      <option value="<var:value>"<if:selected: selected:>><var:name></option>
-      </block:lesson_time_options>
-    </select>
-  </div>
-  <div class="field">
-    <input class="field__input" type="text" name="schedule_name" placeholder="Mācību priekšmeta tēma" value="<var:schedule_name>">
-  </div>
-  <button class="main-form__button">Saglabat</button>
-  <!-- <button class="js_modal_close main-form__button" type="button">Cancel</button> -->
+<form id="shedule_form" class="modal-section modal-section_480" method="post">
+    <div class="modal-section__header _modal_no _modal_holder">
+        <h2 class="modal-section__title">Nodarbību grafiks</h2>
+    </div>
+
+    <div class="modal-section__body _modal_o">
+        <div class="field-grid">
+            <div class="field-grid__span field-grid__span_6">
+                <div class="field-block field-block_label">
+                    <input id="shedule_form_date" class="field field_stretch field_datepicker field-block__field" type="text" name="schedule_date" value="<var:schedule_date>" autofocus>
+                    <label for="shedule_form_date" class="field-block__label">Datums</label>
+                </div>
+            </div>
+            <div class="field-grid__span field-grid__span_6">
+                <div class="field-block field-block_label">
+                    <select id="shedule_form_lesson_time" class="field field_select field_stretch field-block__field" name="lesson_time_id" autofocus>
+                        <option value=""></option>
+                        <block:lesson_time_options>
+                        <option value="<var:value>"<if:selected: selected:>><var:name></option>
+                        </block:lesson_time_options>
+                    </select>
+                    <label for="shedule_form_lesson_time" class="field-block__label">Laiks</label>
+                </div>
+            </div>
+        </div>
+        <div class="field-block field-block_label">
+            <select id="shedule_form_lesson" class="field field_select field_stretch field-block__field" name="lesson_id" autofocus>
+                <option value=""></option>
+                <block:lesson_options>
+                <option value="<var:value>"<if:selected: selected:>><var:name></option>
+                </block:lesson_options>
+            </select>
+            <label for="shedule_form_lesson" class="field-block__label">Mācību priekšmets</label>
+        </div>
+        <div class="field-block field-block_label">
+            <input id="shedule_form_name" class="field field_stretch field-block__field" type="text" name="schedule_name" value="<var:schedule_name>" autofocus>
+            <label for="shedule_form_name" class="field-block__label">Mācību priekšmeta tēma</label>
+        </div>
+    </div>
+
+    <div class="modal-section__footer _modal_no">
+        <a id="shedule_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit">Saglabat</button>
+    </div>
 </form>
 <script>
 (function(){

@@ -1,10 +1,20 @@
-<form id="lesson_invite_form" class="main-form" method="post">
-  <input type="hidden" name="lesson_id" value="<var:lesson_id>">
-  <h2 class="main-form__header">Ielugums <var:lesson_name></h2>
-  <div class="field">
-    <input class="field__input" type="text" name="user_email" placeholder="e-pasts" autofocus>
-  </div>
-  <button class="main-form__button">Nosūtīt</button>
+<form id="lesson_invite_form" class="modal-section modal-section_480" method="post">
+    <input type="hidden" name="lesson_id" value="<var:lesson_id>">
+    <div class="modal-section__header _modal_no _modal_holder">
+        <h2 class="modal-section__title">Ielugums <var:lesson_name></h2>
+    </div>
+
+    <div class="modal-section__body _modal_o">
+        <div class="field-block field-block_label">
+            <input id="group_form_email" class="field field_stretch field-block__field" type="text" name="lesson_invite_email">
+            <label for="group_form_email" class="field-block__label">E-pasts</label>
+        </div>
+    </div>
+
+    <div class="modal-section__footer _modal_no">
+        <a id="group_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit">Nosūtīt</button>
+    </div>
 </form>
 <script>
 (function(){

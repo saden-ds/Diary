@@ -35,7 +35,7 @@ i, em, var { font-style: normal; }
 
 table { border-collapse: collapse; border-spacing: 0; font-size: 1em; }
 
-hr { display: block; height: 1px; border: 0; border-top: 1px solid #e0ddde; margin: 20px 0; padding: 0; }
+hr { display: block; height: 1px; border: 0; border-top: 1px solid #ebebeb; margin: 20px 0; padding: 0; }
 
 input, select { vertical-align: middle; }
 
@@ -54,7 +54,7 @@ a:hover, a:active { outline: none; }
 ::-moz-selection{ background: #fff2a8; color: #000; text-shadow: none; }
 ::selection { background: #fff2a8; color: #000; text-shadow: none; }
 
-img { border: 0; -ms-interpolation-mode: bicubic; }
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
 
 svg:not(:root) { overflow: hidden; }
 
@@ -107,4 +107,3 @@ html { -webkit-font-smoothing: antialiased; }
 html { font-size: 100%; }
 
 hr { clear: both; }
-

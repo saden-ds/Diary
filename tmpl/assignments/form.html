@@ -1,21 +1,31 @@
-<form id="assignment_form" class="main-form" method="post">
+<form id="assignment_form" class="modal-section modal-section_480">
   <input type="hidden" name="schedule_id" value="<var:schedule_id>">
-  <h2 class="main-form__header">Jauns uzdevums</h2>
-  <div class="field">
-    <select class="field__input field__input_select" name="assignment_type" autofocus>
-      <option value="">Izvelies darba veidu</option>
-      <block:assignment_type_option>
-      <option value="<var:value>"<if:selected: selected:>><var:name></option>
-      </block:assignment_type_option>
-    </select>
+  <div class="modal-section__header _modal_no _modal_holder">
+    <h2 class="modal-section__title">Jauns uzdevums</h2>
   </div>
-  <div class="field">
-    <input class="field__input" type="text" name="assignment_description" placeholder="Uzdevuma apraksts" value="<var:assignment_description>">
+  <div class="modal-section__body _modal_o">
+    <div class="field-block field-block_label">
+      <select id="assignment_form_type" class="field field_select field_stretch field-block__field" name="assignment_type" autofocus>
+        <option value=""></option>
+        <block:assignment_type_option>
+        <option value="<var:value>"<if:selected: selected:>><var:name></option>
+        </block:assignment_type_option>
+      </select>
+      <label for="assignment_form_type" class="field-block__label">Darba veids</label>
+    </div>
+    <div class="field-block field-block_label">
+      <input id="assignment_form_description" class="field field_stretch field-block__field" type="text" name="assignment_description" value="<var:assignment_description>">
+      <label for="assignment_form_description" class="field-block__label">Uzdevuma apraksts</label>
+    </div>
+    <div class="field-block field-block_label">
+      <input id="assignment_form_end_datetime" class="field field_stretch field_datepicker field-block__field" type="text" name="assignment_end_datetime" value="<var:assignment_end_datetime>">
+      <label for="assignment_form_end_datetime" class="field-block__label">Izpildes termiņš</label>
+    </div>
   </div>
-  <div class="field">
-    <input class="field__input field__input_datepicker" type="text" name="assignment_end_datetime" placeholder="Izpildes termiņš" value="<var:assignment_end_datetime>">
+  <div class="modal-section__footer _modal_no">
+    <a id="assignment_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+    <button class="button button_submit" type="submit">Saglabat</button>
   </div>
-  <button class="main-form__button">Saglabat</button>
 </form>
 <script>
 (function(){

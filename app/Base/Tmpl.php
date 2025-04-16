@@ -53,7 +53,7 @@ class Tmpl extends Singleton
             }
         }
 
-        return $this->file($layout ?: 'tmpl/layout.tmpl', $variables);
+        return $this->file('tmpl/' . ($layout ?: 'layout') . '.tmpl', $variables);
     }
 
     public function error(string $path, ?array $data = null): string

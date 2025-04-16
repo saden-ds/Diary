@@ -1,0 +1,16 @@
+<block:items>
+<li class="files-list__item files-list__item_hoverable">
+    <if:assignment_file_delete_path>
+    <ul class="actions-list files-list__action">
+        <li class="actions-list__item">
+            <a class="js_file_delete action action_icon i i_only i_delete" href="<var:assignment_file_delete_path>" title="<msg:action.delete>"></a>
+        </li>
+    </ul>
+    </if:assignment_file_delete_path>
+    <a class="i i_file files-list__title" href="<var:assignment_file_path>"><var:assignment_file_name></a>
+    <div class="files-list__description">
+        <var:user_fullname><if:user_fullname:, :>
+        <var:assignment_file_created_at>
+    </div>
+</li>
+</block:items>

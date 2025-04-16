@@ -23,213 +23,256 @@
   <link href="/css_<var:assets_version>/reset.css" media="screen" type="text/css" rel="stylesheet">
   <link href="/css_<var:assets_version>/modal.css" media="screen" type="text/css" rel="stylesheet">
   <link href="/css_<var:assets_version>/jquery.ui.custom.css" media="screen" type="text/css" rel="stylesheet">
+  <link href="/css_<var:assets_version>/buttons.css" media="screen" type="text/css" rel="stylesheet">
+  <link href="/css_<var:assets_version>/form.css" media="screen" type="text/css" rel="stylesheet">
+  <link href="/css_<var:assets_version>/layout.css" media="screen" type="text/css" rel="stylesheet">
   <link href="/css_<var:assets_version>/application.css" media="screen" type="text/css" rel="stylesheet">
   <script src="/js_<var:assets_version>/jquery.js"></script>
   <script src="/js_<var:assets_version>/jquery.ui.min.js"></script>
+  <script src="/js_<var:assets_version>/jquery.highlight.js"></script>
+  <script src="/js_<var:assets_version>/mustache.js"></script>
   <script src="/js_<var:assets_version>/modal.js"></script>
   <script src="/js_<var:assets_version>/application.js"></script>
 </head>
 <body>
-<body>
-<header class="header">
-    <a href="/" class="header__logo">Logo</a>
-    <nav class="header__nav">
-      <ul class="nav">
-        <block:header_nav>
-        <li class="nav__item">
-          <a href="<var:path>" class="nav__anchor<if:active: active:>"><var:name></a>
-        </li>
-        </block:header_nav>
-      </ul>
-    </nav>
-  </header>
-  <aside id="menu" class="user-menu">
-    <a id="burger" class="burger" href="#menu"><div></div></a>
-    <block:current_user>
-    <div class="user">
-      <div class="user__avatar">
-        <img src="/img/avatar.jpeg" height="40">
-      </div>
-      <div class="user__title"><var:firstname> <var:lastname></div>
-    </div>
-    </block:current_user>
-    <nav class="aside-nav"> 
-      <ul class="aside-nav__nav">
-        <block:header_nav>
-        <li class="aside-nav__item">
-          <a href="<var:path>" class="aside-nav__anchor<if:active: active:>"><var:name></a>
-        </li>
-        </block:header_nav>
-      </ul>
-      <ul class="aside-nav__list">
-        <li class="aside-nav__item">
-          <a href="/conversations" class="aside-nav__anchor aside-nav__anchor_icon icon icon_mail">Saziņa</a>
-        </li>
-        <li class="aside-nav__item">
-          <a href="/profile" class="aside-nav__anchor aside-nav__anchor_icon icon icon_setting js_modal">Uzstādījumi</a>
-        </li>
-        <li class="aside-nav__item">
-          <a id="notification_badge" href="#notification_lates" class="aside-nav__anchor aside-nav__anchor_icon icon icon_notification" data-url="/notifications/latest">Notifikācijas<if:lesson_invites:*:></a>
-          <div id="notification_lates" class="nontification-tabs hidden">
-            <ul class="tabs">
-              <li class="tabs__item">
-                <a href="#nontification_grades" class="tabs__anchor active">Jaunākās atīmes</a>
-              </li>
-              <li class="tabs__item">
-                <a href="#nontification_messages" class="tabs__anchor">Jaunākie ziņojumi</a>
-              </li>
-            </ul>
-            <div class="tabs-content">
-              <div id="nontification_grades" class="tabs-content__item">
-                <ul class="nontifications-list">
-                  <li class="nontifications-list__item">
-                    <a href="" class="nontification">
-                      <div class="nontification__name">Angļu valoda</div>
-                      <div class="nontification__work">
-                        Mācību stunda
-                        <div class="nontification__date">17.11.</div>
-                      </div>
-                      <div class="nontification__grade">9</div>
-                    </a>
-                  </li>
-                  <li class="nontifications-list__item">
-                    <a href="" class="nontification">
-                      <div class="nontification__name">Matemātika</div>
-                      <div class="nontification__work">
-                        Mācību stunda
-                        <div class="nontification__date">17.11.</div>
-                      </div>
-                      <div class="nontification__grade">n/v</div>
-                    </a>
-                  </li>
-                  <li class="nontifications-list__item">
-                    <a href="" class="nontification">
-                      <div class="nontification__name">Latviešu valoda</div>
-                      <div class="nontification__work">
-                        Mācību stunda
-                        <div class="nontification__date">30.11.</div>
-                      </div>
-                      <div class="nontification__grade">2</div>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div id="nontification_messages" class="tabs-content__item hidden">
-                <ul class="nontifications-list">
-                  <block:lesson_invites>
-                  <li class="nontifications-list__item">
-                    <div class="nontification">
-                      <div class="nontification__name">Ielugums <var:lesson_name></div>
-                      <div class="nontification__work">
-                        <var:user_firstname> <var:user_lastname>
-                      </div>
-                      <div class="nontification__button">
-                        <a href="/lessons/invites/<var:lesson_invite_id>/decline" class="button_red">Decline</a>
-                        <a href="/lessons/invites/<var:lesson_invite_id>/accept" class="button_green">Accept</a>
-                      </div>
+<div id="layout" class="layout">
+  <a class="layout__logo" href="/"><var:app_name></a>
+
+  <header class="layout__header layout-header">
+    <ul class="layout-bar">
+      <li class="layout-bar__item">
+        <a class="js_toggle layout-bar__anchor i i_notification" href="#notification_lates" data-autohide="true"><if:lesson_invites:*:></a>
+        <!-- data-url="/notifications/latest" -->
+        <div id="notification_lates" class="layout-bar__content hidden">
+          <ul class="tabs">
+            <li class="tabs__item active">
+              <a href="#nontification_grades" class="js_notification tabs__anchor">Jaunākie vērtējumi</a>
+            </li>
+            <li class="tabs__item">
+              <a href="#nontification_messages" class="js_notification tabs__anchor">Jaunākie ziņojumi</a>
+            </li>
+          </ul>
+          <div class="tabs-content">
+            <div id="nontification_grades" class="tabs-content__item">
+              <if:user_grades>
+              <ul class="nontifications-list">
+                <block:user_grades>
+                <li class="nontifications-list__item">
+                  <a href="" class="nontification">
+                    <div class="nontification__name"><var:lesson_name></div>
+                    <div class="nontification__work">
+                      <var:assignment_type>
+                      <div class="nontification__date"><var:schedule_date></div>
                     </div>
-                  </li>
-                  </block:lesson_invites>
-                  <li class="nontifications-list__item">
-                    <a href="" class="nontification">
-                      <div class="nontification__name">Algoritmēšanas un programmēšanas pamati</div>
-                      <div class="nontification__work">
-                        Mācību stunda
-                        <div class="nontification__date">04.05.</div>
-                      </div>
-                    </a>
-                  </li>
-                  <li class="nontifications-list__item">
-                    <a href="" class="nontification">
-                      <div class="nontification__name">Latviešu valoda</div>
-                      <div class="nontification__work">
-                        Mācību stunda
-                        <div class="nontification__date">17.11.</div>
-                      </div>
-                    </a>
-                  </li>
-                  <li class="nontifications-list__item">
-                    <a href="" class="nontification">
-                      <div class="nontification__name">Datu bāzes programmēšana</div>
-                      <div class="nontification__work">
-                        Mācību stunda
-                        <div class="nontification__date">23.11.</div>
-                      </div>
-                    </a>
-                  </li>
-                </ul>
-              </div>
+                    <div class="nontification__grade"><var:grade_value></div>
+                  </a>
+                </li>
+                </block:user_grades>
+              </ul>
+              </if:user_grades>
+              <ifnot:user_grades>
+              <div class="tabs-content__empty">Nav jaunu vērtējumu</div>
+              </ifnot:user_grades>
+            </div>
+            <div id="nontification_messages" class="tabs-content__item hidden">
+              <ul class="nontifications-list">
+                <block:lesson_invites>
+                <li class="nontifications-list__item">
+                  <div class="nontification">
+                    <div class="nontification__name">Ielugums <var:lesson_name></div>
+                    <div class="nontification__work">
+                      <var:user_firstname> <var:user_lastname>
+                    </div>
+                    <div class="nontification__button">
+                      <a href="/lessons/invites/<var:lesson_invite_id>/decline" class="button button_small button_reject">Noraidīt</a>
+                      <a href="/lessons/invites/<var:lesson_invite_id>/accept" class="button button_small button_accept">Pieņemt</a>
+                    </div>
+                  </div>
+                </li>
+                </block:lesson_invites>
+                <block:organization_invites>
+                <li class="nontifications-list__item">
+                  <div class="nontification">
+                    <div class="nontification__name">Ielugums <var:organization_name></div>
+                    <div class="nontification__work">
+                      <var:user_firstname> <var:user_lastname>
+                    </div>
+                    <div class="nontification__button">
+                      <a href="/organizations/invites/<var:organization_invite_id>/decline" class="button button_small button_reject">Noraidīt</a>
+                      <a href="/organizations/invites/<var:organization_invite_id>/accept" class="button button_small button_accept">Pieņemt</a>
+                    </div>
+                  </div>
+                </li>
+                </block:organization_invites>
+                <block:user_assignments>
+                <li class="nontifications-list__item">
+                  <a href="" class="nontification">
+                    <div class="nontification__name"><var:assignment_type></div>
+                    <div class="nontification__work">
+                      <var:lesson_name>
+                      <div class="nontification__date"><var:schedule_date></div>
+                    </div>
+                  </a>
+                </li>
+                </block:user_assignments>
+                <li class="nontifications-list__item">
+                  <a href="" class="nontification">
+                    <div class="nontification__name">Latviešu valoda</div>
+                    <div class="nontification__work">
+                      Mācību stunda
+                      <div class="nontification__date">17.11.</div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
+        </div>
+      </li>
+      <block:current_user>
+      <li class="layout-bar__item">
+        <a class="js_toggle layout-bar__anchor" href="#user" data-autohide="true">
+          <span class="avatar avatar_<var:fulname_digit>"><var:initials></span>
+        </a>
+        <div id="user" class="layout-bar__content hidden">
+          <a class="user user_big" href="/profiles">
+            <div class="user__avatar avatar avatar_<var:fulname_digit>">
+              <var:initials>
+            </div>
+            <div class="user__title">
+              <var:firstname> <var:lastname>
+            </div>
+            <div class="user__description">
+              <if:organization_name>
+              <var:organization_name>
+              </if:organization_name>
+            </div>
+          </a>
+          <ul class="user-menu">
+            <li class="user-menu__item">
+              <a href="/profile" class="user-menu__anchor js_modal">Uzstādījumi</a>
+            </li>
+            <li class="user-menu__item">
+              <a href="/signout" class="user-menu__anchor">Iziet</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      </block:current_user>
+    </ul>
+  </header>
+
+  <div id="sidebar" class="layout__sidebar layout-sidebar<if:compact: compact:>">
+    <div class="layout-sidebar__body">
+      <ul class="nav">
+        <block:header_nav>
+        <li class="nav__item<if:active: active:>">
+          <a href="<var:path>" class="nav__anchor<if:icon: i i_:><var:icon>"><var:name></a>
         </li>
-        <li class="aside-nav__item">
-          <a href="/signout" class="aside-nav__anchor aside-nav__anchor_icon icon icon_exit">Iziet</a>
-        </li>
+        </block:header_nav>
       </ul>
-    </nav>
-  </aside>
+
+      <ul class="drawer-languages">
+        <block:admin_language_options>
+        <li class="drawer-languages__item">
+          <a class="js_language drawer-languages__anchor<if:selected: drawer-languages__anchor_active:>" href="#<var:value>"><var:name></a>
+        </li>
+        </block:admin_language_options>
+      </ul>
+    </div>
+    
+    <div class="layout-sidebar__footer">
+      <div class="layout-sidebar__app">
+        <var:app.title>, <msg:app.version> <var:version>
+      </div>
+      <div class="layout-sidebar__copyright">
+        &copy; 2025, Deniss Samsonovs
+      </div>
+    </div>
+  </div>
+
   <var:body:r>
-  <script>
-    $('.tabs__anchor').click(function(event){ 
-      event.preventDefault();
+</div>
+<script>
+jQuery(function($){
+  $.datepicker.regional['lv'] = {
+    closeText: 'Aizvērt',
+    prevText: 'Iepr.',
+    nextText: 'Nāk.',
+    currentText: 'Šodien',
+    monthNames: [ 'Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs',
+    'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris' ],
+    monthNamesShort: [ 'Jan', 'Feb', 'Mar', 'Apr', 'Maijs', 'Jūn',
+    'Jūl', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec' ],
+    dayNames: [
+      'svētdiena',
+      'pirmdiena',
+      'otrdiena',
+      'trešdiena',
+      'ceturtdiena',
+      'piektdiena',
+      'sestdiena'
+    ],
+    dayNamesShort: [ 'svt', 'prm', 'otr', 'tre', 'ctr', 'pkt', 'sst' ],
+    dayNamesMin: [ 'Sv', 'Pr', 'Ot', 'Tr', 'Ct', 'Pk', 'Ss' ],
+    weekHeader: 'Ned.',
+    dateFormat: 'dd.mm.yy.',
+    firstDay: 1,
+    isRTL: false,
+    showMonthAfterYear: false,
+    yearSuffix: ''
+  };
+});
+</script>
+<block:flash>
+<script>
+  app.flash.message('<var:message>', null, '<var:type>');
+</script>
+</block:flash>
+<script>
+  $('.js_notification').click(function(event){ 
+    event.preventDefault();
 
-      $('.tabs__anchor').removeClass('active');
+    $('.tabs__item').removeClass('active');
 
-      $(this).addClass('active');
+    $(this).parent().addClass('active');
 
-      $('.tabs-content__item').addClass('hidden');
+    $('.tabs-content__item').addClass('hidden');
 
-      $(this.hash).removeClass('hidden');
+    $(this.hash).removeClass('hidden');
 
+  });
 
+  $('#notification_badge').click(function(event){
+    event.preventDefault();
 
+    var $this      = $(this),
+        $container = $(this.hash),
+        $burger    = $('#burger'),
+        url        = null; //$this.data('url');
 
-    });
-    $('#notification_badge').click(function(event){
-      event.preventDefault();
+    if ($this.hasClass('active')) {
+      $container.slideUp();
+      $this.removeClass('active');
+    } else {
+      if (!$burger.hasClass('active')) {
+        $burger.trigger('click');
+      }
 
-      var $this      = $(this),
-          $container = $(this.hash),
-          $burger    = $('#burger'),
-          url        = null; //$this.data('url');
+      if (url) {
+        $this.data('url', null);
 
-      if ($this.hasClass('active')) {
-        $container.slideUp();
-        $this.removeClass('active');
-      } else {
-        if (!$burger.hasClass('active')) {
-          $burger.trigger('click');
-        }
-
-        if (url) {
-          $this.data('url', null);
-
-          $.get(url, function(html){
-            $container.html(html);
-            $container.slideDown();
-            $this.addClass('active');
-          });
-        } else {
+        $.get(url, function(html){
+          $container.html(html);
           $container.slideDown();
           $this.addClass('active');
-        }
-      }
-    });
-
-    $('#burger').click(function(event){
-      event.preventDefault();
-
-      var $button = $(this);
-      var $conteiner = $(this.hash);
-
-      if ($button.hasClass('active')) {
-        $button.removeClass('active');
-        $conteiner.removeClass('active');
+        });
       } else {
-        $button.addClass('active');
-        $conteiner.addClass('active');
+        $container.slideDown();
+        $this.addClass('active');
       }
-    });
-  </script>
+    }
+  });
+</script>
 </body>
 </html>

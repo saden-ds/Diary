@@ -1,86 +1,43 @@
-<aside class="aside">
-  
-</aside>
-<div class="content">
-  <section class="box">
-    <table class="data" width="100%">
-      <thead class="data__thead">
-        <tr class="data__tr">
-          <th class="data__th" width="8%"></th>
-          <th class="data__th" width="32%"></th>
-          <th class="data__th data__th_first" width="15%">September</th>
-          <th class="data__th data__th_second" width="15%">Oktobris</th>
-          <th class="data__th data__th_third" width="15%">Novembris</th>
-          <th class="data__th data__th_fourth" width="15%">Vidēji</th>
-        </tr>
-      </thead>
-      <tbody class="data__tbody">
-        <tr class="data__tr">
-          <td class="data__td">1.</td>
-          <td class="data__td">Algoritmēšanas un programmēšanas pamati -2</td>
-          <td class="data__td data__td_first"></td>
-          <td class="data__td data__td_second"></td>
-          <td class="data__td data__td_third"></td>
-          <td class="data__td data__td_fourth"></td>
-        </tr>
-        <tbody class="data__tbody">
-        <tr class="data__tr">
-          <td class="data__td">2.</td>
-          <td class="data__td">Algoritmēšanas un programmēšanas pamati PA3</td>
-          <td class="data__td data__td_first"></td>
-          <td class="data__td data__td_second"></td>
-          <td class="data__td data__td_third"></td>
-          <td class="data__td data__td_fourth"></td>
-        </tr>
-        <tr class="data__tr">
-          <td class="data__td">3.</td>
-          <td class="data__td">Angļu valoda -2</td>
-          <td class="data__td data__td_first"></td>
-          <td class="data__td data__td_second">10, 9, 10, 10</td>
-          <td class="data__td data__td_third"></td>
-          <td class="data__td data__td_fourth">10</td> 
-        </tr>
-        <tr class="data__tr">
-          <td class="data__td">4.</td>
-          <td class="data__td">Audzināšana</td>
-          <td class="data__td data__td_first">i</td>
-          <td class="data__td data__td_second">10, 10</td>
-          <td class="data__td data__td_third"></td>
-          <td class="data__td data__td_fourth">10</td>
-        </tr>
-        <tr class="data__tr">
-          <td class="data__td">5.</td>
-          <td class="data__td">Dabas zinības </td>
-          <td class="data__td data__td_first">i, i, 10, i, 10, 9</td>
-          <td class="data__td data__td_second"></td>
-          <td class="data__td data__td_third"></td>
-          <td class="data__td data__td_fourth">10</td>
-        </tr>
-        <tr class="data__tr">
-          <td class="data__td">6.</td>
-          <td class="data__td">Datu bāzes programmēšana PB4 (PR) -2</td>
-          <td class="data__td data__td_first">47%, 6, 90%, i, 7  </td>
-          <td class="data__td data__td_second">i, i, 9</td>
-          <td class="data__td data__td_third"></td>
-          <td class="data__td data__td_fourth">4</td>   
-        </tr>
-        <tr class="data__tr">
-          <td class="data__td">7.</td>
-          <td class="data__td">Datu bāzes programmēšana PB4 (T)</td>
-          <td class="data__td data__td_first">58%, 79%, 82%, 30%, 7 </td>
-          <td class="data__td data__td_second">87%, 86%, 94%</td>
-          <td class="data__td data__td_third"></td>
-          <td class="data__td data__td_fourth">1</td>     
-        </tr>
-        <tr class="data__tr">
-          <td class="data__td">8.</td>
-          <td class="data__td">Krievu valoda</td>
-          <td class="data__td data__td_first">9, 9, 8, 10, 9, 8  </td>
-          <td class="data__td data__td_second">8, 9, 9, 9, 7, 9 </td>
-          <td class="data__td data__td_third">9</td> 
-          <td class="data__td data__td_fourth">9</td>     
-        </tr>
-      </tbody>
-    </table>
+<button id="toggle_aside" class="floating-action floating-action_hide" type="button">
+    <span class="floating-action__icon"></span>
+</button>
+<div id="content" class="layout__content">
+  <block:lesson_grades>
+  <section class="box-section">
+    <div class="js_toggle_parent box-section__header box-section__header_m_grid active">
+      <if:group_id>
+      <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#grades_<var:group_id>"><var:group_name></a></h2>
+      </if:group_id>
+      <ifnot:group_id>
+      <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#grades_">Privatnodarbibas</a></h2>
+      </ifnot:group_id>
+    </div>
+    <div id="grades_<var:group_id>" class="box box_data">
+      <table class="data-table" width="100%">
+        <thead class="data-table__thead">
+          <tr class="data-table__tr">
+            <th class="data-table__th data-table__th_first" width="32%"></th>
+            <block:months>
+            <th class="data-table__th"><var:month></th>
+            </block:months>
+          </tr>
+        </thead>
+        <tbody class="data-table__tbody">
+          <block:lessons>
+          <tr class="data-table__tr">
+            <td class="data-table__td data-table__td_first"><var:lesson_name></td>
+            <block:grades>
+            <td class="data-table__td">
+              <var:grade_numeric>
+              <var:grade_percent>
+              <var:grade_included>
+            </td>
+            </block:grades>
+          </tr>
+          </block:lessons>
+        </tbody>
+      </table>
+    </div>
   </section>
+  </block:lesson_grades>
 </div>

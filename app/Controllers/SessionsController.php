@@ -6,7 +6,28 @@ use App\Base\Exceptions\ForbiddenException;
 use App\Base\View;
 
 class SessionsController extends ApplicationController
-{
+{   
+    public function showAction(): ?View
+    {
+        if (!$this->current_user->isSignedIn()) {
+            throw new ForbiddenException();
+        }
+
+        $organizations = $this->current_user->fetchOrganizations();
+
+        if ($organizations) {
+            return View::init('tmpl/session/show.tmpl', [
+                'organizations' => $organizations
+            ])->layout('blank');
+        }
+
+        return View::init('tmpl/schedules/show.html');
+        // return View::init('tmpl/schedules/show.html', [
+        //    'assignments' => $this->getAssignments()
+        // ]);
+        
+    }
+
     public function createAction(): ?View
     {
         if ($this->current_user->isSignedIn()) {
@@ -29,6 +50,28 @@ class SessionsController extends ApplicationController
         } else {
             return $view->error($this->msg->t('authorization.message.error.fail'));
         }
+    }
+
+    public function updateAction(): ?View
+    {
+        if (!$this->current_user->isSignedIn()) {
+            throw new ForbiddenException();
+        }
+
+        $view = new View();
+
+        if ($this->current_user->selectOrganizationById($this->request->get('organization_id'))) {
+            $view->data([
+                'organization_id' => $this->current_user->organization_id
+            ]);
+        } else {
+            $view->error($this->msg->t('authorization.message.error.organization'));
+        }
+        
+
+        $this->redirect('/');
+
+        return null;
     }
 
     public function deleteAction(): ?View

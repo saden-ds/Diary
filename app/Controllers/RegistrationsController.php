@@ -12,7 +12,7 @@ class RegistrationsController extends ApplicationController
     public function newAction(): ?View
     {
         return View::init('tmpl/registrations/form.tmpl')
-            ->layout('tmpl/blank.tmpl')
+            ->layout('blank')
             ->data([
                 'error' => null
             ]);

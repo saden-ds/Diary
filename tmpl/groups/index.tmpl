@@ -1,0 +1,49 @@
+<button id="toggle_aside" class="floating-action floating-action_hide active" type="button">
+    <span class="floating-action__icon"></span>
+</button>
+
+<div id="aside" class="layout__aside aside">
+    <div id="filter" class="aside-filter">
+        <div class="aside-filter__body">
+            <div class="aside-search">
+                <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:flat.search_placeholder>" autocomplete="off" autofocus>
+                <button class="aside-search__submit i i_search" type="submit"></button>
+            </div>
+        </div>
+    </div>
+    <ul id="aside_nav" class="aside-nav">
+        <var:index:r>
+    </ul>
+</div>
+
+<div id="content" class="layout__content">
+    <header class="content-header">
+        <h1 class="content-header__h1">Grupas</h1>
+        <if:actions>
+        <ul class="actions-list content-header__actions">
+          <li class="js_menu_parent actions-list__item">
+            <a href="#menu" class="js_menu action action_icon i i_menu i_only"></a>
+            <ul class="menu menu_hidden">
+                <block:actions>
+                <li class="menu__item">
+                    <a class="menu__anchor<if:class_name: :><var:class_name>" href="<var:path>"><var:title></a>
+                </li>
+                </block:actions>
+            </ul>
+          </li>
+        </ul>
+        </if:actions>
+    </header>
+
+    <div class="empty-block">Nav izvēlētas neviena grupa</div>
+    </div>
+</div>
+<script>
+    (function(){
+        new app.Lookup('#filter_suggest', {
+            onSelect: function($selected, selectedIndex) {
+                window.location.href = $selected.prop('href');
+            }
+        });
+    })();
+</script>

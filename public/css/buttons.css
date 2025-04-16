@@ -1,0 +1,368 @@
+.button {
+  display: inline-block;
+  padding: 12px 16px;
+  min-width: 80px; height: 40px;
+  border: 1px solid #FF8C41; border-radius: 4px;
+  background: #fff;
+  color: #FF8C41;
+  font-size: 12px; font-weight: 600;
+  line-height: 14px;
+  vertical-align: middle;
+  text-align: center; text-transform: uppercase; text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+
+  -webkit-transition: background-color, border-color 0.3s linear;
+          transition: background-color, border-color 0.3s linear;
+}
+.button:hover,
+.button:focus,
+.button:active {
+  -webkit-box-shadow: 0 0 0 2px rgba(255, 140, 65, 0.2);
+          box-shadow: 0 0 0 2px rgba(255, 140, 65, 0.2);
+
+  text-decoration: none;
+}
+.button_icon_inside {
+  padding-top: 8px; padding-bottom: 8px;
+  min-width: 56px;
+}
+.button_icon_inside .i {
+  display: inline-block;
+  font-size: 0;
+}
+
+.button.stretch {
+  padding-right: 0; padding-left: 0;
+  width: 100%;
+  min-width: 0;
+}
+.button_text_left {
+  text-align: left;
+}
+
+.button_small {
+  padding: 8px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.button.disabled,
+.button:disabled,
+.button[disabled] {
+  opacity: .6;
+  cursor: default;
+  border-color: #D4C4BC;
+  color: #D4C4BC;
+
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.button_wait_icon::before {
+  visibility: hidden;
+}
+.button_wait_icon::after {
+  content: '';
+  position: absolute; top: 8px; left: 6px;
+  width: 18px; height: 18px;
+  background: url('../img/spinner_small.gif') no-repeat 50% 50%;
+}
+
+.button_submit {
+  border-color: transparent;
+  background: #FF8C41;
+  color: #FFF;
+}
+.button_submit:hover,
+.button_submit:focus {
+  -webkit-box-shadow: 0 0 0 2px rgba(255, 140, 65, 0.2);
+          box-shadow: 0 0 0 2px rgba(255, 140, 65, 0.2);
+}
+.button_submit.disabled,
+.button_submit.disabled,
+.button_submit:disabled,
+.button_submit[disabled] {
+  background-color: #D4C4BC;
+  color: #FFF;
+
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.button_icon {
+  position: relative; z-index: 1;
+  padding-left: 40px;
+}
+.button_icon::before {
+  position: absolute; top: 7px; left: 7px;
+}
+.button_small.button_icon_only {
+  width: 32px;
+}
+.button_small.button_icon_only::before {
+  left: 4px;
+}
+.button_small.button_icon::before {
+  top: 3px;
+}
+.button_icon_only {
+  padding-left: 0; width: 40px; min-width: 0;
+}
+.button_icon.button_submit::before,
+.button_icon.button_gray::before {
+  background-image: url(../img/icons_white10.png);
+  background-image: none, url(../img/icons_white10.svg);
+}
+
+.button_simple {
+  background-color: transparent;
+  border-color: transparent;
+  color: #72605e;
+}
+.button_simple:hover,
+.button_simple:focus,
+.button_simple:active {
+  background-color: rgba(114, 94, 94, .1);
+  box-shadow: none;
+}
+.button_simple.disabled,
+.button_simple.disabled,
+.button_simple:disabled,
+.button_simple[disabled] {
+  border-color: #D4C4BC;
+  background-color: transparent;
+}
+
+.button_white
+.button_white:hover,
+.button_white:focus,
+.button_white:active {
+  background-color: #FFF;
+}
+
+.button_gray {
+  background-color: #72605E;
+  border-color: transparent;
+  color: #FFF;
+}
+.button_gray:hover,
+.button_gray:focus,
+.button_gray:active {
+  background-color: #72605E;
+
+  -webkit-box-shadow: 0 0 0 2px rgba(114, 96, 94, 0.1);
+          box-shadow: 0 0 0 2px rgba(114, 96, 94, 0.1);
+}
+.button_gray .i::before {
+  background-image: url('../img/icons_white10.svg');
+  background-image: none, url('../img/icons_white10.svg');
+}
+
+.button_accept {
+  border-color: transparent;
+  background-color: #53D683;
+  color: #FFF;
+}
+.button_accept:hover,
+.button_accept:focus,
+.button_accept:active {
+  background-color: #53D683;
+
+  -webkit-box-shadow: 0 0 0 2px rgba(83, 214, 131, 0.2);
+          box-shadow: 0 0 0 2px rgba(83, 214, 131, 0.2);
+}
+
+.button_orange {
+  border-color: transparent;
+  background-color: #F35B1C;
+  color: #FFF;
+}
+.button_orange:hover,
+.button_orange:focus,
+.button_orange:active {
+  background-color: #FF8C41;
+
+  -webkit-box-shadow: 0 0 0 2px rgba(243, 91, 28, 0.2);
+          box-shadow: 0 0 0 2px rgba(243, 91, 28, 0.2);
+}
+
+.button_red,
+.button_reject {
+  border-color: transparent;
+  background-color: #E7391E;
+  color: #FFF;
+}
+.button_red:hover,
+.button_red:focus,
+.button_red:active,
+.button_reject:hover,
+.button_reject:focus,
+.button_reject:active {
+  background-color: #E7391E;
+
+  -webkit-box-shadow: 0 0 0 2px rgba(231, 57, 30, 0.2);
+          box-shadow: 0 0 0 2px rgba(231, 57, 30, 0.2);
+}
+
+
+.button-search {
+  padding: 2px;
+  height: 30px;
+  border: none;
+  background: none;
+  color: #CCC;
+  font-size: 16px;
+  vertical-align: middle;
+  text-align: center; text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+
+  -webkit-appearance: none;
+          appearance: none;
+}
+
+
+.action {
+  position: relative;
+  display: inline-block;
+  height: 32px;
+  color: #9C8D8D;
+  line-height: 32px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.action:hover {
+  color: #7C6C6C;
+  text-decoration: none;
+}
+.action_button {
+  padding-left: 8px; padding-right: 8px;
+  background-color: #C0A99D;
+  border-radius: 3px;
+  color: #FFF;
+}
+.action_button:hover,
+.action_button:focus,
+.action_button:active {
+  -webkit-box-shadow: 0 0 0 2px rgba(114, 96, 94, 0.1);
+          box-shadow: 0 0 0 2px rgba(114, 96, 94, 0.1);
+}
+.action_button.i::before {
+  background-image: url('../img/icons_white10.png');
+  background-image: none, url('../img/icons_white10.svg');
+}
+.action_button:hover {
+  color: #FFF;
+
+  -webkit-box-shadow: 0 0 0 2px rgba(192, 169, 157, .2);
+          box-shadow: 0 0 0 2px rgba(192, 169, 157, .2);
+}
+.action_icon {
+  position: relative; z-index: 1;
+  padding-left: 32px;
+}
+.action_icon::before {
+  position: absolute; top: 4px; left: 4px;
+}
+.action_icon_right { padding-left: 0; padding-right: 32px; }
+.action_icon_right::before { left: auto; right: 4px; }
+.action_icon_only {
+  width: 32px;
+  padding: 4px;
+  overflow: hidden;
+}
+.action_icon_only_badge {
+  width: 32px;
+  padding: 4px;
+  overflow: visible;
+}
+.action_icon_only::before { position: static; }
+.action.hidden {
+  display: none;
+}
+.action_compact.action_icon_only {
+  width: 24px; height: 16px;
+  padding: 0;
+  overflow: visible;
+  vertical-align: top;
+}
+.action_compact.action_icon_only::before {
+  position: absolute; top: -4px; left: 0;
+}
+.action_left {
+  float: left;
+}
+.action.offline-pending::after {
+  content: '';
+  display: block;
+  position: absolute; top: 4px; left: 4px; z-index: 10;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #E7391E;
+}
+.action__badge {
+  position: absolute; top: 0; right: -1px; z-index: 1;
+  padding: 0 4px;
+  border-radius: 4px;
+  border: 1px solid #FFF;
+  font-size: 11px;
+  line-height: 14px;
+  background: #72605E;
+  color: #FFF;
+  text-decoration: none;
+}
+.action.disabled {
+  visibility: hidden;
+}
+
+a.action__badge:hover {
+  text-decoration: underline;
+}
+
+
+.fab {
+  display: inline-block;
+  position: relative; z-index: 1;
+  padding: 0 12px;
+  height: 40px;
+  border-radius: 20px;
+  background: #A3B3BB;
+  color: #FFF;
+  line-height: 40px;
+  white-space: nowrap;
+  text-decoration: none;
+
+  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 6px rgba(0, 0, 0, .12);
+          box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 6px rgba(0, 0, 0, .12);
+}
+.fab_icon { padding-left: 40px; }
+.fab_icon::before { position: absolute; top: 8px; left: 8px; }
+.fab_icon_only {
+  padding: 8px;
+  width: 40px;
+  overflow: hidden;
+}
+.fab_icon_only::before { position: static; }
+.fab.i_new { background-color: #EE7023; }
+
+
+@media screen and (-webkit-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
+  .button_loading_icon::before {
+    background-image: url('../img/spinner_small_x2.gif'); background-size: 18px 18px;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .action_m_icon_only.i {
+    width: 32px;
+    padding-right: 0; padding-left: 32px;
+    overflow: hidden;
+    text-indent: 100%;
+  }
+}

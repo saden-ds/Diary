@@ -1,18 +1,44 @@
-<aside class="aside">
-    <div class="resource">
-        <div class="resource__header">
-            <h1 class="resource__title">Priekšmeti</h1>
-            <a href="/lessons/new" class="js_modal resource__action button button_new">Jauns priekšmets</a>
+<button id="toggle_aside" class="floating-action floating-action_list active" type="button">
+    <span class="floating-action__icon"></span>
+</button>
+<div id="aside" class="layout__aside aside">
+    <div id="filter" class="aside-filter">
+      <div class="aside-filter__body">
+        <div class="aside-search">
+            <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:misc.search_placeholder>" autocomplete="off" autofocus>
+            <button class="aside-search__submit i i_search" type="submit"></button>
         </div>
-        <ul class="resource__list">
-            <block:lessons>
-            <li class="resource__item">
-                <a class="resource__anchor<if:active: resource__anchor_active:>" href="<var:lesson_path>"><var:lesson_name></a>
-            </li>
-            </block:lessons>
-        </ul>
+      </div>
     </div>
-</aside>
-<div class="content">
-  <div class="empty empty_lesson_list">Nav izvēlētas neviens mācību priekšmets</div>
+    <ul id="aside_nav" class="aside-nav">
+        <var:index:r>
+    </ul>
 </div>
+
+<div id="content" class="layout__content">
+    <header class="content-header">
+        <h1 class="content-header__h1">Priekšmeti</h1>
+        <ul class="actions-list content-header__actions">
+          <li class="js_menu_parent actions-list__item">
+            <a href="#menu" class="js_menu action action_icon i i_menu i_only"></a>
+            <ul class="menu menu_hidden">
+              <li class="menu__item">
+                <a class="menu__anchor js_modal" href="/lessons/new">Jauns priekšmets</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+    </header>
+
+    <div class="empty-block">Nav izvēlētas neviens mācību priekšmets</div>
+    </div>
+</div>
+<script>
+    (function(){
+        new app.Lookup('#filter_suggest', {
+            onSelect: function($selected, selectedIndex) {
+                window.location.href = $selected.prop('href');
+            }
+        });
+    })();
+</script>

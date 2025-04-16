@@ -1,76 +1,172 @@
-<aside class="aside">
-    <div class="resource">
-        <div class="resource__header">
-            <h1 class="resource__title">Priekšmeti</h1>
-            <a href="/lessons/new" class="js_modal resource__action button button_new">Jauns priekšmets</a>
+<button id="toggle_aside" class="floating-action floating-action_list active" type="button">
+    <span class="floating-action__icon"></span>
+</button>
+<div id="aside" class="layout__aside aside">
+    <div id="filter" class="aside-filter">
+      <div class="aside-filter__body">
+        <div class="aside-search">
+          <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:flat.search_placeholder>" autocomplete="off" autofocus>
+          <button class="aside-search__submit i i_search" type="submit"></button>
         </div>
-        <ul class="resource__list">
-            <block:lessons>
-            <li class="resource__item">
-                <a class="resource__anchor<if:active: resource__anchor_active:>" href="<var:lesson_path>"><var:lesson_name></a>
+      </div>
+    </div>
+    <ul id="aside_nav" class="aside-nav">
+        <var:index:r>
+    </ul>
+</div>
+
+<div id="content" class="layout__content">
+    <header class="content-header">
+        <h1 class="content-header__h1"><var:lesson_name></h1>
+        <div class="breadcrumbs">
+            / <a class="breadcrumbs__anchor inherit" href="/lessons">Priekšmeti</a>
+        </div>
+        <if:actions>
+        <ul class="actions-list content-header__actions">
+            <li class="js_menu_parent actions-list__item">
+                <a href="#menu" class="js_menu action action_icon i i_menu i_only"></a>
+                <ul class="menu menu_hidden">
+                    <block:actions>
+                    <li class="menu__item">
+                        <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                    </li>
+                    </block:actions>
+                </ul>
             </li>
-            </block:lessons>
         </ul>
-    </div>
-</aside>
-<div class="box">
-<if:lesson_id>
-<div class="box__header box-header">
-    <div class="box-header__main">
-        <div class="box-header__title"><var:lesson_name></div>
-        <div class="box-header__description"><var:lesson_description></div>
-    </div>
-    <if:actions>
-    <div class="box-header__actions">
-        <block:actions>
-        <a href="<var:path>" class="<var:class_name> button_action"><var:title></a>
-        </block:actions>
-    </div>
-    </if:actions>
+        </if:actions>
+    </header>
+
+    <if:lesson_description>
+    <section class="box-section">
+        <div class="js_toggle_parent box-section__header active">
+            <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#lesson_description">Apraksts</a></h2>
+        </div>
+        <div id="lesson_description" class="box">
+            <var:lesson_description>
+        </div>
+    </section>
+    </if:lesson_description>
+
+    <section class="box-section">
+        <div class="js_toggle_parent box-section__header active">
+            <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#lesson_invites">Uzaicināti cilvēki</a></h2>
+        </div>
+        <div id="lesson_invites" class="box box_data">
+            <if:lesson_invites>
+            <table class="data-table" width="100%">
+                <thead class="data-table__thead">
+                    <tr class="data-table__tr">
+                        <th class="data-table__th data-table__th_first" width="99%">Skolēns</th>
+                        <th class="data-table__th data-table__th_last" width="1%"></th>
+                    </tr>
+                </thead>
+                <tbody class="data-table__tbody">
+                    <block:lesson_invites> 
+                    <tr class="data-table__tr">
+                        <td class="data-table__td data-table__td_first">
+                            <div class="user">
+                                <div class="user__avatar avatar avatar_<var:user_digit>">
+                                  <var:user_initials>
+                                </div>
+                                <div class="user__title">
+                                    <var:user_firstname> <var:user_lastname>
+                                </div>
+                                <div class="user__description">
+                                    <var:user_email>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="data-table__td data-table__td_last <if:actions:: data-table__td_empty>">
+                            <if:actions>
+                            <ul class="actions-list">
+                                <li class="js_menu_parent actions-list__item">
+                                    <a class="js_menu action- action_icon i i_menu i_only" href="#menu"></a>
+                                    <ul class="menu menu_hidden">
+                                        <block:actions>
+                                        <li class="menu__item">
+                                            <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                                        </li>
+                                        </block:actions>
+                                    </ul>
+                                </li>
+                            </ul>
+                            </if:actions>
+                        </td>
+                    </tr>
+                    </block:lesson_invites>
+                </tbody>
+            </table>
+            </if:lesson_invites>
+            <ifnot:lesson_invites>
+            <div class="empty-block">Nav datu</div>
+            </ifnot:lesson_invites>
+        </div>
+    </section>
+
+
+    <section class="box-section">
+        <div class="js_toggle_parent box-section__header active">
+            <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#lesson_users">Cilvēki mācību priekšmētā</a></h2>
+        </div>
+        <div id="lesson_users" class="box box_data">
+            <if:lesson_users>
+            <table class="data-table" width="100%">
+                <thead class="data-table__thead">
+                    <tr class="data-table__tr">
+                        <th class="data-table__th data-table__th_first" width="99%">Skolēns</th>
+                        <th class="data-table__th data-table__th_last" width="1%"></th>
+                    </tr>
+                </thead>
+                <tbody class="data-table__tbody">
+                    <block:lesson_users> 
+                    <tr class="data-table__tr">
+                        <td class="data-table__td data-table__td_first">
+                            <div class="user">
+                                <div class="user__avatar avatar avatar_<var:user_digit>">
+                                  <var:user_initials>
+                                </div>
+                                <div class="user__title">
+                                    <var:user_firstname> <var:user_lastname>
+                                </div>
+                                <div class="user__description">
+                                    <var:user_email>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="data-table__td data-table__td_last <if:actions:: data-table__td_empty>">
+                            <if:actions>
+                            <ul class="actions-list">
+                                <li class="js_menu_parent actions-list__item">
+                                    <a class="js_menu action- action_icon i i_menu i_only" href="#menu"></a>
+                                    <ul class="menu menu_hidden">
+                                        <block:actions>
+                                        <li class="menu__item">
+                                            <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                                        </li>
+                                        </block:actions>
+                                    </ul>
+                                </li>
+                            </ul>
+                            </if:actions>
+                        </td>
+                    </tr>
+                    </block:lesson_users>
+                </tbody>
+            </table>
+            </if:lesson_users>
+            <ifnot:lesson_users>
+            <div class="empty-block">Nav datu</div>
+            </ifnot:lesson_users>
+        </div>
+    </section> 
 </div>
-<div class="box__content">
-    <if:lesson_invites>
-    <h2 class="content__header">Uzaicināti cilvēki</h2>
-    <ul>
-        <block:lesson_invites> 
-            <li class="user user_modified user_modified_color">
-                <div class="user__avatar">
-                    <img src="/img/avatar.jpeg" height="40">
-                </div>
-                <div class="user__title">
-                    <if:user_id>
-                    <var:user_firstname>
-                    <var:user_lastname>
-                    </if:user_id>
-                    <var:user_email> 
-                </div>
-            </li>
-        </block:lesson_invites>
-    </ul>
-    </if:lesson_invites>
-    <h2 class="content__header">Cilvēki mācību priekšmētā</h2>
-    <if:lesson_users>
-    <ul>
-        <block:lesson_users>
-            <li class="user user_modified">
-                <div class="user__avatar">
-                    <img src="/img/avatar.jpeg" height="40">
-                </div>
-                <div class="user__title">
-                    <if:user_id>
-                    <var:user_firstname>
-                    <var:user_lastname>
-                    </if:user_id>
-                    <var:user_email> 
-                </div>
-                <if:lesson_user_delete_path>
-                <a href="<var:lesson_user_delete_path>" class="delete_button"><img src="/img/delete.png" height="22"></a>
-                </if:lesson_user_delete_path>
-                <!-- <a href="/lessons/users/<var:lesson_user_id>/delete" class="delete_button"><img src="/img/delete.png" height="22"></a> -->
-            </li>
-        </block:lesson_users>
-    </ul>
-    </if:lesson_users>
-</div>
-</if:lesson_id>
-</div> 
+<script>
+    (function(){
+        new app.Lookup('#filter_suggest', {
+            onSelect: function($selected, selectedIndex) {
+                window.location.href = $selected.prop('href');
+            }
+        });
+    })();
+</script>

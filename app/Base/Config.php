@@ -63,30 +63,14 @@ class Config {
         return $this->recursive(explode(self::NAME_DELIMITER, $name), $default);
     }
 
-    public function getUploadMaxFilesize(bool $raw = false): ?string
+    public function getUploadMaxFilesize()
     {
-        $value = $this->parsePhpIniSize(ini_get('upload_max_filesize'));
-
-        if (!$value) {
-            $value = null;
-        } elseif(!$raw) {
-            $value = Number::set($value)->toPrettyFileSize();
-        }
-
-        return $value;
+        return $this->parsePhpIniSize(ini_get('upload_max_filesize'));
     }
 
-    public function getPostMaxSize(bool $raw = false): ?string
+    public function getPostMaxSize()
     {
-        $value = $this->parsePhpIniSize(ini_get('post_max_size'));
-
-        if (!$value) {
-            $value = null;
-        } elseif(!$raw) {
-            $value = Number::set($value)->toPrettyFileSize();
-        }
-
-        return $value;
+        return $this->parsePhpIniSize(ini_get('post_max_size'));
     }
 
     public function recursive($names, $default = null): mixed
