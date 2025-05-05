@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Base\Exceptions\NotFoundException;
 use App\Base\DataStore;
+use App\Base\DataQuery;
 use App\Base\View;
 use DateTime;
 
