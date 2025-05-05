@@ -36,9 +36,8 @@
         <thead class="data-table__thead">
           <tr class="data-table__tr">
             <th class="data-table__th data-table__th_first" width="1%">#</th>
-            <th class="data-table__th" width="10%">Laiks</th>
-            <th class="data-table__th" width="30%">Priekšmets, Klases telpa, pedagogs </th>
-            <th class="data-table__th" width="5%">Vērtējumi </th>
+            <th class="data-table__th" width="15%">Laiks</th>
+            <th class="data-table__th">Priekšmets</th>
             <th class="data-table__th" width="4%">Apmeklējumi</th>
             <th class="data-table__th" width="20%">Uzdevumi</th>
             <th class="data-table__th" width="30%">Tēma</th>
@@ -61,6 +60,11 @@
                   <var:lesson_participant>
                 </div>
                 </if:lesson_participant>
+                <if:organization_name>
+                <div class="data-summary__description">
+                  <var:organization_name>
+                </div>
+                </if:organization_name>
               </div>
               </if:lesson_name>
               <ifnot:lesson_name>
@@ -70,8 +74,28 @@
               </ifnot:lesson_name>
             </td>
             <td class="data-table__td data-table__td_empty">
+              <block:visits_count>
+              <var:presence_count> / <var:total_count>
+              </block:visits_count>
+              <block:presence>
+              <if:visit_presence>
+              <div class="i i_checkbox"></div>
+              </if:visit_presence>
+              <ifnot:visit_presence>
+              <if:excused_absence>
+              <div class="i i_checkbox_ok"></div>
+              </if:excused_absence>
+              <ifnot:excused_absence>
+              <div class="i i_checkbox_warn"></div>
+              </ifnot:excused_absence>
+              </ifnot:visit_presence>
+              </block:presence>
+              <ifnot:presence>
+              <ifnot:visits_count>
+              <div class="i i_checkbox_blank"></div>
+              </ifnot:visits_count>
+              </ifnot:presence>
             </td>
-            <td class="data-table__td data-table__td_empty"></td>
             <td class="data-table__td<if:assignments:: data-table__td_empty>">
               <block:assignments>
               <table width="100%">
@@ -99,6 +123,9 @@
                     </li>
                     <li class="menu__item">
                       <a href="<var:assignment_new_path>" class="menu__anchor js_modal">Pievienot uzdevumu</a>
+                    </li>
+                    <li class="menu__item">
+                      <a href="<var:schedule_visits_path>" class="menu__anchor js_modal">Atzīmēt apmeklējumu</a>
                     </li>
                   </ul>
                 </li>

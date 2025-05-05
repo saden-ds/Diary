@@ -5,7 +5,7 @@
     <div id="filter" class="aside-filter">
       <div class="aside-filter__body">
         <div class="aside-search">
-          <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:flat.search_placeholder>" autocomplete="off" autofocus>
+          <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:group.search_placeholder>" autocomplete="off" autofocus>
           <button class="aside-search__submit i i_search" type="submit"></button>
         </div>
       </div>
@@ -138,7 +138,7 @@
 
                 $new.hide();
                 $droppable.append($draggable).removeClass('data_droppable');
-                
+
                 $.post(url, {lesson_id: id}, function(response){
                     if (response.error) {
                         app.flash.error(response.error);
@@ -147,6 +147,16 @@
                             $(this).remove();
                             $new.show();
                         });         
+                    } else {
+                        $draggable.replaceWith(
+                            '<div>' +
+                                $draggable.text() +
+                                ' <a class="js_lesson_remove" href="/schedules/' + 
+                                    response.schedule_id + 
+                                '/groups/delete">×</a>' +
+                            
+                            '</div>'
+                        );
                     }
                 }, 'json').fail(function(jqXHR, textStatus, errorThrown){
                     $draggable.fadeOut(function(){
@@ -166,6 +176,7 @@
                 if (response.error) {
                     app.flash.error(response.error);     
                 } else {
+                    $lesson.closest('td').addClass('data_droppable ui-droppable');
                     $lesson.fadeOut('fast', function(){
                         $(this).remove();
                     });

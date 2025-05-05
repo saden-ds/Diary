@@ -2,7 +2,6 @@
     <span class="floating-action__icon"></span>
 </button>
 <div id="content" class="layout__content">
-
     <header class="content-header">
         <h1 class="content-header__h1">Pārstāvji</h1>
         <if:actions>
@@ -20,7 +19,7 @@
         </ul>
         </if:actions>
     </header>
-    
+    <if:organization_users>
     <section class="box-section">
         <div class="js_toggle_parent box-section__header active">
             <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#representatives">Organizācijas pārstāvji</a></h2>
@@ -73,7 +72,8 @@
             </table>
         </div>
     </section>
-
+    </if:organization_users>
+    <if:organization_invites>
     <section class="box-section">
         <div class="js_toggle_parent box-section__header active">
             <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#invited_representatives">Uzaicināti</a></h2>
@@ -125,4 +125,19 @@
             </table>
         </div>
     </section>
+    </if:organization_invites>
+    <ifnot:organization_invites>
+    <if:organization_user_new_path>
+    <section class="box-section">
+        <div class="js_toggle_parent box-section__header active">
+            <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#invited_representatives">Uzaicināti</a></h2>
+        </div>
+        <div id="invited_representatives" class="box box_data">
+            <div class="empty-block">
+                <a class="js_modal button button_small button_gray" href="<var:organization_user_new_path>">Uzaicināt</a>
+            </div>
+        </div>
+    </section>
+    </if:organization_user_new_path>
+    </ifnot:organization_invites>
 </div>

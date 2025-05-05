@@ -1,18 +1,19 @@
 <block:groups>
-<var:group_name>
-<table width="100%" style="font-size: 12px">
+<div class="title"><var:group_name></div><br>
+<block:dates>
+<table  class="schedule" width="100%" style="font-size: 12px; page-break-inside: avoid;" autosize="1">
     <tr>
-        <td width="40%">Laiks</td>
-        <td>Priekšmets</td>
-    </tr>
-    <block:dates>
-    <tr>
-        <td><var:date></td>
+        <td class="schedule__date"><var:date></td>
         <td></td>
+    </tr>
+    <tr>
+        <td class="schedule__th" width="20%">Laiks</td>
+        <td class="schedule__th">Priekšmets</td>
+        <td class="schedule__th" width="30%">Skolotājs</td>
     </tr>
     <block:time>
     <tr>
-        <td>
+        <td class="schedule__td">
             <table width="100%">
                 <tr>
                     <td width="20"><var:lesson_time_number></td>
@@ -20,12 +21,16 @@
                 </tr>
             </table>
         </td>
-        <td>
+        <td class="schedule__td">
             <var:lesson_name>
+        </td>
+        <td class="schedule__td">
+            <var:user_fullname>
         </td>
     </tr>
     </block:time>
-    </block:dates>
 </table>
-<hr>
+<br>
+</block:dates>
+<pagebreak>
 </block:groups>

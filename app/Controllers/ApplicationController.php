@@ -79,6 +79,8 @@ class ApplicationController
                     $current_user['unconfirmed_message'] = null;
                 }
 
+                $current_user['app_name'] = $this->config->get('title');
+
                 $current_user = [$current_user];
             }
 
@@ -92,13 +94,13 @@ class ApplicationController
                 'name' => 'Atzīmes',
                 'path' => '/grades',
                 'active' => get_class($this) == 'App\Controllers\GradesController',
-                'icon' => 'assignment'
+                'icon' => 'grade'
             ];
             $header_nav[] = [
                 'name' => 'Kavējumi',
                 'path' => '/visits',
                 'active' => false,
-                'icon' => 'assignment'
+                'icon' => 'calendar_check'
             ];
             $header_nav[] = [
                 'name' => 'Uzdevumi',
@@ -130,7 +132,7 @@ class ApplicationController
                     'name' => 'Pārstāvji',
                     'path' => '/organizations/users',
                     'active' => get_class($this) == 'App\Controllers\Organizations\InvitesController',
-                    'icon' => 'assignment'
+                    'icon' => 'representative'
                 ];
                 $header_nav[] = [
                     'name' => 'Grafika plānotājs',
@@ -166,6 +168,7 @@ class ApplicationController
             if (!$view->isException()) {
                 $view->csrf($this->session->get('csrf'));
                 $view->main([
+                    'app_name' => $this->config->get('title'), 
                     'version' => $this->config->get('version'),
                     'assets_version' => $this->config->get('version_timestamp'),
                     'current_user' => $current_user,

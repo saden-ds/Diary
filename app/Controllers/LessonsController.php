@@ -44,11 +44,14 @@ class LessonsController extends PrivateController
         $actions = null;
 
         if ($this->current_user->canAdmin($lesson->organization_id)) {
-            $actions[] = [
-                'title' => 'Rediģēt',
-                'path' => '/lessons/' . $lesson->lesson_id . '/edit',
-                'class_name' => 'js_modal'
-            ];
+            if ($lesson->organization_id) {
+                $actions[] = [
+                    'title' => 'Rediģēt',
+                    'path' => '/lessons/' . $lesson->lesson_id . '/edit',
+                    'class_name' => 'js_modal'
+                ];
+            }
+
             $actions[] = [
                 'title' => 'Jauns priekšmets',
                 'path' => '/lessons/new',
@@ -197,11 +200,16 @@ class LessonsController extends PrivateController
         }
 
         if ($this->current_user->organization_id) {
-           $query
-                ->where('l.organization_id = ?', $this->current_user->organization_id);
+           $query->where('l.organization_id = ?', $this->current_user->organization_id);
         } else {
-            $query->where('l.user_id = ?', $this->current_user->id);
+            $query
+                ->where('l.user_id = ?', $this->current_user->id)
+                ->where('l.organization_id is null');
         }
+
+        $query
+            ->select('o.organization_name')
+            ->leftJoin('organization o on o.organization_id = l.organization_id');
 
         if (!$data = $query->fetchAll()) {
             return null;
@@ -214,6 +222,7 @@ class LessonsController extends PrivateController
                 'lesson_name' => $r['lesson_name'],
                 'lesson_path' => '/lessons/' . intval($r['lesson_id']),
                 'user_fullname' => $r['user_fullname'],
+                'organization_name' => $r['organization_name'] ?: 'Privats',
                 'active'      => $r['lesson_id'] == $id
             ];
         }

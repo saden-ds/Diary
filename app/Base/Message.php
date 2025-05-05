@@ -4,6 +4,7 @@ namespace App\Base;
 
 use Exception;
 use DateTime;
+use DateTimeZone;
 
 class Message
 {
@@ -85,7 +86,7 @@ class Message
         }
 
         $format = isset($options['format']) ? $options['format'] : 'default';
-        $time = new DateTime($time_string);
+        $time = new DateTime($time_string, new DateTimeZone('UTC'));
         $localized_format = $this->t('datetime.format.'.$format, [
             'default' => $format
         ]);
@@ -93,6 +94,8 @@ class Message
         if (preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $time_string)) {
             return $time->format($localized_format);
         }
+
+        $time->setTimezone(new DateTimeZone($this->config->get('timezone')));
 
         return $time->format($localized_format);
     }

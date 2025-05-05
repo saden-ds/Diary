@@ -18,7 +18,7 @@
 }
 .modal__tools { display: none; }
 .modal__close {
-  position: absolute; top: 16px; right: 32px; z-index: 101;
+  position: absolute; top: 12px; right: 24px; z-index: 101;
   width: 32px; height: 32px;
   border-radius: 4px;
   white-space: nowrap;
@@ -72,10 +72,9 @@
   width: 800px; max-width: 100%;
 }
 .modal-section__header {
-  padding: 20px 72px 19px 32px;
-  border-bottom: 1px solid #E8E3DE;
+  padding: 16px 72px 16px 24px;
   border-radius: 4px 4px 0 0;
-  background: #FBF2EA;
+  background: #F9F3EB;
 }
 .modal-section__header_action {
   position: relative;
@@ -89,7 +88,7 @@
   padding-left: 64px;
 }
 .modal-section__header_i::before {
-  position: absolute; top: 20px; left: 32px;
+  position: absolute; top: 20px; left: 24px;
 }
 .modal-section__header_i.i_gas::before,
 .modal-section__header_i.i_hot::before,
@@ -150,10 +149,10 @@
 }
 .modal-section__body,
 .modal-section__message {
-  padding: 24px 32px 16px;
+  padding: 24px 24px 16px;
 }
 .modal-section__textarea {
-  padding: 16px 32px;
+  padding: 16px 24px;
   width: 100%; min-height: 100px;
   border: none;
   border-radius: 0;
@@ -205,14 +204,13 @@
   border-top: 1px solid #E4D8D8;
 }
 .modal-section__empty {
-  padding: 32px;
+  padding: 24px;
   color: #868686;
   text-align: center;
 }
 .modal-section__footer {
-  padding: 8px 32px 4px;
-  border-top: 1px solid #E8E3DE;
-  background: #FBF2EA;
+  padding: 8px 24px 4px;
+  background: #F9F3EB;
   text-align: right;
 }
 .modal-section__footer_clearfix::after {
@@ -236,9 +234,6 @@
 }
 .modal-section__footer .files-list {
   text-align: left;
-}
-.modal-section__footer > .overlay {
-  margin: -8px -32px -4px;
 }
 
 .modal-section_480 { width: 480px; }
@@ -284,16 +279,16 @@
   background: #EBE7E2;
 }
 .modal-filter_simple {
-  padding: 8px 32px 1px;
+  padding: 8px 24px 1px;
 }
 .modal-filter__td {
   padding: 8px 4px 0;
 }
 .modal-filter__td_first {
-  padding-left: 32px;
+  padding-left: 24px;
 }
 .modal-filter__td_last {
-  padding-right: 32px;
+  padding-right: 24px;
 }
 .modal-filter__td .switch {
   margin: 10px 0;
@@ -305,10 +300,10 @@
 .modal .data-keyval__td_first,
 .modal .data-options__th_first,
 .modal .data-options__td_first {
-  padding-left: 32px;
+  padding-left: 24px;
 }
 .modal .data-table__td_first .data-summary_boolean_outside {
-  margin-left: 32px;
+  margin-left: 24px;
 }
 
 .modal .tree__level_1 .tree__title:not(.tree__title_no_toggle) {
@@ -334,7 +329,7 @@
   font-size: 14px;
 }
 .modal .tree__title_icon {
-  padding-left: 32px;
+  padding-left: 24px;
 }
 .modal .tree__anchor_icon::before {
   left: 0;

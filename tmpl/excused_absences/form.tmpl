@@ -1,0 +1,37 @@
+<form id="excused_absence_form" class="modal-section modal-section_640">
+  <div class="modal-section__header _modal_no _modal_holder">
+    <h2 class="modal-section__title"><var:user_firstname> <var:user_lastname> / <var:group_name></h2>
+  </div>
+  <div class="modal-section__body _modal_o">
+    <div class="js_period field-grid">
+      <div class="field-grid__span field-grid__span_6">
+        <div class="field-block field-block_label">
+          <input id="excused_absence_form_from" class="field field_stretch field_period field-block__field" type="text" name="excused_absence_from" autofocus>
+          <label for="excused_absence_form_from" class="field-block__label">Periods no</label>
+        </div>
+      </div>
+      <div class="field-grid__span field-grid__span_6">
+        <div class="field-block field-block_label">
+          <input id="excused_absence_form_to" class="field field_stretch field_period field-block__field" type="text" name="excused_absence_to">
+          <label for="excused_absence_form_to" class="field-block__label">līdz</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-section__footer _modal_no">
+    <a id="excused_absence_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+    <button class="button button_submit" type="submit">Pievienot</button>
+  </div>
+</form>
+<script>
+(function(){
+  new app.Form('#excused_absence_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>
+

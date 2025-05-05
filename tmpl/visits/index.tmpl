@@ -1,0 +1,50 @@
+<button id="toggle_aside" class="floating-action floating-action_hide" type="button">
+    <span class="floating-action__icon"></span>
+</button>
+<div id="content" class="layout__content">
+  <block:lesson_visits>
+  <section class="box-section">
+    <div class="js_toggle_parent box-section__header box-section__header_m_grid active">
+      <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#visits_<var:group_id>"><var:group_name></a></h2>
+    </div>
+    <div id="visits_<var:group_id>" class="box box_data">
+      <table class="data-table" width="100%">
+        <thead class="data-table__thead">
+          <tr class="data-table__tr">
+            <th class="data-table__th data-table__th_first" width="32%"></th>
+            <block:months>
+            <th class="data-table__th" colspan="3"><var:month></th>
+            </block:months>
+          </tr>
+          <tr class="data-table__tr">
+            <th class="data-table__th data-table__th_first" width="32%"></th>
+            <block:months>
+            <th class="data-table__th">
+              Nodarbības
+            </th>
+            <th class="data-table__th">
+              Neattaisnoti
+            </th>
+            <th class="data-table__th">
+              Attaisnoti
+            </th>
+            </block:months>
+          </tr>
+        </thead>
+        <tbody class="data-table__tbody">
+          <block:lessons>
+          <tr class="data-table__tr">
+            <td class="data-table__td data-table__td_first"><var:lesson_name></td>
+            <block:visits>
+            <td class="data-table__td"><var:lesson_count></td>
+            <td class="data-table__td"><var:unjustified_count></td>
+            <td class="data-table__td">0</td>
+            </block:visits>
+          </tr>
+          </block:lessons>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  </block:lesson_visits>
+</div>

@@ -1,0 +1,68 @@
+<form id="visit_form" class="modal-section modal-section_640">
+  <div class="modal-section__header _modal_no _modal_holder">
+    <h2 class="modal-section__title">Jauns apmeklējums</h2>
+  </div>
+  <div class="modal-section__overflow _modal_o">
+    <table class="data-options" width="100%">
+      <tbody>
+        <tr class="data_row data-options__tr">
+          <td class="data-options__td data-options__td_first">Atzīmēt visus</td>
+          <td class="data-options__td data-options__td_last data-options__td_switch" width="1%">
+            <label class="switch">
+              <input class="switch__input" type="checkbox" id="visits_all">
+              <i class="switch__icon"></i>
+            </label>
+          </td>
+        </tr>
+        <block:users>
+        <tr class="data_row data-options__tr">
+          <td class="data-options__td data-options__td_first data-options__td_title">
+            <var:user_firstname> <var:user_lastname>
+          </td>
+          <td class="data-options__td data-options__td_last data-options__td_switch">
+            <label class="switch">
+              <input class="switch__input visit_switch" type="checkbox" name="visits[<var:user_id>]" <if:visit_presence: checked:>>
+              <i class="switch__icon"></i>
+            </label>
+          </td>
+        </tr>
+        </block:users>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-section__footer _modal_no">
+    <a id="grade_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+    <button class="button button_submit" type="submit">Saglabat</button>
+  </div>
+</form>
+<script>
+(function(){
+    new app.Form('#visit_form', {
+      url: '<var:path>',
+      keepOverlay: true,
+      onSuccess: function(form, response){
+        window.location.reload();
+      }
+    });
+
+    function updateMainSwitch() {
+      const all = $('.visit_switch').length;
+      const checked = $('.visit_switch:checked').length;
+
+      $('#visits_all').prop('checked', all === checked);
+    }
+
+    $('#visits_all').on('change', function() {
+      var checked = this.checked;
+      $('.visit_switch').prop('checked', checked);
+    });
+
+    $(document).on('change', '.visit_switch', function() {
+      updateMainSwitch();
+    });
+
+    $(document).ready(function() {
+      updateMainSwitch();
+    });
+})();
+</script>

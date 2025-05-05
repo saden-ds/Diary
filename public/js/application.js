@@ -1549,12 +1549,13 @@ app.script = (function(){
     if ($.datepicker) {
       $('.field_datepicker', parent).each(function(){
         var options,
-            $this   = $(this),
-            data    = $this.data();
+            $this = $(this),
+            data  = $this.data();
 
         options = {
           changeMonth: true,
           changeYear: true,
+          dateFormat: 'dd.mm.yy.',
           beforeShow: function(input){
             if ($(input).attr('readonly')) return false;
           },
@@ -1566,9 +1567,11 @@ app.script = (function(){
         if (data.format) {
           options.dateFormat = data.format;
         }
-
         if (typeof(data.max) !== 'undefined') {
           options.maxDate = data.max;
+        }
+        if (typeof(data.min) !== 'undefined') {
+          options.minDate = data.min;
         }
 
         $this.datepicker(options);
@@ -1587,28 +1590,31 @@ app.script = (function(){
     }
   }
 
-  function period(parent, options) {
+  function period(parent, periodOptions) {
     if (!$.datepicker) return;
-
-    options = $.extend({
-      changeMonth: true,
-      changeYear: true,
-      beforeShow: function(input){
-        if (input.readonly) return false;
-      },
-      onSelect: function(dateText, o){
-        o.input.trigger('blur');
-      }
-    }, options);
 
     $('.js_period', parent).each(function(){
       var $parent = $(this),
-          $inputs = $('.field__input_period', this),
+          $inputs = $('.field_period', this),
           $start  = $inputs.first(),
           $end    = $inputs.last();
 
       $inputs.each(function(){
-        var $this = $(this);
+        var options,
+            $this = $(this),
+            data  = $this.data();
+
+        options = $.extend({
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: 'dd.mm.yy.',
+          beforeShow: function(input){
+            if (input.readonly) return false;
+          },
+          onSelect: function(dateText, o){
+            o.input.trigger('blur');
+          }
+        }, periodOptions);
 
         if ($this.data('year-range')) {
           options.yearRange = $this.data('year-range');
@@ -1616,19 +1622,30 @@ app.script = (function(){
 
         if (this === $start[0]) {
           if ($end.val()) {
-            options['maxDate'] = $end.val();
+            options.maxDate = $end.val();
+          } else if (typeof(data.max) !== 'undefined') {
+            options.maxDate = data.max;
+          }
+          if (typeof(data.min) !== 'undefined') {
+            options.minDate = data.min;
           }
 
           options.onClose = function(selectedDate) {
-            $end.datepicker('option', 'minDate', selectedDate);
+            var minDate = $end.data('min');
+
+            $end.datepicker('option', 'minDate', selectedDate || minDate);
           }
         } else {
           if ($start.val()) {
-            options['minDate'] = $start.val();
+            options.minDate = $start.val();
+          } else if (typeof(data.min) !== 'undefined') {
+            options.minDate = data.min;
           }
 
           options.onClose = function(selectedDate) {
-            $start.datepicker('option', 'maxDate', selectedDate);
+            var maxDate = $start.data('max');
+
+            $start.datepicker('option', 'maxDate', selectedDate || maxDate);
           }
         }
 

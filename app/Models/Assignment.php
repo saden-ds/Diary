@@ -57,6 +57,28 @@ class Assignment extends Model
         return new Assignment($r, true);
     }
 
+    public function setAssignmentEndDatetime($value): void
+    {
+        if (is_array($value)) {
+            if (
+                isset($value['date']) &&
+                isset($value['hour']) &&
+                isset($value['minute']) &&
+                $value['date']
+            ) {
+                $value = $value['date'].' '.$value['hour'].':'.$value['minute'].':00';
+
+                if (date_create($value) === false) {
+                    $this->addError('assignment_end_datetime', $this->msg->t('error.invalid_date_format'));
+                }
+            } else {
+                $value = null;
+            }
+        }
+
+        $this->assignAttribute('assignment_end_datetime', $value);
+    }
+
     public function create($attributes = null): bool
     {
         return $this->validateAndCreateRecord($attributes);

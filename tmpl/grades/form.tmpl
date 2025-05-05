@@ -6,7 +6,6 @@
     <div class="modal-section__body">
       <div class="field-block field-block_label">
         <select id="grade_form_type" class="field field_select field_stretch field-block__field" name="grade_type" autofocus>
-          <option value=""></option>
           <block:grade_type_options>
           <option value="<var:value>"<if:selected: selected:>><var:name></option>
           </block:grade_type_options>
@@ -29,11 +28,8 @@
             <var:user_firstname> <var:user_lastname>
           </td>
           <td class="data-options__td data-options__td_last data-options__td_input" width="20%">
-            <input id="grade_form_grade" type="text" class="field field_stretch" name="grades[<var:user_id>]" value="<var:user_grade>">
-            <select id="grade_form_grade_options" class="field field_select field_stretch hidden" name="grades[<var:user_id>]" value="<var:user_grade>" disabled>
-              <block:grade_included_options>
-              <option value="<var:value>"<if:selected: selected:>><var:name></option>
-              </block:grade_included_options>
+            <select class="js_grades field field_select field_stretch" name="grades[<var:user_id>]" data-value="<var:user_grade>">
+              <option value=""></option>
             </select>
           </td>
         </tr>
@@ -48,15 +44,68 @@
 </form>
 <script>
 (function(){
+
+  var $grades = $('.js_grades');
+
+  function populateNumeric() {
+    $grades.each(function(){
+      var options = [],
+          value   = $(this).data('value');
+
+      for (var i = 0; i <= 10; i++) {
+        options.push(
+          '<option value="' + i + '"' + (value == i ? ' selected' : '') + '>' +
+            (i === 0 ? 'n/v' : i) +
+          '</option>'
+        );
+      }
+
+      $(this).html(options.join(' '));
+    });
+  }
+
+  function popilatPercent() {
+    $grades.each(function(){
+      var options = [],
+          value   = $(this).data('value');
+
+      for (var i = 0; i <= 100; i++) {
+        options.push(
+          '<option value="' + i + '"' + (value == i ? ' selected' : '') + '>' +
+            i +
+          '</option>'
+        );
+      }
+
+      $(this).html(options.join(' '));
+    });
+  }
+
+  function popilatIncluded() {
+    $grades.each(function(){
+      var options = [],
+          value   = $(this).data('value');
+
+      options.push(
+        '<option value="1"' + (value === '1' ? ' selected' : '') + '>i</option>'
+      );
+      options.push(
+        '<option value="0"' + (value === '0' ? ' selected' : '') + '>ni</option>'
+      );
+
+      $(this).html(options.join(' '));
+    });
+  }
+
   $('#grade_form_type').on('change pick', function(){
     var type = $(this).val();
 
     if (type === 'included') {
-      $('#grade_form_grade').prop('disabled', true).addClass('hidden');
-      $('#grade_form_grade_options').prop('disabled', false).removeClass('hidden');
+      popilatIncluded();
+    } else if (type === 'percent') {
+      popilatPercent();
     } else {
-      $('#grade_form_grade').prop('disabled', false).removeClass('hidden');
-      $('#grade_form_grade_options').prop('disabled', true).addClass('hidden');
+      populateNumeric();
     }
   }).trigger('pick');
 

@@ -2,7 +2,7 @@
     <div id="filter" class="aside-filter">
         <div class="aside-filter__body">
             <div class="aside-search">
-                <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:flat.search_placeholder>" autocomplete="off" autofocus>
+                <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:group.search_placeholder>" autocomplete="off" autofocus>
                 <button class="aside-search__submit i i_search" type="submit"></button>
             </div>
         </div>
@@ -44,7 +44,8 @@
                 <thead class="data-table__thead">
                     <tr class="data-table__tr">
                         <th class="data-table__th data-table__th_first" width="50%">Skolēns</th>
-                        <th class="data-table__th" width="49%">Statuss</th>
+                        <th class="data-table__th">Statuss</th>
+                        <th class="data-table__th" width="5%">Statuss</th>
                         <th class="data-table__th data-table__th_last" width="1%"></th>
                     </tr>
                 </thead>
@@ -72,7 +73,19 @@
                             nav reģistrēts
                             </ifnot:status>
                         </td>
-                        <td class="data-table__td data-table__td_last <if:actions:: data-table__td_empty>">
+                        <td class="data-table__td">
+                            <if:excused_absences_count>
+                            <div class="data-summary data-summary_i i i_excused_absence">
+                                <if:excused_absences_path>
+                                <a class="js_modal toggle" href="<var:excused_absences_path>"><var:excused_absences_count></a>
+                                </if:excused_absences_path>
+                                <ifnot:excused_absences_path>
+                                <var:excused_absences_count>
+                                </ifnot:excused_absences_path>
+                            </div>
+                            </if:excused_absences_count>
+                        </td>
+                        <td class="data-table__td data-table__td_last <if:actions: data-table__td_actions: data-table__td_empty>">
                             <if:actions>
                             <ul class="actions-list">
                                 <li class="js_menu_parent actions-list__item">
@@ -131,7 +144,7 @@
                             </div>
                         </td>
                         <td class="data-table__td"><var:lesson_name></td>
-                        <td class="data-table__td data-table__td_last <if:actions:: data-table__td_empty>">
+                        <td class="data-table__td data-table__td_last <if:actions: data-table__td_actions: data-table__td_empty>">
                             <if:actions>
                             <ul class="actions-list">
                                 <li class="js_menu_parent actions-list__item">

@@ -9,11 +9,13 @@ use App\Controllers\MainController;
 use App\Controllers\ConversationsController;
 use App\Controllers\RegistrationsController;
 use App\Controllers\GradesController;	
+use App\Controllers\OrganizationsController;   
 use App\Controllers\Organizations\GroupsController;   
 use App\Controllers\Organizations\GroupUsersController;   
 use App\Controllers\Organizations\GroupLessonsController;   
 use App\Controllers\Organizations\ScheduleGroupsController;   
 use App\Controllers\Organizations\InvitesController as OrganizationInvitesController;   
+use App\Controllers\Organizations\ExcusedAbsenceController;   
 use App\Controllers\OrganizationInvitesController as UserOrganizationInvitesController;   
 use App\Controllers\NotificationsController;	
 use App\Controllers\VisitsController;
@@ -60,7 +62,9 @@ $router->get('/grades', [GradesController::class, 'indexAction']);
 $router->get('/assignments/{:assignment_id}/grades/new', [GradesController::class, 'newAction']);
 $router->post('/assignments/{:assignment_id}/grades/create', [GradesController::class, 'createAction']);
 
-// $router->get('/visits', [VisitsContynceroller::class, 'indexAction']);
+$router->get('/visits', [VisitsController::class, 'indexAction']);
+$router->get('/schedules/{:schedule_id}/visits/new', [VisitsController::class, 'newAction']);
+$router->post('/schedules/{:schedule_id}/visits/create', [VisitsController::class, 'createAction']);
 
 $router->get('/lessons', [LessonsController::class, 'indexAction']);
 $router->get('/lessons/new', [LessonsController::class, 'newAction']);
@@ -112,7 +116,13 @@ $router->get('/groups', [GroupsController::class, 'indexAction']);
 $router->get('/groups/new', [GroupsController::class, 'newAction']);
 $router->post('/groups/create', [GroupsController::class, 'createAction']);
 $router->get('/groups/{:id}', [GroupsController::class, 'showAction']);
+$router->get('/groups/{:id}/edit', [GroupsController::class, 'editAction']);
+$router->post('/groups/{:id}/update', [GroupsController::class, 'updateAction']);
 $router->get('/groups/{:group_id}/users', [GroupUsersController::class, 'indexAction']);
+$router->get('/groups/users/{:group_user_id}/absences', [ExcusedAbsenceController::class, 'indexAction']);
+$router->get('/groups/users/{:group_user_id}/absences/new', [ExcusedAbsenceController::class, 'newAction']);
+$router->post('/groups/users/{:group_user_id}/absences/create', [ExcusedAbsenceController::class, 'createAction']);
+$router->get('/groups/users/absences/{:id}/delete', [ExcusedAbsenceController::class, 'deleteAction']);
 $router->get('/groups/{:group_id}/users/new', [GroupUsersController::class, 'newAction']);
 $router->post('/groups/{:group_id}/users/create', [GroupUsersController::class, 'createAction']);
 $router->get('/groups/{:group_id}/users/{:group_user_id}/delete', [GroupUsersController::class, 'deleteAction']);
@@ -129,6 +139,8 @@ $router->get('/organizations/invites/{:invite_id}/accept', [UserOrganizationInvi
 $router->get('/organizations/invites/{:invite_id}/decline', [UserOrganizationInvitesController::class, 'declineAction']);
 
 $router->get('/profiles', [SessionsController::class, 'showAction']);
+$router->get('/organizations/new', [OrganizationsController::class, 'newAction']);
+$router->post('/organizations/create', [OrganizationsController::class, 'createAction']);
 $router->post('/signin', [SessionsController::class, 'createAction']);
 $router->any('/private', [SessionsController::class, 'updateAction']);
 $router->any('/organizations/{:organization_id}', [SessionsController::class, 'updateAction']);

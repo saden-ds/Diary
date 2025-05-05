@@ -16,11 +16,14 @@ class InvitesController extends ApplicationController
     public function indexAction(): ?View
     {
         $actions = null;
+        $organization_user_new_path = null;
 
         if ($this->current_user->canAdmin()) {
+            $organization_user_new_path = '/organizations/users/new';
+
             $actions[] = [
                 'title' => 'Uzaicināt',
-                'path' => '/organizations/users/new',
+                'path' => $organization_user_new_path,
                 'class_name' => 'js_modal'
             ];
         }
@@ -28,6 +31,7 @@ class InvitesController extends ApplicationController
         return View::init('tmpl/organization_invites/index.tmpl', [
             'organization_users' => $this->getOrganizationUsers(),
             'organization_invites' => $this->getOrganizationInvites(),
+            'organization_user_new_path' => $organization_user_new_path,
             'actions' => $actions
         ]);     
     }
@@ -107,13 +111,21 @@ class InvitesController extends ApplicationController
         $query = new DataQuery();
 
         $query
-            ->select('ou.*', 'u.user_firstname', 'u.user_lastname', 'u.user_email')
+            ->select(
+                'ou.*',
+                'o.user_id as owner_id',
+                'u.user_id',
+                'u.user_firstname',
+                'u.user_lastname',
+                'u.user_email'
+            )
             ->from('organization_user as ou')
+            ->join('organization as o on o.organization_id = ou.organization_id')
             ->join('user as u on u.user_id = ou.user_id')
-            ->where('ou.organization_id = ? and ou.user_id != ?', [
-                $this->current_user->organization_id, 
-                $this->current_user->id
-            ]);
+            ->where(
+                'ou.organization_id = ?',
+                $this->current_user->organization_id
+            );
 
         if (!$data = $query->fetchAll()) {
             return null;
@@ -127,7 +139,7 @@ class InvitesController extends ApplicationController
             $v['user_digit'] = $user->user_digit;
             $v['user_initials'] = $user->user_initials;
 
-            if ($is_admin) {
+            if ($is_admin && $v['user_id'] !== $v['owner_id']) {
                 $v['actions'] = [
                     [
                         'title' => 'Rediģēt',

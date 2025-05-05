@@ -1,21 +1,19 @@
 <div class="shield">
   <form id="signin_form" class="shield__container" method="post">
     <div class="shield__header">
-      <h1 class="logo"><var:title></h1>
+      <a class="logo" href="/"></a>
     </div>
     <div class="shield__body">
-      <div class="field-block">
-        <input id="signin_user" class="field field_stretch field-block__field" type="text" name="email" value="" autocomplete="off" autofocus>
-        <label for="signin_user" class="field-block__label"><msg:signin.email></label>
+      <div class="field-block field-block_compact">
+        <input id="signin_user" class="field field_stretch field-block__field" type="text" name="email" placeholder="<msg:signin.email>" autocomplete="off" autofocus>
       </div>
-      <div class="field-block">
-        <input id="signin_pass" class="field field_stretch field-block__field" type="password" name="password" autocomplete="off">
-        <label for="signin_pass" class="field-block__label"><msg:signin.password></label>
+      <div class="field-block field-block_compact">
+        <input id="signin_pass" class="field field_stretch field-block__field" type="password" name="password" placeholder="<msg:signin.password>" autocomplete="off">
       </div>
     </div>
     <div class="shield__footer">
-      <button class="button button_commit" type="submit"><msg:signin.submit></button>
-      <a href="/signup" class="button button_simple">Sign up</a>
+      <button class="button button_submit button_stretch" type="submit"><msg:signin.action.submit></button>
+      <a href="/signup" class="button button_simple button_stretch">Sign up</a>
     </div>
   </form>
 </div>

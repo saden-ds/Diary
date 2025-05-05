@@ -40,9 +40,10 @@ class ScheduleGroupsController extends ApplicationController
         $grid = null;
         $active = false;
         $actions = [[
-            'title' => 'Download',
+            'title' => 'Lejupielādēt pdf',
             'path' => $this->request->getPath() . '.pdf',
-            'class_name' => null
+            'class_name' => null,
+            'target' => true
         ]];
 
         $datetime_end = clone $datetime_start;
@@ -331,12 +332,15 @@ class ScheduleGroupsController extends ApplicationController
                 's.lesson_time_id',
                 'g.group_id',
                 's.schedule_id',
-                's.schedule_active'
+                's.schedule_active',
+                'u.user_firstname',
+                'u.user_lastname'
             )
             ->from('lesson as l')
             ->join('group_lesson as gl on gl.lesson_id = l.lesson_id')
             ->join('schedule as s on s.lesson_id = gl.lesson_id')
             ->join('`group` as g on g.group_id = gl.group_id')
+            ->join('user as u on u.user_id = l.user_id')
             ->where('s.schedule_date between ? and ?', [$from, $to])
             ->where('s.group_id = gl.group_id')
             ->where('g.organization_id = ?', $this->current_user->organization_id);
@@ -354,7 +358,8 @@ class ScheduleGroupsController extends ApplicationController
                 'lesson_id' => $v['lesson_id'],
                 'lesson_name' => $v['lesson_name'],
                 'schedule_id' => $v['schedule_id'],
-                'schedule_active' => $v['schedule_active']
+                'schedule_active' => $v['schedule_active'],
+                'user_fullname' => $v['user_firstname'] . ' ' . $v['user_lastname']
             ];
         }
      
@@ -487,7 +492,7 @@ class ScheduleGroupsController extends ApplicationController
         $groups = $this->getGroups();
         $times = $this->getTimes();
         $lessons = $this->getScheduleLessons(clone $datetime_start);
-
+        
         $mpdf->SetTitle('');
         $mpdf->SetCreator('');
         $mpdf->WriteHTML(file_get_contents(__ROOT__ . '/tmpl/pdf/style.css'), 1);
@@ -517,7 +522,8 @@ class ScheduleGroupsController extends ApplicationController
                             'lesson_time_number' => $r['lesson_time_number'],
                             'lesson_time_start_at' => $r['lesson_time_start_at'],
                             'lesson_time_end_at' => $r['lesson_time_end_at'],
-                            'lesson_name' => $lesson['lesson_name'] ?? null
+                            'lesson_name' => $lesson['lesson_name'] ?? null,
+                            'user_fullname' => $lesson['user_fullname'] ?? null
                         ];
                     }
 

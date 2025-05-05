@@ -36,9 +36,20 @@
 </head>
 <body>
 <div id="layout" class="layout">
-  <a class="layout__logo" href="/"><var:app_name></a>
+  <block:current_user>
+  <ifnot:organization_name>
+  <a class="layout__logo" href="/"></a>
+  </ifnot:organization_name>
+  </block:current_user>
 
   <header class="layout__header layout-header">
+    <block:current_user>
+    <if:organization_name>
+    <div class="layout-header__organization">
+      <var:organization_name>
+    </div>
+    </if:organization_name>
+    </block:current_user>
     <ul class="layout-bar">
       <li class="layout-bar__item">
         <a class="js_toggle layout-bar__anchor i i_notification" href="#notification_lates" data-autohide="true"><if:lesson_invites:*:></a>
@@ -131,11 +142,22 @@
       </li>
       <block:current_user>
       <li class="layout-bar__item">
-        <a class="js_toggle layout-bar__anchor" href="#user" data-autohide="true">
+        <a class="js_toggle layout-bar__avatar" href="#user" data-autohide="true">
           <span class="avatar avatar_<var:fulname_digit>"><var:initials></span>
         </a>
         <div id="user" class="layout-bar__content hidden">
           <a class="user user_big" href="/profiles">
+            <if:organization_name>
+            <div class="user__organization">
+            </div>
+            <div class="user__title">
+              <var:organization_name>
+            </div>
+            <div class="user__description">
+              <var:firstname> <var:lastname>
+            </div>
+            </if:organization_name>
+            <ifnot:organization_name>
             <div class="user__avatar avatar avatar_<var:fulname_digit>">
               <var:initials>
             </div>
@@ -143,15 +165,19 @@
               <var:firstname> <var:lastname>
             </div>
             <div class="user__description">
-              <if:organization_name>
-              <var:organization_name>
-              </if:organization_name>
+              Privatpersona
             </div>
+            </ifnot:organization_name>
           </a>
           <ul class="user-menu">
             <li class="user-menu__item">
               <a href="/profile" class="user-menu__anchor js_modal">Uzstādījumi</a>
             </li>
+            <ifnot:organization_name>
+            <li class="user-menu__item">
+              <a href="/organizations/new" class="user-menu__anchor">Izveidot organizāciju</a>
+            </li>
+            </ifnot:organization_name>
             <li class="user-menu__item">
               <a href="/signout" class="user-menu__anchor">Iziet</a>
             </li>
@@ -183,7 +209,7 @@
     
     <div class="layout-sidebar__footer">
       <div class="layout-sidebar__app">
-        <var:app.title>, <msg:app.version> <var:version>
+        <msg:app.version> <var:version>
       </div>
       <div class="layout-sidebar__copyright">
         &copy; 2025, Deniss Samsonovs
@@ -192,6 +218,7 @@
   </div>
 
   <var:body:r>
+  <div class="layout__spacer"></div>
 </div>
 <script>
 jQuery(function($){

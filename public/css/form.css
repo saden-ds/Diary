@@ -17,7 +17,7 @@ input, select, textarea, button {
   border: 1px solid #D4C4BC;
   border-radius: 4px;
   background: #fff;
-  color: #522B2A;
+  color: #5a3523;
   font-size: 16px;
   line-height: 18px;
 
@@ -122,7 +122,7 @@ input, select, textarea, button {
   padding: 6px 0 6px 49px;
   height: 30px;
   background: #FFF;
-  color: #522B2A;
+  color: #5a3523;
   font-size: 14px;
   vertical-align: middle;
 
@@ -198,7 +198,7 @@ input, select, textarea, button {
   border: 1px solid #7C6C6C;
   border-radius: 4px;
   background: none;
-  color: #522B2A;
+  color: #5a3523;
   font-size: 14px;
   line-height: 16px;
 
@@ -663,7 +663,7 @@ input, select, textarea, button {
 .upload__label {
   display: block;
   position: absolute; top: 0;
-  color: #522B2A;
+  color: #5a3523;
   width: 100%; height: 32px;
   line-height: 32px;
   overflow: hidden;
@@ -764,7 +764,7 @@ input, select, textarea, button {
   display: block;
 }
 .options-list__actions {
-  color: #522B2A;
+  color: #5a3523;
   font-size: 16px;
 }
 .options-list_select {
@@ -819,7 +819,7 @@ input, select, textarea, button {
 .options-list__button_connector {
   display: inline-block;
   padding: 10px 0;
-  color: #522B2A;
+  color: #5a3523;
   font-size: 16px;
   line-height: 18px;
   vertical-align: middle;
@@ -830,7 +830,7 @@ input, select, textarea, button {
   height: 40px;
   border: 1px solid transparent; border-radius: 4px;
   background: #FFF;
-  color: #522B2A;
+  color: #5a3523;
   font-size: 16px;
   line-height: 18px;
   vertical-align: middle;
@@ -857,7 +857,7 @@ input, select, textarea, button {
 .options-list__action_input:hover,
 .options-list__action_input:focus,
 .options-list__action_input:active {
-  color: #522B2A;
+  color: #5a3523;
   font-weight: normal;
   border-color: #72605E;
   cursor: text;
@@ -939,7 +939,7 @@ input, select, textarea, button {
 
 .field-block {
   position: relative;
-  margin-bottom: 12px; padding: 20px 0 4px 0;
+  margin-bottom: 16px; padding: 10px 0 4px 0;
   text-align: left;
 }
 .field-block_online::before,
@@ -968,15 +968,18 @@ input, select, textarea, button {
 .field-block__label {
   display: block;
   position: absolute; top: 0; z-index: 2;
+  padding: 0 4px;
+  max-width: calc(100% - 8px);
+  background: #FFF;
   color: #9C8D8D;
   font-size: 12px;
   line-height: 16px;
 }
 .field-block__tag {
-  right: 0;
+  right: 4px;
 }
 .field-block__label {
-  left: 0; right: 0;
+  left: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -997,13 +1000,14 @@ input, select, textarea, button {
 .field-block .field_empty + .field-block__label {
   font-size: 16px;
 
-  -webkit-transform: translate3d(7px, 32px, 0);
-          transform: translate3d(7px, 32px, 0);
+  -webkit-transform: translate3d(7px, 22px, 0);
+          transform: translate3d(7px, 22px, 0);
 }
 .field-block .field_empty + .field-block__label {
   cursor: text;
 }
 .field-block .field:focus + .field-block__label {
+  color: #72605E;
   font-size: 12px;
 
   -webkit-transform: translate3d(0, 0, 0);

@@ -12,28 +12,49 @@
       <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#grades_">Privatnodarbibas</a></h2>
       </ifnot:group_id>
     </div>
-    <div id="grades_<var:group_id>" class="box box_data">
-      <table class="data-table" width="100%">
+    <div id="grades_<var:group_id>" class="box box_data box_overflow">
+      <table class="data-table data-table_sticky" width="100%">
         <thead class="data-table__thead">
           <tr class="data-table__tr">
-            <th class="data-table__th data-table__th_first" width="32%"></th>
+            <th class="data-table__th data-table__th_first data-table__th_sticky" width="32%"></th>
             <block:months>
-            <th class="data-table__th"><var:month></th>
+            <th class="data-table__th data-table__th_month data-table__th<if:first:: data-table__th_separate>"><var:month></th>
             </block:months>
+            <th class="data-table__th data-table__th_last data-table__th_sticky_right">Vidējāis</th>
           </tr>
         </thead>
         <tbody class="data-table__tbody">
           <block:lessons>
           <tr class="data-table__tr">
-            <td class="data-table__td data-table__td_first"><var:lesson_name></td>
+            <td class="data-table__td data-table__td_first data-table__td_sticky"><b><var:lesson_name></b></td>
             <block:grades>
-            <td class="data-table__td">
+            <td class="data-table__td<if:first:: data-table__td_separate>">
+              <b>
+                <var:grade_numeric>
+                <var:grade_percent>
+                <var:grade_included>
+              </b>
+            </td>
+            </block:grades>
+            <td class="data-table__td data-table__td_last data-table__td_sticky_right">
+              <b><var:average></b>
+            </td>
+          </tr>
+          <block:types>
+          <tr class="data-table__tr">
+            <td class="data-table__td data-table__td_indent data-table__td_first data-table__td_sticky"><var:assignment_type></td>
+            <block:grades>
+            <td class="data-table__td<if:first:: data-table__td_separate>">
               <var:grade_numeric>
               <var:grade_percent>
               <var:grade_included>
             </td>
             </block:grades>
+            <td class="data-table__td data-table__td_last data-table__td_sticky_right">
+              <var:average>
+            </td>
           </tr>
+          </block:types>
           </block:lessons>
         </tbody>
       </table>

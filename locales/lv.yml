@@ -1,7 +1,7 @@
 action:
   add: Pievienot
   cancel: Atcelt
-  create: Pievienot
+  create: Izveidot
   delete: Dzēst
   download: Lejupielādēt
   edit: Rediģēt
@@ -13,6 +13,9 @@ action:
   remove: Noņemt
   show_more: Parādīt vēl
   submit: Saglabāt
+
+app:
+  version: Versija
 
 array:
   last_word_connector: " un "
@@ -301,31 +304,8 @@ http_error:
     description: |
       Pieeja pieprasītajai lapai ir aizliegta. <a href="/">Atgriezieties sākumlapā</a>.
 
-laboratory:
-  search_placeholder: Meklēt laboratoriju
-  tests: Testi
-  tests_blank: Nav informācijas par veiktajiem testiem
-
-laboratory_file:
-  date: Dokumenta datums
-  delete_confirm: Vai jūs tiešam vēlaties dzēst šo dokumentu?
-  file: Fails
-  form_new: Jauns dokuments
-  url: Saite uz ārējo resursu
-  message:
-    error:
-      create: Neizdevās pievienot dokumentu
-      update: Neizdevās atjaunināt dokumentu
-      delete: Neizdevās izdzēst dokumentu
-  name: Dokumenta nosaukums
-
 mail:
   footer: Ja Jūs neveicāt reģistrēšanos Life e-pakalpojumā, lūdzu, ignorējiet šo ziņu.
-
-manufacturer:
-  search_placeholder: Meklēt ražotāju
-  products: Produkti
-  products_blank: Nav informācijas par produktiem
 
 meta:
   description:
@@ -394,11 +374,6 @@ number:
       mb: MB
       tb: TB
 
-
-recyclability:
-  name: Pārstrādājamais īpatsvars
-  description: Paskaidrojums
-
 search:
   not_found: Nav atrasti dati atbilstoši ievadītajiem meklēšanas parametriem
 
@@ -430,50 +405,6 @@ signup:
       create: Neizdevās nosūtīt pieteikumu
       email_exists: Lietotājs jau eksistē, mēģiniet ielogoties
       gdpr: Vajag piekrīst lietošanas noteikumiem
-
-suggestion:
-  message:
-    no_company: Uzņēmums nav atrasts
-    no_customer: Uzņēmums nav atrasts
-    no_laboratory: Laboratorija nav atrasta
-    no_manufacturer: Ražotājs nav atrasts
-    no_nace: NACE nav atrasts
-    no_product: Produkts nav atrasts
-
-test:
-  action:
-    new: Pievienot testu
-    new_request: Pasūtīt testu
-  agreement: Līgums
-  completed: Testēšana pabeigta
-  components: Pārbaudītās komponentes
-  customer: Testa pasūtītājs
-  date: Testa datums
-  error:
-    date: ir jābūt lielākam par līguma datumu
-    product: nav pievienots produkts
-  extcomponent: Testējamās papildus komponentes
-  form_edit: Laboratorijas testa rezultāta rediģēšana
-  form_new: Pievienot laboratorijas testa rezultātu
-  form_new_request: Laboratorisko izmeklējumu pieteikums
-  inprocess: Testēšana nav pabeigta
-  laboratory: Laboratorija
-  laboratory_note: Laboratorijas komentārs
-  maincomponent: Testējamā pamatkomponente
-  message:
-    error:
-      create: Neizdevās pievienot testu
-      uniq: Tests jau ir pievienots
-  product: Produkts
-  products: Testējamie produkti
-  product_name: Produkta nosaukums
-  product_search_placeholder: Pievienot produktu
-  contract_date: Līguma datums
-  contract_number: Līguma numurs
-  result_recyclability: Pārstrādājamais īpatsvars
-  waiting: Gaida testēšanu
-
-title: Plastmasas izstrādājumu pārstrādājamības reģistrs
 
 user_activation:
   title: Gaida apstiprināšanu!
@@ -520,8 +451,6 @@ user_recovery:
   password: Parole (vismaz 8 simboli)
   password_confirm: Atkārtojiet paroli
 
-
-
 assignment:
   expired: Nokavēts
   days_left: Atlīkušas
@@ -533,6 +462,9 @@ assignment:
     test: PD
     work: Nodarbība 
 
+group:
+  search_placeholder: Grupas nosaukums
+
 schedule:
   message:
     error:
@@ -542,6 +474,9 @@ organization_user:
   roles:
     teacher: Skolotājs
     admin: Administrators
+
+lesson:
+  search_placeholder: Priekšmeta nosaukums
 
 
 

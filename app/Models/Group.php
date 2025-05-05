@@ -11,7 +11,8 @@ class Group extends Model
     static $attributes_mapping = [
         'group_id' => ['type' => 'integer'],
         'group_name' => ['type' => 'string'],
-        'organization_id' => ['type' => 'integer']
+        'organization_id' => ['type' => 'integer'],
+        'organization_user_id' => ['type' => 'integer']
     ];
 
     protected static ?string $table_name = 'group';
@@ -32,7 +33,7 @@ class Group extends Model
     protected function validate(): void
     {
         $presence = new ValidatorPresence([
-            'group_name'
+            'group_name', 'organization_id', 'organization_user_id'
         ]);
 
         $presence->validate($this);

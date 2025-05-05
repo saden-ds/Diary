@@ -24,7 +24,7 @@ class SchedulesController extends ApplicationController
         return View::init('tmpl/main/index.tmpl')
             ->layout('blank')
             ->data([
-                // 'user_name' => $user['name']
+                'app_name' => $this->config->get('title')
             ])
             ->meta('description', $this->msg->t('meta.description.main'));
     }
@@ -56,6 +56,10 @@ class SchedulesController extends ApplicationController
             'schedule_name', 'schedule_date', 'lesson_id', 'lesson_time_id'
         ]));
         $view = new View();
+
+        if (!$this->current_user->organization_id) {
+            $schedule->schedule_active = true;
+        }
 
         if ($schedule->create()) {
             return $view->data([
@@ -241,7 +245,8 @@ class SchedulesController extends ApplicationController
                     lt.*, 
                     l.lesson_name, 
                     l.user_id, 
-                    g.group_name
+                    g.group_name,
+                    null as organization_name
                 from schedule s
                 join lesson l on l.lesson_id = s.lesson_id
                 join lesson_time lt on lt.lesson_time_id = s.lesson_time_id
@@ -265,9 +270,11 @@ class SchedulesController extends ApplicationController
                     l.lesson_name,
                     l.user_id,
                     u.user_firstname,
-                    u.user_lastname
+                    u.user_lastname,
+                    o.organization_name
                 from schedule as s
                 join lesson as l on l.lesson_id = s.lesson_id
+                left join organization o on o.organization_id = l.organization_id
                 left join group_lesson gl on gl.lesson_id = l.lesson_id
                 left join group_user gu on gu.group_id = gl.group_id
                 left join lesson_user as lu on lu.lesson_id = l.lesson_id
@@ -286,12 +293,22 @@ class SchedulesController extends ApplicationController
         }
 
         $schedules_assignments = null;
+        $schedules_visits = null;
+        $schedules_presences = null;
 
         if ($schedule_data) {
             foreach ($schedule_data as $value) {
                 $schedules_assignments[$value['schedule_id']] = null;
+
+                if ($value['user_id'] == $this->current_user->id) {
+                    $schedules_visits[$value['schedule_id']] = null;
+                } else {
+                    $schedules_presences[$value['schedule_id']] = null;
+                }
             }
 
+            $schedules_visits = $this->populateSchedulesVisits($schedules_visits);
+            $schedules_presences = $this->populateSchedulesPresences($schedules_presences);
             $schedules_assignments = $this->populateSchedulesAssignments($schedules_assignments);
         } 
 
@@ -302,6 +319,8 @@ class SchedulesController extends ApplicationController
                     $value['schedule_edit_path'] = '/schedules/' . intval($value['schedule_id']) . '/edit';
                     $value['assignment_new_path'] = '/schedules/' . intval($value['schedule_id']) . 
                         '/assignments/new';
+                    $value['schedule_visits_path'] = '/schedules/' . intval($value['schedule_id']) . 
+                        '/visits/new';
                 } else {
                     $value['is_owner'] = false;
                     $value['schedule_edit_path'] = null;
@@ -314,9 +333,18 @@ class SchedulesController extends ApplicationController
                     if ($value['user_firstname']) {
                         $value['lesson_participant'] = $value['user_firstname'] . '  ' . $value['user_lastname'];
                     }
+
+                    if ($value['user_id'] == $this->current_user->id) {
+                        $value['organization_name'] = 'Jūsu priekšmets';
+                        $value['lesson_participant'] = null;
+                    } else {
+                        $value['organization_name'] = $value['organization_name'] ?: 'Privats';
+                    }
                 }
 
                 $value['assignments'] = $schedules_assignments[$value['schedule_id']] ?? null;
+                $value['visits_count'] = $schedules_visits[$value['schedule_id']] ?? null;
+                $value['presence'] = $schedules_presences[$value['schedule_id']] ?? null;
 
                 $schedule[$value['schedule_date']]['lessons'][$value['lesson_time_id']] = $value;
 
@@ -388,6 +416,88 @@ class SchedulesController extends ApplicationController
         }
 
         return $assignments;
+    }
+
+    private function populateSchedulesVisits($visits): ?array
+    {
+        if (!$visits) {
+            return $visits;
+        }
+        
+        $query = new DataQuery();
+
+        $query
+            ->select(
+                'v.schedule_id',
+                'sum(v.visit_presence) as visit_presence',
+                'count(gu.group_user_id) as group_users_count',
+                'count(lu.lesson_user_id) as lesson_users_count'
+            )
+            ->from('visit as v')
+            ->join('schedule as s on s.schedule_id = v.schedule_id')
+            ->leftJoin('group_user as gu on gu.group_id = s.group_id')
+            ->leftJoin('lesson_user as lu on lu.lesson_id = s.lesson_id')
+            ->where(
+                'v.schedule_id in ('.$query->placeholders($visits).')',
+                array_keys($visits)
+            )
+            ->group('v.schedule_id');
+
+        if (!$data = $query->fetchAll()) {
+            return $visits;    
+        }
+
+        foreach ($data as $value) {
+            $visits[$value['schedule_id']] = [[
+                'presence_count' => $value['visit_presence'],
+                'total_count' => intval($value['group_users_count'] ?: $value['lesson_users_count'])
+            ]];
+        }
+
+        return $visits;
+    }
+
+    private function populateSchedulesPresences($presences): ?array
+    {
+        if (!$presences) {
+            return $presences;
+        }
+        
+        $query = new DataQuery();
+
+        $query
+            ->select(
+                'v.schedule_id',
+                'v.visit_presence',
+                '(' .
+                ' select 1 as one' .
+                ' from excused_absence ea' .
+                ' where ea.group_user_id = gu.group_user_id' .
+                '  and ea.excused_absence_from <= s.schedule_date' .
+                '  and ea.excused_absence_to >= s.schedule_date' .
+                ') as excused_absence'
+            )
+            ->from('visit as v')
+            ->join('schedule s on s.schedule_id = v.schedule_id')
+            ->leftJoin('group_user gu on gu.group_id = s.group_id and gu.user_id = v.user_id')
+            ->where(
+                'v.schedule_id in ('.$query->placeholders($presences).')',
+                array_keys($presences)
+            )
+            ->where('v.user_id = ?', $this->current_user->id);
+
+        if (!$data = $query->fetchAll()) {
+            return $presences;    
+        }
+
+        foreach ($data as $value) {
+            $presences[$value['schedule_id']] = [[
+                'visit_presence' => $value['visit_presence'],
+                'excused_absence' => !!$value['excused_absence'],
+            ]];
+        }
+
+        return $presences;
     }
 
     private function getAssignments($schedule): ?array

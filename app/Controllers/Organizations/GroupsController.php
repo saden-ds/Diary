@@ -65,7 +65,12 @@ class GroupsController extends ApplicationController
 
         $actions = null;
 
-        if ($this->current_user->canAdmin()) {
+        if ($this->current_user->canAdmin($group->organization_id)) {
+            $actions[] = [
+                'title' => 'Rediģēt',
+                'path' => '/groups/' . $group->group_id . '/edit',
+                'class_name' => 'js_modal'
+            ];
             $actions[] = [
                 'title' => 'Jauns skolēns',
                 'path' => '/groups/' . $group->group_id . '/users/new',
@@ -102,7 +107,7 @@ class GroupsController extends ApplicationController
             throw new ForbiddenException();
         }
 
-        return View::init('tmpl/groups/form.tmpl');
+        return $this->renderForm(new Group());
     }
 
     public function createAction(): ?View
@@ -112,7 +117,7 @@ class GroupsController extends ApplicationController
         }
 
         $group = new Group($this->request->permit([
-            'group_name'
+            'group_name', 'organization_user_id'
         ]));
         $view = new View();
 
@@ -125,6 +130,95 @@ class GroupsController extends ApplicationController
         } else {
             return $this->recordError($group);
         } 
+    }
+
+    public function editAction(): ?View 
+    {
+        if (!$this->current_user->canAdmin()) {
+            throw new ForbiddenException();
+        }
+
+        $group = Group::find($this->request->get('id'));
+
+        if (empty($group)) {
+            throw new NotFoundException();
+        }
+
+        if ($group->organization_id !== $this->current_user->organization_id) {
+            throw new ForbiddenException();
+        }
+
+        return $this->renderForm($group);
+    }
+
+    public function updateAction(): ?View 
+    {
+        if (!$this->current_user->canAdmin()) {
+            throw new ForbiddenException();
+        }
+
+        $group = Group::find($this->request->get('id'));
+
+        if (empty($group)) {
+            throw new NotFoundException();
+        }
+
+        if ($group->organization_id !== $this->current_user->organization_id) {
+            throw new ForbiddenException();
+        }
+
+        $group->setAttributes($this->request->permit([
+            'organization_user_id'
+        ]));
+        $view = new View();
+
+        if ($group->update()) {
+            return $view->data([
+                'group_id' => $group->group_id
+            ]);
+        } else {
+            return $this->recordError($group);
+        } 
+    }
+
+
+    private function renderForm($group): ?View
+    {
+        return View::init('tmpl/groups/form.tmpl', [
+            'group_id' => $group->group_id,
+            'group_name' => $group->group_name,
+            'organization_user_options' => $this->getOrganizationUserOptions($group),
+            'action_path' => $group->group_id
+                ? '/groups/' . $group->group_id . '/update'
+                : '/groups/create'
+        ]);
+    }
+
+    private function getOrganizationUserOptions($group): ?array
+    {
+        $options = null;
+
+        $query = new DataQuery();
+
+        $query
+            ->select('ou.organization_user_id', 'u.user_firstname', 'u.user_lastname')
+            ->from('organization_user as ou')
+            ->join('user u on u.user_id = ou.user_id')
+            ->where('ou.organization_id = ?', $this->current_user->organization_id);
+
+        if (!$data = $query->fetchAll()) {
+            return $options;
+        }
+
+        foreach ($data as $value) {
+            $options[] = [
+                'name' => $value['user_firstname'] . ' ' . $value['user_lastname'],
+                'value' => $value['organization_user_id'],
+                'selected' => $value['organization_user_id'] == $group->organization_user_id
+            ];
+        }
+
+        return $options;
     }
 
     private function getGroups(): ?array
@@ -152,32 +246,59 @@ class GroupsController extends ApplicationController
         $query = new DataQuery();
 
         $query
-            ->select('gu.*')
+            ->select(
+                'gu.*',
+                'ou.user_id as group_teacher_id',
+                '(' .
+                ' select count(ea.excused_absence_id)' .
+                ' from excused_absence as ea' .
+                ' where ea.group_user_id = gu.group_user_id' .
+                ') as excused_absences_count'
+            )
             ->from('group_user as gu')
+            ->join('`group` g on g.group_id = gu.group_id')
+            ->leftJoin('organization_user as ou on ou.organization_user_id = g.organization_user_id')
             ->where('gu.group_id = ?', $group->group_id);
         
         if (!$data = $query->fetchAll()) {
             return null;
         }
 
-        $is_admin = $this->current_user->canAdmin();
+        $is_admin = $this->current_user->canAdmin($group->organization_id);
 
         foreach ($data as $k => $v) {
             $user = new User([
                 'user_fullname' => $v['group_user_name']
             ], true);
+            $actions = null;
 
             $v['status'] = !empty($v['user_id']);
             $v['group_user_digit'] = $user->user_digit;
             $v['group_user_initials'] = $user->user_initials;
 
+            if ($v['group_teacher_id'] == $this->current_user->id) {
+                $actions[] = [
+                    'title' => 'Pievienot attaisnojuma zīmi',
+                    'path' => '/groups/users/' . intval($v['group_user_id']) . '/absences/new',
+                    'class_name' => 'js_modal'
+                ];
+            }
+
+            if ($this->current_user->organization_id) {
+                $v['excused_absences_path'] = '/groups/users/' . intval($v['group_user_id']) . '/absences';
+            } else {
+                $v['excused_absences_path'] = null;
+            }
+
             if ($is_admin) {
-                $v['actions'] = [[
+                $actions[] = [
                     'title' => 'Dzēst',
                     'path' => '/groups/' . $v['group_id'] . '/users/' . $v['group_user_id'] . '/delete',
                     'class_name' => ''
-                ]];
+                ];
             }
+
+            $v['actions'] = $actions;
 
             $data[$k] = $v;
         }
@@ -198,7 +319,7 @@ class GroupsController extends ApplicationController
 
         $data = $query->fetchAll();
 
-        $is_admin = $this->current_user->canAdmin();
+        $is_admin = $this->current_user->canAdmin($group->organization_id);
         $items = null;
 
         if ($data) {

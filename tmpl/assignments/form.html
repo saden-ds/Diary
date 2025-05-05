@@ -17,9 +17,20 @@
       <input id="assignment_form_description" class="field field_stretch field-block__field" type="text" name="assignment_description" value="<var:assignment_description>">
       <label for="assignment_form_description" class="field-block__label">Uzdevuma apraksts</label>
     </div>
-    <div class="field-block field-block_label">
-      <input id="assignment_form_end_datetime" class="field field_stretch field_datepicker field-block__field" type="text" name="assignment_end_datetime" value="<var:assignment_end_datetime>">
-      <label for="assignment_form_end_datetime" class="field-block__label">Izpildes termiņš</label>
+    <div class="field-block">
+      <input id="assignment_form_end_date" class="field field_width_160 field_datepicker" type="text" name="assignment_end_datetime[date]" value="<var:assignment_end_date>" data-min="0">
+      <select id="assignment_form_end_hour" class="field field_select" name="assignment_end_datetime[hour]">
+        <block:assignment_end_hour_options>
+        <option value="<var:value>"<if:selected: selected:>><var:name></option>
+        </block:assignment_end_hour_options>
+      </select>
+      :
+      <select id="assignment_form_end_minute" class="field field_select" name="assignment_end_datetime[minute]">
+        <block:assignment_end_minute_options>
+        <option value="<var:value>"<if:selected: selected:>><var:name></option>
+        </block:assignment_end_minute_options>
+      </select>
+      <label class="field-block__label" for="assignment_form_end_date">Izpildes termiņš</label>
     </div>
   </div>
   <div class="modal-section__footer _modal_no">
@@ -32,7 +43,12 @@
   new app.Form('#assignment_form', {
     url: '<var:path>',
     keepOverlay: true,
-    onSuccess: function(form, response){
+    onError: function(form, response) {
+      if (response.errors && response.errors.assignment_end_datetime) {
+        this.addError($('#assignment_form_end_date').get(0), response.errors.assignment_end_datetime, true);
+      }
+    },
+    onSuccess: function(form, response) {
       window.location.reload();
     }
   });

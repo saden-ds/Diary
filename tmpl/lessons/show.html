@@ -5,7 +5,7 @@
     <div id="filter" class="aside-filter">
       <div class="aside-filter__body">
         <div class="aside-search">
-          <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:flat.search_placeholder>" autocomplete="off" autofocus>
+          <input id="filter_suggest" class="aside-search__input" name="q" type="text" placeholder="<msg:lesson.search_placeholder>" autocomplete="off" autofocus>
           <button class="aside-search__submit i i_search" type="submit"></button>
         </div>
       </div>
@@ -43,7 +43,9 @@
             <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#lesson_description">Apraksts</a></h2>
         </div>
         <div id="lesson_description" class="box">
-            <var:lesson_description>
+            <div class="box__body box__body_padding">
+                <var:lesson_description>
+            </div>
         </div>
     </section>
     </if:lesson_description>

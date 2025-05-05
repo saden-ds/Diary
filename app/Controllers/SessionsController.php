@@ -15,17 +15,10 @@ class SessionsController extends ApplicationController
 
         $organizations = $this->current_user->fetchOrganizations();
 
-        if ($organizations) {
-            return View::init('tmpl/session/show.tmpl', [
-                'organizations' => $organizations
-            ])->layout('blank');
-        }
-
-        return View::init('tmpl/schedules/show.html');
-        // return View::init('tmpl/schedules/show.html', [
-        //    'assignments' => $this->getAssignments()
-        // ]);
-        
+        return View::init('tmpl/session/show.tmpl', [
+            'app_name' => $this->config->get('title'),
+            'organizations' => $organizations
+        ])->layout('blank');
     }
 
     public function createAction(): ?View

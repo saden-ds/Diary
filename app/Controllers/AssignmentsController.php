@@ -141,14 +141,65 @@ class AssignmentsController extends PrivateController
             $path = '/assignments/create';
         }
 
+        if ($assignment->assignment_end_datetime) {
+            $assignment_end_date = $this->msg->date($assignment->assignment_end_datetime);
+            $assignment_end_hour = $this->msg->l($assignment->assignment_end_datetime, ['format' => 'hour']);
+            $assignment_end_minute = $this->msg->l($assignment->assignment_end_datetime, ['format' => 'minute']);
+        } else {
+            $assignment_end_date = null;
+            $assignment_end_hour = null;
+            $assignment_end_minute = null;
+        }
+
         return View::init('tmpl/assignments/form.html', [
             'assignment_id' => $assignment->assignment_id,
             'assignment_type_option' => $this->getTypeOptions($assignment),
             'assignment_description' => $assignment->assignment_description,
-            'assignment_end_datetime' => $assignment->assignment_end_datetime,
+            'assignment_end_date' => $assignment_end_date,
+            'assignment_end_hour_options' => $this->getHourOptions($assignment_end_hour),
+            'assignment_end_minute_options' => $this->getMinuteOptions($assignment_end_minute),
             'schedule_id' => $assignment->schedule_id,
             'path' => $path
         ]);
+    }
+
+    private function getHourOptions($hour): array
+    {
+        $hour = $hour ?: 12;
+        $hours = null;
+
+        for ($i = 0; $i < 24; $i++) {
+            $value = $i < 10 ? '0'.$i : $i;
+            $hours[] = [
+                'name' => $value,
+                'value' => $value,
+                'selected' => strval($value) === strval($hour)
+            ];
+        }
+
+        return $hours;
+    }
+
+    private function getMinuteOptions($minute): array
+    {
+        $minute = $minute ?: 0;
+        $minutes = null;
+
+        if ($minute % 5 !== 0) {
+            $minute = $minute + 5 - $minute % 5;
+        }
+
+        for ($i = 0; $i < 12; $i++) {
+            $value = $i * 5;
+            $value = $value < 10 ? '0' . $value : $value;
+            $minutes[] = [
+                'name' => $value,
+                'value' => $value,
+                'selected' => strval($value) === strval($minute)
+            ];
+        }
+
+        return $minutes;
     }
 
     private function renderShow(Assignment $assignment): View
