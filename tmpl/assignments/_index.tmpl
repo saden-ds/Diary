@@ -1,0 +1,65 @@
+<if:is_wrap>
+<section class="box-section box-section_first">
+    <div class="box">
+        <table class="data-table" width="100%">
+            <thead class="data-table__thead">
+                <tr class="data-table__tr data-table__tr_first_last">
+                    <block:header>
+                    <th class="data-table__th">
+                        <if:path>
+                        <a class="<var:class_name>" href="<var:path>"><var:title></a>
+                        </if:path>
+                        <ifnot:path>
+                        <var:title>
+                        </ifnot:path>
+                    </th>
+                    </block:header>
+                </tr>
+            </thead>
+            <tbody id="assignments" class="data-table__tbody">
+</if:is_wrap>
+                <block:items>
+                <tr class="data-table__tr">
+                    <td class="data-table__td data-table__td_first">
+                        <div class="data-summary">
+                            <a href="/assignments/<var:assignment_id>" class="js_modal toggle"><var:assignment_end_datetime></a>
+                            <div class="data-summary__description">
+                                <span class="badge badge_xsmall<if:assignment_expired: badge_red:>"><var:assignment_days_count></span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="data-table__td">
+                        <div class="data-summary">
+                            <a href="/assignments/<var:assignment_id>" class="js_modal toggle"><var:lesson_name></a>
+                            <div class="data-summary__description">
+                                <var:user_fullname>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="data-table__td">
+                        <div class="data-summary">
+                            <a href="/assignments/<var:assignment_id>" class="js_modal toggle"><var:assignment_description></a>
+                            <div class="data-summary__description">
+                                <var:assignment_type>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="data-table__td"></td>
+                </tr>
+                </block:items>
+                <block:more>
+                <tr class="data-table__infinite data-infinite">
+                    <td class="data-infinite__wrapper" colspan="4">
+                        <a class="js_infinite data-infinite__anchor" href="#more" data-url="<var:path>" data-filter="#filter"><msg:pagination.load_more></a>
+                    </td>
+                </tr>
+                </block:more>
+<if:is_wrap>
+            </tbody>
+        </table>
+    </div>
+</section>
+<script>
+app.script.infiniteScroll('#content', '#assignments');
+</script>
+</if:is_wrap>

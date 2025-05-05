@@ -4,36 +4,38 @@ namespace App\Controllers;
 
 use App\Base\Exceptions\NotFoundException;
 use App\Base\Exceptions\ForbiddenException;
-use App\Base\View;
+use App\Base\Collection;
 use App\Base\DataStore;
 use App\Base\DataQuery;
+use App\Base\ParamsCollection;
+use App\Base\View;
 use App\Models\Assignment;
 use App\Models\Schedule;
 use App\Services\Assignment\FilesCollection;
+use DateTime;
+use DateTimeZone;
 
 class AssignmentsController extends PrivateController
 {
     public function indexAction(): ?View
     {   
-        $header = [
-          $this->getSortBlock('assignment_end_datetime', 'Termiņš'),
-          [
-            'title' => 'Priekšmets',
-            'path' => null
-          ], [
-            'title' => 'Apraksts',
-            'path' => null
-          ], [
-            'title' => 'Vērtējums',
-            'path' => null
-          ]
-        ];
+        $view = new View();
 
-        return View::init('tmpl/assignments/index.html')
+        if ($this->request->isXhr()) {
+            return View::init(
+                'tmpl/assignments/_index.tmpl', 
+                $this->getAssignments()
+            );
+        }
+
+        return $view
+            ->path('tmpl/assignments/index.html')
             ->data([
-                'assignments' => $this->getAssignments(),
-                'header' => $header,
-                'filter' => $this->getFilter()
+                'filter' => $this->getFilter(),
+                'body' => $view->file(
+                    'tmpl/assignments/_index.tmpl',
+                    $this->getAssignments()
+                )
             ]);
             
     }
@@ -208,7 +210,8 @@ class AssignmentsController extends PrivateController
             'assignment_id' => $assignment->assignment_id,
             'assignment_type' => $this->msg->t('assignment.types.'.$assignment->assignment_type),
             'assignment_description' => $assignment->assignment_description,
-            'assignment_end_datetime' => $assignment->assignment_end_datetime,
+            'assignment_end_datetime' => $this->msg->l($assignment->assignment_end_datetime),
+            'assignment_created_at' => $this->msg->l($assignment->assignment_created_at),
             'assignment_edit_path' => '/assignments/' . $assignment->assignment_id . '/edit',
             'assignment_delete_path' => '/assignments/' . $assignment->assignment_id . '/delete',
             'assignment_grade_path' => '/assignments/' . $assignment->assignment_id . '/grades/new',
@@ -230,7 +233,8 @@ class AssignmentsController extends PrivateController
             'assignment_id' => $assignment->assignment_id,
             'assignment_type' => $this->msg->t('assignment.types.'.$assignment->assignment_type),
             'assignment_description' => $assignment->assignment_description,
-            'assignment_end_datetime' => $assignment->assignment_end_datetime,
+            'assignment_end_datetime' => $this->msg->l($assignment->assignment_end_datetime),
+            'assignment_created_at' => $this->msg->l($assignment->assignment_created_at),
             'assignment_edit_path' => null,
             'assignment_delete_path' => null,
             'assignment_grade_path' => null,
@@ -263,10 +267,26 @@ class AssignmentsController extends PrivateController
 
     private function getAssignments(): ?array
     {
-        $sort_param = $this->getSortParam();
-        
         $query = new DataQuery();
-
+        $collection = new Collection([
+            'page' => $this->request->get('page', 1),
+            'limit' => 40,
+            'sort' => $this->request->get('sort'),
+            'path' => '/assignments'
+        ]);
+        $params = new ParamsCollection($this->request->get('filter'));
+        $header = [
+          $collection->getSortBlock('assignment_end_datetime', 'Termiņš'),
+          $collection->getSortBlock('lesson_name', 'Priekšmets'),
+          $collection->getSortBlock('assignment_type', 'Apraksts'),
+          [
+            'title' => 'Vērtējums',
+            'path' => null
+          ]
+        ];
+        $items = null;
+        $more = null;
+        
         $query
             ->select(
                 'a.*',
@@ -293,139 +313,141 @@ class AssignmentsController extends PrivateController
                 $this->current_user->id, 
                 $this->current_user->id,
                 $this->current_user->id
-            ]) // --
+            ])
+            ->limit($collection->limit + 1)
+            ->offset($collection->offset)
             ->group('a.assignment_id');
 
-        if ($this->request->get('filter.lesson_id')) {
-          $query->where('l.lesson_id = ?', $this->request->get('filter.lesson_id'));
+        if ($value = $params->get('lesson_id')) {
+          $query->where('l.lesson_id = ?', $value);
         }
 
-        if ($this->request->get('filter.assignment_owner') == 1) {
-            $query->where('l.user_id = ?', $this->current_user->id);
-        } elseif ($this->request->get('filter.assignment_owner') == 2) {
-            $query->where('lu.user_id = ?', $this->current_user->id);
-        }
-
-        if ($this->request->get('filter.assignment_description')) {
-          $query->where('a.assignment_description like ?', '%'.$this->request->get('filter.assignment_description').'%');
-        }
-
-        switch ($sort_param[0]) {
-            case 'schedule_date':
-                $query->order('s.schedule_date '.$sort_param[1]);
-                break;
-            case 'assignment_end_datetime':
-                $query->order('a.assignment_end_datetime '.$sort_param[1]);
-                break;
-         } 
-
-        $data = $query->fetchAll();
-        $result = null;
-
-        if (!$data) {
-            return $result;
-        }
-
-        foreach ($data as $key => $value) {
-            $assignment_days_count = $this->getAssignmentDaysCount($value['assignment_end_datetime']);
-            $assignment_days_text = '';
-
-            if ($assignment_days_count < 0) {
-                $assignment_days_text = $this->msg->t('assignment.expired');
-            } else {
-                $assignment_days_text = $this->msg->t('assignment.days_left');
+        if ($value = $params->get('assignment_owner')) {
+            if ($value == 1) {
+                $query->where('l.user_id = ?', $this->current_user->id);
+            } elseif ($value == 2) {
+                $query->where('lu.user_id = ?', $this->current_user->id);
             }
-
-            $assignment_days_text .= ' ' . $this->msg->t('assignment.days', [
-                'count' => abs($assignment_days_count)
-            ]);
-
-            $result[] = [
-                'assignment_row_number' => $key + 1,
-                'assignment_id'=> $value['assignment_id'],
-                'user_fullname' => $value['user_firstname'] . '  ' . $value['user_lastname'],
-                'assignment_description' => $value['assignment_description'],
-                'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
-                'assignment_end_datetime' => $this->msg->l($value['assignment_end_datetime']),
-                'schedule_date' => $value['schedule_date'],
-                'lesson_time' => $value['lesson_time_start_at'] . ' - ' . $value['lesson_time_end_at'],
-                'lesson_name' => $value['lesson_name'],
-                'assignment_expired' => $assignment_days_count < 0,
-                'assignment_days_count' => $assignment_days_text
-            ];
         }
 
-        return $result;
-    }
-
-    private function getSortParam() 
-    {
-        $sort_column = null;
-        $sort_direction = null;
-        $sort_param = $this->request->get('filter.sort');
-
-        if ($sort_param && strpos($sort_param, '.') !== false) {
-            list($sort_column, $sort_direction) = explode('.', $sort_param);
-        } else {
-            $sort_column = $sort_param;
+        if ($value = $params->get('assignment_description')) {
+            $query->where('a.assignment_description like ?', '%' . $value . '%');
         }
 
-        if ($sort_direction != 'asc') {
-            $sort_direction = 'desc';
+        if ($value = $params->getDate('assignment_end_from')) {
+            $query->where('a.assignment_end_datetime >= ?', $value);
+        }
+        if ($value = $params->getEndOfDate('assignment_end_to')) {
+            $query->where('a.assignment_end_datetime <= ?', $value);
         }
 
-        return [$sort_column, $sort_direction];
-    }
+        if ($sort_param = $collection->getSortParam()) {
+            switch ($sort_param[0]) {
+                case 'schedule_date':
+                    $query->order('s.schedule_date '.$sort_param[1]);
+                    break;
+                case 'assignment_end_datetime':
+                    $query->order('a.assignment_end_datetime '.$sort_param[1]);
+                    break;
+                case 'lesson_name':
+                    $query->order('l.lesson_name '.$sort_param[1]);
+                    break;
+                case 'assignment_type':
+                    $query->order('a.assignment_type '.$sort_param[1]);
+                    break;
+                default:
+                    $query->order('a.assignment_id desc');
+             }
+        } 
 
-    private function getSortBlock($column, $title) 
-    {
-        $sort = [$column];
-        $sort_param = $this->getSortParam();
-        $params = $this->request->get('filter');
-        $class_name = 'sort';
+        $collection->setData($query->fetchAll());
 
-        if ($sort_param[0] != $column) {
-            $sort[] = 'desc';
-        } elseif ($sort_param[1] == 'desc') {
-            $class_name .= ' sort_desc';
-            $sort[] = 'asc';
-        } else {
-            $class_name .= ' sort_asc';
-            $sort = [];
+        if (!$collection->isEmpty()) {
+            foreach ($collection->data as $key => $value) {
+                $assignment_end_count = $this->getAssignmentEndCount($value['assignment_end_datetime']);
+                $assignment_days_text = '';
+
+                if ($assignment_end_count < 0) {
+                    $assignment_days_text = $this->msg->t('assignment.expired');
+                } else {
+                    $assignment_days_text = $this->msg->t('assignment.days_left');
+                }
+
+                if (abs(intval($assignment_end_count / 3600)) < 1) {
+                    $assignment_days_text .= ' ' . $this->msg->t('assignment.minutes', [
+                        'count' => abs(intval($assignment_end_count / 60))
+                    ]);
+                } elseif (abs(intval($assignment_end_count / 86400)) < 1) {
+                    $assignment_days_text .= ' ' . $this->msg->t('assignment.hours', [
+                        'count' => abs(intval($assignment_end_count / 3600))
+                    ]);
+                } else {
+                    $assignment_days_text .= ' ' . $this->msg->t('assignment.days', [
+                        'count' => abs(intval($assignment_end_count / 86400))
+                    ]);
+                }
+
+                $items[] = [
+                    'assignment_row_number' => $key + 1,
+                    'assignment_id'=> $value['assignment_id'],
+                    'user_fullname' => $value['user_firstname'] . '  ' . $value['user_lastname'],
+                    'assignment_description' => $value['assignment_description'],
+                    'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
+                    'assignment_end_datetime' => $this->msg->l($value['assignment_end_datetime']),
+                    'schedule_date' => $value['schedule_date'],
+                    'lesson_time' => $value['lesson_time_start_at'] . ' - ' . $value['lesson_time_end_at'],
+                    'lesson_name' => $value['lesson_name'],
+                    'assignment_expired' => $assignment_end_count < 0,
+                    'assignment_days_count' => $assignment_days_text
+                ];
+            }
         }
 
-        $params['sort'] = implode('.', $sort);
+        if ($collection->hasMore()) {
+            $params = $this->request->getQuery();
+            $params['page'] = $collection->next_page;
+            $more = [[
+                'path' => '/assignments?' . http_build_query($params)
+            ]];
+        }
 
         return [
-            'title' => $title,
-            'path' => '/assignments?'.http_build_query(['filter'=>$params]),
-            'class_name' => $class_name
+            'header' => $header,
+            'items' => $items,
+            'is_empty' => $collection->isEmpty(),
+            'more' => $more,
+            'is_wrap' => !$collection->isEmpty() && $collection->page < 2
         ];
     }
 
     private function getLessonOptions(): ?array
     {
-        $db = DataStore::init();
-        $data = $db->data('
-            select 
-                l.lesson_id,
-                l.lesson_name
-            from assignment as a
-            join schedule as s on s.schedule_id = a.schedule_id
-            join lesson as l on l.lesson_id = s.lesson_id
-            left join lesson_user as lu on lu.lesson_id = l.lesson_id
-            where l.user_id = ? or lu.user_id = ?
-            group by l.lesson_id
-            order by l.lesson_name
-        ', [
-            $this->current_user->id,
-            $this->current_user->id
-        ]);
+        $query = new DataQuery();
+
+        $query
+            ->select('l.lesson_id', 'l.lesson_name')
+            ->from('assignment as a')
+            ->join('schedule as s on s.schedule_id = a.schedule_id')
+            ->join('lesson as l on l.lesson_id = s.lesson_id')
+            ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
+            ->leftJoin('group_lesson as gl on gl.lesson_id = l.lesson_id')
+            ->leftJoin('group_user as gu on gu.group_id = gl.group_id')
+            ->where('(
+                    l.user_id = ? 
+                    or lu.user_id = ?
+                    or gu.user_id = ?
+                )', [
+                $this->current_user->id, 
+                $this->current_user->id,
+                $this->current_user->id
+            ])
+            ->group('l.lesson_id')
+            ->order('l.lesson_name');
 
         $options = null;
         $lesson_id = $this->request->get('filter.lesson_id');
 
-        if (!$data) {
+        if (!$data = $query->fetchAll()) {
             return $options;
         }
 
@@ -470,17 +492,15 @@ class AssignmentsController extends PrivateController
         ]];
     }
 
-    private function getAssignmentDaysCount($datetime_string): ?int
+    private function getAssignmentEndCount($datetime_string): ?int
     {
         if (!$datetime_string) {
             return null;
         }
 
         $start_timestamp = time();
-        $end_timestamp = strtotime($datetime_string);
+        $end_datetime = new DateTime($datetime_string, new DateTimeZone('utc'));
 
-        $diff = $end_timestamp - $start_timestamp;
-
-        return intval($diff / 86400) - 1;
+        return $end_datetime->getTimestamp() - $start_timestamp;
     }
 }

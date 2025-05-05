@@ -84,7 +84,7 @@ $router->post('/lessons/invites/create', [LessonInvitesController::class, 'creat
 
 $router->get('/lessons/users/{:lesson_user_id}/delete', [LessonUsersController::class, 'deleteAction']);
 
-$router->get('/assignments', [AssignmentsController::class, 'indexAction']);
+$router->any('/assignments', [AssignmentsController::class, 'indexAction']);
 $router->get('/schedules/{:schedule_id}/assignments/new', [AssignmentsController::class, 'newAction']);
 $router->post('/assignments/create', [AssignmentsController::class, 'createAction']);
 $router->get('/assignments/{:id}/edit', [AssignmentsController::class, 'editAction']);
@@ -108,10 +108,10 @@ $router->get('/schedules/{:schedule_id}/groups/delete', [ScheduleGroupsControlle
 
 $router->get('/schedules/new', [SchedulesController::class, 'newAction']);
 $router->post('/schedules/create', [SchedulesController::class, 'createAction']);
-$router->get('/schedules/{:year}/{:month}/{:day}', [SchedulesController::class, 'indexAction']);
 $router->get('/schedules/{:id}/edit', [SchedulesController::class, 'editAction']);
 $router->post('/schedules/{:id}/update', [SchedulesController::class, 'updateAction']);
 $router->get('/schedules/{:id}', [SchedulesController::class, 'showAction']);
+$router->get('/schedules/{:year}/{:month}/{:day}', [MainController::class, 'indexAction']);
 
 $router->get('/test', [TestController::class, 'indexAction']);
 

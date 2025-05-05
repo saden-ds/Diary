@@ -28,6 +28,20 @@
                         </select>
                         <label for="filter_owner" class="field-block__label">Uzdevuma piederības</label>
                     </div>
+                    <div class="js_period field-grid">
+                        <div class="field-grid__span field-grid__span_6">
+                            <div class="field-block field-block_label">
+                                <input id="filter_assignment_end_from" class="field field_period field_stretch field-block__input" type="text" name="filter[assignment_end_from]">
+                                <label for="filter_assignment_end_from" class="field-block__label">Termiņš no</label>
+                            </div>
+                        </div>
+                        <div class="field-grid__span field-grid__span_6">
+                            <div class="field-block field-block_label">
+                                <input id="filter_assignment_end_to" class="field field_period field_stretch field-block__input" type="text" name="filter[assignment_end_to]">
+                                <label for="filter_assignment_end_to" class="field-block__label">līdz</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="field-block field-block_label">
                       <input id="filter_assignment_description" class="field field_stretch" type="text" name="filter[assignment_description]" value="<var:assignment_description>">
                       <label for="filter_assignment_description" class="field-block__label">Teksts</label>
@@ -36,104 +50,40 @@
             </div>
         </div>
         <div class="aside-form__footer aside-form__footer_buttons">
-            <button class="js_filter_reset button button_simple" type="button"><msg:filter.reset></button>
-            <button class="button button_submit" type="submit"><msg:filter.submit></button>
+            <button class="js_filter_reset button button_simple" type="button"><msg:action.reset></button>
+            <button class="button button_submit" type="submit"><msg:action.filter></button>
         </div>
     </form>
 </div>
 </block:filter>
 <div id="content" class="layout__content">
-    <!-- <section class="box-section">
-        <div class="box">
-            <div class="section section_header_first">
-                <div class="section__header">
-                    <h3 class="section__title toggle-title">
-                        <a class="js_toggle toggle-title__toggle active" href="#agreement_persons">asdsadad</a>
-                    </h3>
-                    <ul class="actions-list section__actions">
-                        <li class="js_menu_parent actions-list__item">
-                            <a class="js_modal action action_icon action_m_icon_only i i_new" href="#new">Add</a>
-                        </li>
-                    </ul>
-                </div>
-                <div id="agreement_persons" class="section__body">
-                    <div class="section__content">
-                        asdsa
-                    </div>
-                </div>
-            </div>
-            <div class="section section_header_first">
-                <div class="section__header">
-                    <h3 class="section__title toggle-title">
-                        <a class="js_toggle toggle-title__toggle active" href="#agreement_persons2">asdsadad</a>
-                    </h3>
-                    <ul class="actions-list section__actions">
-                        <li class="js_menu_parent actions-list__item">
-                            <a class="js_modal action action_icon action_m_icon_only i i_new" href="#new">Add</a>
-                        </li>
-                    </ul>
-                </div>
-                <div id="agreement_persons2" class="section__body">
-                    asdsa
-                </div>
-            </div>
-        </div>
-    </section> -->
-
-
-    <section class="box-section">
-        <div class="box">
-            <table class="data-table" width="100%">
-                <thead class="data-table__thead">
-                    <tr class="data-table__tr">
-                        <block:header>
-                        <th class="data-table__th">
-                            <if:path>
-                            <a class="<var:class_name>" href="<var:path>"><var:title></a>
-                            </if:path>
-                            <ifnot:path>
-                            <var:title>
-                            </ifnot:path>
-                        </th>
-                        </block:header>
-                    </tr>
-                </thead>
-                <block:assignments>
-                <tbody class="data-table__tbody">
-                    <tr class="data-table__tr">
-                        <td class="data-table__td data-table__td_first">
-                            <div class="data-summary">
-                                <a href="/assignments/<var:assignment_id>" class="js_modal toggle"><var:assignment_end_datetime></a>
-                                <div class="data-summary__description">
-                                    <span class="badge badge_xsmall<if:assignment_expired: badge_red:>"><var:assignment_days_count></span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="data-table__td">
-                            <div class="data-summary">
-                                <a href="/assignments/<var:assignment_id>" class="js_modal toggle"><var:lesson_name></a>
-                                <div class="data-summary__description">
-                                    <var:user_fullname>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="data-table__td">
-                            <div class="data-summary">
-                                <a href="/assignments/<var:assignment_id>" class="js_modal toggle"><var:assignment_description></a>
-                                <div class="data-summary__description">
-                                    <var:assignment_type>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="data-table__td"></td>
-                    </tr>
-                </tbody>
-                </block:assignments>
-            </table>
-        </div>
-    </section>
+    <var:body:r>
 </div>
 <script>
+(function(){
+    var url = '/assignments';
+
+    $('#filter').submit(function(event){
+        event.preventDefault();
+
+        var $container = $('#content'),
+            params = $(this).serializeArray();
+
+        $container.overlay();
+
+        $.post(url, params, function(html){
+            $container.html(html);
+        });
+    });
+
+    $('#content').on('click', '.sort', function(event){
+        event.preventDefault();
+
+        url = this.href;
+
+        $('#filter').trigger('submit');
+    });
+})();
     // $('#select_filter_lesson').change(function() {
     //     $('#form_filter').trigger('submit');
     // });

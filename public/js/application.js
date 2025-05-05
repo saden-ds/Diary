@@ -1517,7 +1517,7 @@ app.script = (function(){
           url     = $this.data('url') || this.href;
 
       if (!$this.hasClass('active')) {
-        $this.addClass('active').html('please wait&hellip;');
+        $this.addClass('active').empty().ticker();
 
         if (filter) {
           data = $(filter).serializeArray();
@@ -1537,7 +1537,7 @@ app.script = (function(){
         }).fail(function(jqXHR, textStatus, errorThrown){
           $this.parent().html(
             '<span class="data-infinite__anchor data-infinite__anchor_disabled">' +
-              'System error' +
+              textStatus +
             '</span>'
            );
         });

@@ -7,10 +7,12 @@ action:
   edit: Rediģēt
   export_xlsx: Eksportēt XLSX
   file_browse: Pievienot
+  filter: Pielietot
   find: Meklēt
   next: Turpināt
   request: Pasūtīt
   remove: Noņemt
+  reset: Attīrīt
   show_more: Parādīt vēl
   submit: Saglabāt
   signin: Pieslēgties
@@ -415,6 +417,9 @@ number:
       mb: MB
       tb: TB
 
+pagination:
+  load_more: Ielādēt vairāk
+
 search:
   not_found: Nav atrasti dati atbilstoši ievadītajiem meklēšanas parametriem
 
@@ -435,7 +440,7 @@ signup:
   email: Lietotājvārds (e-pasta adrese)
   gdpr: Piekrītu reģistra lietošanas un personas datu apstrādes noteikumiem
   firstname: Jūsu vārds
-  password: Parole (vismaz 8 simboli)
+  password: Parole (vismaz 9 simboli)
   password_confirm: Atkārtojiet paroli
   lastname: Uzvārds
   error:
@@ -488,7 +493,7 @@ user_recovery:
       mail: Kļūda! Neizdevās nosūtīt norādījumus paroles atjaunošanai
     notice:
       mail: Ja Jūsu e-pasts eksistē mūsu datubāzē, tad Jums tiks nosūtīti norādījumi paroles atjaunošanai
-  password: Parole (vismaz 8 simboli)
+  password: Parole (vismaz 9 simboli)
   password_confirm: Atkārtojiet paroli
 
 assignment:
@@ -498,6 +503,14 @@ assignment:
     one: '%{count} diena'
     few: '%{count} dienas'
     many: '%{count} dienas'
+  hours:
+    one: '%{count} stunda'
+    few: '%{count} stundas'
+    many: '%{count} stundas'
+  minutes:
+    one: '%{count} minute'
+    few: '%{count} minutes'
+    many: '%{count} minutes'
   types:
     test: PD
     work: Nodarbība 

@@ -50,6 +50,11 @@ class View
         }
     }
 
+    public function file(string $file, ?array $data = null): string
+    {
+        return $this->tmpl->file($file, $data);
+    } 
+
     public function __toString()
     {
         return $this->toString();

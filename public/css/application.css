@@ -84,7 +84,7 @@ a.inherit:hover { text-decoration: underline; }
 .sort {
   position: relative;
   display: inline-block;
-  padding-right: 26px;
+  padding-right: 20px;
   color: inherit;
   text-decoration: none;
 }
@@ -92,12 +92,12 @@ a.inherit:hover { text-decoration: underline; }
   text-decoration: none;
 }
 .sort::after {
-  position: absolute; top: -6px; right: 0;
+  position: absolute; top: 0px; right: 0;
   content: '';
   display: block;
-  width: 24px; height: 24px;
-  background: url('../img/icons10.png') no-repeat 0 -2496px;
-  background-image: none, url('../img/icons10.svg');
+  width: 16px; height: 16px;
+  background: url('../img/icons/sort_desc.svg') no-repeat 0 0;
+  background-size: 16px auto;
   opacity: .2;
 }
 .sort_asc::after,
@@ -105,45 +105,7 @@ a.inherit:hover { text-decoration: underline; }
   opacity: 1;
 }
 .sort_desc::after {
-  background-position: 0 -2520px;
-}
-
-.embed {
-  position: relative;
-  width: 880px;
-}
-.embed__container {
-  min-height: 64px; max-width: 880px;
-  overflow: auto;
-}
-.embed__image {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%; max-height: 100%;
-}
-.embed__empty {
-  display: block;
-  position: absolute; top: 50%; left: 0;
-  margin-top: -80px;
-  padding: 32px;
-  width: 100%;
-  color: inherit;
-  font-size: 20px;
-  text-align: center;
-  text-decoration: none;
-  opacity: .6;
-}
-.embed__empty.i::before {
-  content: '';
-  display: block;
-  width: 48px; height: 48px;
-  margin: 0 auto 8px;
-  background: url('../img/download.png') no-repeat 0 0;
-  background-image: none, url('../img/download.svg');
-}
-.embed__empty:hover {
-  opacity: 1;
-  text-decoration: none;
+  background-image: url('../img/icons/sort_asc.svg');
 }
 
 .wordwrap {
@@ -2804,8 +2766,9 @@ a.user-summary__abbr:hover {
 .data-infinite__anchor {
   display: inline-block;
   position: relative;
-  padding: 11px 48px;
-  color: #522B2A;
+  padding: 12px 48px;
+  color: inherit;
+  font-size: 12px;
 }
 .data-infinite__anchor.active,
 .data-infinite__anchor.active:hover,
@@ -2814,17 +2777,9 @@ a.user-summary__abbr:hover {
   text-decoration: none;
   cursor: default;
 }
-.data-infinite__anchor::before {
-  content: '';
-  display: block;
-  position: absolute; top: 12px; left: 23px; z-index: 1;
-  width: 18px; height: 18px;
-  background: url('../img/spinner_small.gif') no-repeat 99px 99px;
+.data-infinite__wrapper .loader-ticker {
+  margin: 5px auto;
 }
-.data-infinite__anchor.active::before {
-  background-position: 50% 50%;
-}
-
 
 .survey-table.ui-sortable-helper {
   position: absolute;
@@ -3094,11 +3049,13 @@ a.user-summary__abbr:hover {
   color: #9C8D8D;
 }
 .data-table__th_first,
-.data-table__td_first {
+.data-table__td_first,
+.data-table__tr_first_last .data-table__th:first-child {
   padding-left: 32px;
 }
 .data-table__th_last,
-.data-table__td_last {
+.data-table__td_last,
+.data-table__tr_first_last .data-table__th:last-child {
   padding-right: 32px;
 }
 .data-table__td_indent {
@@ -4910,10 +4867,6 @@ a.user-summary__abbr:hover {
 .avatar_9 { background-color: #1EA550; }
 .avatar_10 { background-color: #009688; }
 
-
-/*
- *  Loaders
- */
 .loader-ticker {
   width: 26px;
   font-size: 0;
@@ -4946,7 +4899,7 @@ a.user-summary__abbr:hover {
     content: '';
     width: 6px; height: 6px;
     border-radius: 2px;
-    background-color: #478CA5;
+    background-color: #E36255;
     -webkit-animation-name: ticker-bounce;
        -moz-animation-name: ticker-bounce;
         -ms-animation-name: ticker-bounce;
