@@ -6,6 +6,7 @@ use App\Base\Exceptions\NotFoundException;
 use App\Base\DataStore;
 use App\Base\View;
 use App\Models\User;
+use App\Models\UserConfirmation;
 
 class RegistrationsController extends ApplicationController
 {
@@ -20,13 +21,15 @@ class RegistrationsController extends ApplicationController
 
     public function createAction(): ?View
     {
-        $user = new User($this->request->permit([
-            'user_firstname', 'user_lastname', 'user_email', 'user_password', 'user_password_repeat'
-        ]));
-        
         $view = new View();
-
+        $user = new User($this->request->permit([
+            'user_firstname', 'user_lastname', 'user_email',
+            'user_password', 'user_password_repeat'
+        ]));
+        $confirmation = new UserConfirmation();
+        
         if ($user->create()) {
+            $confirmation->createAndSendMail($user);
             $this->current_user->update($user);
             
             return $view->data([
@@ -35,7 +38,5 @@ class RegistrationsController extends ApplicationController
         } else {
             return $this->recordError($user);
         }
-
-
     }
 }

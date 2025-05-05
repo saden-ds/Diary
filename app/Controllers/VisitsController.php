@@ -8,7 +8,7 @@ use App\Base\DataQuery;
 use App\Models\Visit;
 use DateTime;
 
-class VisitsController extends ApplicationController
+class VisitsController extends PrivateController
 {
     public function indexAction(): ?View
     {

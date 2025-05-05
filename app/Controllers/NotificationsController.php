@@ -6,7 +6,7 @@ use App\Base\View;
 use App\Base\DataStore;
 use DateTime;
 
-class NotificationsController extends ApplicationController
+class NotificationsController extends PrivateController
 {
     public function latestAction(): ?View
     {

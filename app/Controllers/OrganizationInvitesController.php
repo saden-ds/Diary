@@ -8,7 +8,7 @@ use App\Base\View;
 use App\Models\OrganizationInvite;
 use App\Models\OrganizationUser;
 
-class OrganizationInvitesController extends ApplicationController
+class OrganizationInvitesController extends PrivateController
 {
     public function acceptAction(): ?View
     {

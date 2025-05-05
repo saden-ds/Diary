@@ -129,6 +129,49 @@ a:hover, a:focus { text-decoration: underline; }
   margin: -3px 0 0 -20px;
 }
 
+.checklist {
+    padding-top: 4px;
+}
+.checklist__item {
+    position: relative;
+    padding-left: 12px;
+    font-weight: 300;
+    font-size: 0.813rem;
+}
+.checklist__item::before,
+.checklist__item::after {
+    content: '';
+    display: block;
+    position: absolute; left: 0;
+    background: #FE5F1E;
+    width: 8px; height: 2px;
+    border-radius: 1px;
+}
+.checklist__item::before {
+    top: 8px;
+    transform: rotate(45deg);
+}
+.checklist__item::after {
+    top: 8px;
+    transform: rotate(135deg);
+}
+.checklist__item.checked::before {
+    top: 8px;
+    background: #007A42;
+    transform: rotate(135deg);
+}
+.checklist__item.checked::after {
+    top: 9px;
+    left: -2px;
+    background: #007A42;
+    content: '';
+    width: 5px; 
+    transform: rotate(45deg);
+}
+.checked {
+    color: #007A42;
+}
+
 .button {
   display: inline-block;
   padding: 12px 16px;
@@ -342,6 +385,10 @@ a:hover, a:focus { text-decoration: underline; }
   background: #C5131C;
   color: #FFF;
 }
+.flash_notice {
+  background: #79B27D;
+  color: #FFF;
+}
 
 .shield {
   position: relative; z-index: 1;
@@ -365,7 +412,17 @@ a:hover, a:focus { text-decoration: underline; }
   font-weight: bold;
 }
 .shield__body {
-  padding: 32px 32px 0;
+  padding: 16px 24px 0;
+}
+.shield__body h1 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+}
+.shield__body p {
+  margin-bottom: 16px;
+  text-align: center;
 }
 .shield__message {
   padding-bottom: 8px;
@@ -374,12 +431,12 @@ a:hover, a:focus { text-decoration: underline; }
   line-height: 1.5;
 }
 .shield__footer {
-  padding: 0 32px 32px;
+  padding: 0 24px 24px;
   text-align: center;
 }
 .shield__container {
   position: relative;
-  width: 360px;
+  width: 400px;
   border-radius: 10px 10px 8px 8px;
   background: #FFF;
 }

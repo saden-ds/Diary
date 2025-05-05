@@ -1,5 +1,5 @@
 <div class="shield">
-    <form id="registration_form" class="shield__container" method="post">
+    <form id="signup" class="shield__container" method="post">
         <div class="shield__header">
             <h1 class="shield__title">Reģistrēties</h1>
         </div>
@@ -17,28 +17,80 @@
                 <label for="signup_email" class="field-block__label"><msg:signup.email></label>
             </div>
             <div class="field-block">
-                <input id="signup_pass" class="field field_stretch field-block__field" type="password" name="user_password" autocomplete="off">
-                <label for="signup_pass" class="field-block__label"><msg:signup.password></label>
+                <input id="signup_password" class="field field_stretch field-block__field" type="password" name="user_password" autocomplete="off">
+                <label for="signup_password" class="field-block__label"><msg:signup.password></label>
+                <ul class="checklist">
+                <li id="signup_password_letters" class="checklist__item">
+                    <msg:checklist.password.letters>
+                </li>
+                <li id="signup_password_number" class="checklist__item">
+                    <msg:checklist.password.number>
+                </li>
+                <li id="signup_password_symbol_special" class="checklist__item">
+                    <msg:checklist.password.symbol_special>
+                </li>
+                <li id="signup_password_symbol_count" class="checklist__item">
+                    <msg:checklist.password.symbol_count>
+                </li>
+            </ul>
             </div>
             <div class="field-block">
-                <input id="signup_pass_confirm" class="field field_stretch field-block__field" type="password" name="user_password_repeat" autocomplete="off">
-                <label for="signup_pass_confirm" class="field-block__label"><msg:signup.password_confirm></label>
+                <input id="signup_password_confirm" class="field field_stretch field-block__field" type="password" name="user_password_repeat" autocomplete="off">
+                <label for="signup_password_confirm" class="field-block__label"><msg:signup.password_confirm></label>
             </div>
         </div>
         <div class="shield__footer">
-            <button class="button button_commit" type="submit"><msg:signup.submit></button>
-            <a href="/" class="button button_simple">Sign in</a>
+            <button class="button button_submit button_stretch" type="submit"><msg:action.signup></button>
+            <a href="/" class="button button_simple button_stretch"><msg:action.signin></a>
         </div>
     </form>
 </div>
 <script>
 (function(){
-  new app.Form('#registration_form', {
-    url: '/signup',
-    keepOverlay: true,
-    onSuccess: function(form, response){
-      window.location.href = '/';
-    }
-  });
+    $('#signup_password').on('keyup paste', function(){
+        var disabled = false;
+
+        if (/[a-z]/.test(this.value) && /[A-Z]/.test(this.value)) {
+            $('#signup_password_letters').addClass('checked');
+        } else {
+            disabled = true;
+
+            $('#signup_password_letters').removeClass('checked');
+        }
+
+        if (/\d/.test(this.value)) {
+            $('#signup_password_number').addClass('checked');
+        } else {
+            disabled = true;
+
+            $('#signup_password_number').removeClass('checked');
+        }
+
+        if (/[#?!@$%^&*_=\-]/.test(this.value)) {
+            $('#signup_password_symbol_special').addClass('checked');
+        } else {
+            disabled = true;
+
+            $('#signup_password_symbol_special').removeClass('checked');
+        }
+
+        if (this.value.length >= 9) {
+            $('#signup_password_symbol_count').addClass('checked');
+        } else {
+            disabled = true;
+
+            $('#signup_password_symbol_count').removeClass('checked');
+        }
+
+        $('#signup_button').prop('disabled', disabled);
+    });
+
+    new app.Form('#signup', {
+        url: '/signup',
+        keepOverlay: true,
+        onSuccess: function(form, response){
+            window.location.href = '/';
+        }
+    });
 })();
 </script>

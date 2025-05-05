@@ -13,6 +13,9 @@ action:
   remove: Noņemt
   show_more: Parādīt vēl
   submit: Saglabāt
+  signin: Pieslēgties
+  signup: Reģistrēties
+  signout: Beigt darbu
 
 app:
   version: Versija
@@ -269,6 +272,13 @@ error:
     cant_write: Fails netika augšupielādēts
     extension: Fails netika augšupielādēts
 
+checklist:
+  password:
+    letters: Jāsatur vismaz viens lielais un viens mazais burts
+    number: Jāsatur vismaz viens cipars
+    symbol_special: Jāsatur vismaz viens īpašais simbols ( - = + _ . ? ! & @ # )
+    symbol_count: Jāsatur vismaz 9 simboli
+
 footer:
   copyright: Vides aizsardzības un reģionālās attīstības ministrija, publicētā satura visas tiesības aizsargātas.
   navigation:
@@ -304,8 +314,42 @@ http_error:
     description: |
       Pieeja pieprasītajai lapai ir aizliegta. <a href="/">Atgriezieties sākumlapā</a>.
 
+user_confirmation:
+  title: Lūdzu, apstipriniet savu <nobr>e-pasta adresi!</nobr>
+  description: |
+    Pateicamies par <nobr>Studyco</nobr> konta izveidošanu.<br>
+    Lai uzsāktu lietošanu, lūdzu, pārbaudiet savu e-pastu <b>%{email}</b> un aktivizējiet kontu!<br><br>
+    <b>Ja apstiprinājuma e-pasts nav pienācis ilgu laiku, lūdzu, pārbaudiet arī "Spam" sadaļā.</b>
+  footnote: |
+    Ja konta apstiprinājuma e-pasta sūtījumu neesiet saņēmuši, pieprasiet konta apstiprināšanas e-pasta sūtījumu atkārtoti.
+  button: Nosūtīt e-pastu atkārtoti
+  send_instructions: Pāris minūšu laikā uz Jūsu e-pastu tiks nosūtīti norādījumi <nobr>Studyco</nobr> konta apstiprināšanai
+  change_profile: Mainīt lietotāja datus
+  message:
+    error:
+      send: Neizdevās nosūtīt konta apstiprināšanas instrukcijas
+  success:
+    title: Paldies!
+    description: Jūsu konts ir aktivizēts.
+    link_title: Sākuma lapā
+  error:
+    title: Kļūda
+    description: Neizdevās apstiprināt e-pasta adresi!<br> Konta apstiprinājuma derīguma termiņš ir beidzies. Lūdzu, pieprasiet konta apstiprināšanas e-pasta sūtījumu atkārtoti.
+    resend_link_title: Nosūtīt e-pastu atkārtoti
+
 mail:
-  footer: Ja Jūs neveicāt reģistrēšanos Life e-pakalpojumā, lūdzu, ignorējiet šo ziņu.
+  footer: Ja Jūs neveicāt reģistrēšanos Studyco, lūdzu, ignorējiet šo ziņu.
+  confirmation_instruction:
+    subject: Studyco konta apstiprināšana
+    link_title: Aktivizēt manu kontu
+    body: |
+      Pateicamies par Studyco konta izveidošanu!<br>
+      Lūdzu, aktivizējiet kontu.<br>
+    plain_text: |
+      Pateicamies par Studyco izveidošanu!
+      Lūdzu, aktivizējiet kontu!
+      To var veikt, sekojot saitei zemāk:
+      %{url}
 
 meta:
   description:
@@ -318,9 +362,6 @@ navigation:
   signin: Pieslēgties
   signup: Reģistrēties
   signout: Beigt darbu
-  products: Produkti
-  laboratories: Laboratorijas
-  manufacturers: Ražotāji
 
 notification:
   mail:
@@ -381,7 +422,6 @@ signin:
   action:
     recovery: Mainīt paroli
     sent_recovery: Aizmirsu paroli
-    submit: Pieslēgties
   email: Lietotājvārds (e-pasta adrese)
   password: Parole
 

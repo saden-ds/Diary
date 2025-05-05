@@ -1,0 +1,55 @@
+<if:is_error>
+<div class="shield">
+    <div id="confirmation" class="shield__container" method="post">
+        <div class="shield__header">
+            <a class="logo" href="/"></a>
+        </div>
+        <div class="shield__body">
+            <h1><msg:user_confirmation.error.title></h1>
+            <p><msg:user_confirmation.error.description:r></p>
+        </div>
+        <div class="shield__footer">
+            <button id="send_confirmation" class="button button_submit button_stretch" type="button"><msg:user_confirmation.error.resend_link_title></button>
+            <a href="/signup" class="button button_simple button_stretch"><msg:action.signup></a>
+        </div>
+    </div>
+</div>
+<script>
+$('#send_confirmation').click(function(event){
+    event.preventDefault();
+
+    var $this = $(this),
+        $container = $('#confirmation');
+
+    $container.overlay();
+
+    $.post('/confirmations/send', function(response){
+        if (response.notice) {
+            app.flash.notice(response.notice);
+        } else if (response.error) {
+            app.flash.error(response.error);
+        }
+    }, 'json').fail(function(jqXHR, textStatus, errorThrown){
+        app.flash.error(jqXHR.responseJSON.error);
+    }).always(function(jqXHR, textStatus) {
+        $container.overlay('remove');
+    });
+});
+</script>
+</if:is_error>
+<ifnot:is_error>
+<div class="shield">
+    <div id="confirmation" class="shield__container" method="post">
+        <div class="shield__header">
+            <a class="logo" href="/"></a>
+        </div>
+        <div class="shield__body">
+            <h1><msg:user_confirmation.success.title></h1>
+            <p><msg:user_confirmation.success.description></p>
+        </div>
+        <div class="shield__footer">
+            <a href="/signup" class="button button_submit button_stretch"><msg:user_confirmation.success.link_title></a>
+        </div>
+    </div>
+</div>
+</ifnot:is_error>

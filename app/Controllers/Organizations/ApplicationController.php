@@ -10,9 +10,13 @@ class ApplicationController extends BaseApplicationController
 {
     protected function beforeAction(string $action): void
     {
+        if (!$this->current_user->isSignedIn()) {
+            $this->redirect('/');
+        }
+
         if (
-            !$this->current_user->isSignedIn() ||
             !$this->current_user->organization_id
+            || !$this->current_user->confirmed
         ) {
             throw new ForbiddenException();
         }

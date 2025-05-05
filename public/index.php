@@ -28,6 +28,7 @@ use App\Controllers\AssignmentsController;
 use App\Controllers\AssignmentFilesController;
 use App\Controllers\JournalsController;
 use App\Controllers\UsersController;
+use App\Controllers\UserConfirmationsController;
 use App\Controllers\TestController;
 
 
@@ -39,8 +40,10 @@ header('X-Request-ID: ' . $_SERVER['X_REQUEST_ID']);
 
 $router = new Router($_SERVER, [ApplicationController::class, 'notFoundAction']);
 
-// $router->get('/', [MainController::class, 'indexAction']);
-$router->get('/', [SchedulesController::class, 'indexAction']);
+$router->get('/', [MainController::class, 'indexAction']);
+
+$router->post('/confirmations/send', [UserConfirmationsController::class, 'updateAction']);
+$router->get('/confirm/{:token}', [UserConfirmationsController::class, 'showAction']);
 
 $router->get('/conversations', [ConversationsController::class, 'indexAction']);
 $router->get('/conversations/new', [ConversationsController::class, 'newAction']);

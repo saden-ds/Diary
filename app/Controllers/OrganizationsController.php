@@ -8,7 +8,7 @@ use App\Base\DataQuery;
 use App\Models\Organization;
 use App\Models\OrganizationUser;
 
-class OrganizationsController extends ApplicationController
+class OrganizationsController extends PrivateController
 {
     public function newAction(): ?View
     {

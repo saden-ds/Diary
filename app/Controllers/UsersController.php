@@ -7,10 +7,8 @@ use App\Base\DataStore;
 use App\Base\View;
 use App\Models\User;
 
-class UsersController extends ApplicationController
+class UsersController extends PrivateController
 {
-
-
     public function editAction(): ?View
     {
         $user = User::find($this->current_user->id);

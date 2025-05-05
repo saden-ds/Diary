@@ -10,6 +10,7 @@ class Tmpl extends Singleton
     public const OPTION_REGEXP = '[hjr]';
     private array $tmpl = [];
     private string $csrf = '';
+    private Config $config;
     private Message $msg;
 
     protected function __construct()

@@ -89,15 +89,14 @@ class User extends Model
         return crc32($name) % 10;
     }
 
-    public function update($attributes = null): bool
-    {
-        return $this->validateAndUpdateRecord($attributes);
-    }
-
-
     public function create($attributes = null): bool
     {
         return $this->validateAndCreateRecord($attributes);
+    }
+
+    public function update($attributes = null): bool
+    {
+        return $this->validateAndUpdateRecord($attributes);
     }
 
     public function isEqualsPassword($password): bool
