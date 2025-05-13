@@ -129,9 +129,9 @@ class User extends Model
 
         if (!$this->user_id || $this->user_password) {
             if (!$this->user_password_repeat) {
-                $this->addError('user_password_repeat', 'epmty');
+                $this->addError('user_password_repeat', 'ir jābūt aizpildītam');
             } elseif ($this->user_password_repeat != $this->user_password) {
-                $this->addError('user_password_repeat', 'not equals');
+                $this->addError('user_password_repeat', 'nav vienāds');
             }
         }
     }

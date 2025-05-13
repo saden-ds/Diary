@@ -50,12 +50,12 @@
     </section>
     </if:lesson_description>
 
+    <if:lesson_invites>
     <section class="box-section">
         <div class="js_toggle_parent box-section__header active">
             <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#lesson_invites">Uzaicināti cilvēki</a></h2>
         </div>
         <div id="lesson_invites" class="box box_data">
-            <if:lesson_invites>
             <table class="data-table" width="100%">
                 <thead class="data-table__thead">
                     <tr class="data-table__tr">
@@ -99,20 +99,15 @@
                     </block:lesson_invites>
                 </tbody>
             </table>
-            </if:lesson_invites>
-            <ifnot:lesson_invites>
-            <div class="empty-block">Nav datu</div>
-            </ifnot:lesson_invites>
         </div>
     </section>
-
-
+    </if:lesson_invites>
+    <if:lesson_users>
     <section class="box-section">
         <div class="js_toggle_parent box-section__header active">
             <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#lesson_users">Cilvēki mācību priekšmētā</a></h2>
         </div>
         <div id="lesson_users" class="box box_data">
-            <if:lesson_users>
             <table class="data-table" width="100%">
                 <thead class="data-table__thead">
                     <tr class="data-table__tr">
@@ -156,12 +151,9 @@
                     </block:lesson_users>
                 </tbody>
             </table>
-            </if:lesson_users>
-            <ifnot:lesson_users>
-            <div class="empty-block">Nav datu</div>
-            </ifnot:lesson_users>
         </div>
     </section> 
+    </if:lesson_users>
 </div>
 <script>
     (function(){

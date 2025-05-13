@@ -36,37 +36,17 @@ class LessonsController extends PrivateController
     public function showAction(): ?View
     {
         $lesson = Lesson::find($this->request->get('id'));
+        $tmpl = Tmpl::init();
 
         if (!$lesson) {
             throw new NotFoundException();
         }
 
-        $actions = null;
+        $is_student = $this->isLessonStudent($lesson);
+        $can_edit = $this->current_user->canEdit($lesson->user_id, $lesson->organization_id);
 
-        if ($this->current_user->canAdmin($lesson->organization_id)) {
-            if ($lesson->organization_id) {
-                $actions[] = [
-                    'title' => 'Rediģēt',
-                    'path' => '/lessons/' . $lesson->lesson_id . '/edit',
-                    'class_name' => 'js_modal'
-                ];
-            }
-
-            $actions[] = [
-                'title' => 'Jauns priekšmets',
-                'path' => '/lessons/new',
-                'class_name' => 'js_modal'
-            ];
-        }
-
-        if ($lesson->user_id == $this->current_user->id) {
-            if (empty($lesson->organization_id)) {
-                $actions[] = [
-                    'title' => 'Uzaicināt',
-                    'path' => '/lessons/' . $lesson->lesson_id . '/invites/new',
-                    'class_name' => 'js_modal'
-                ];
-            }
+        if (!$is_student && !$can_edit) {
+            throw new NotFoundException();
         }
 
         if ($this->request->isXhr()) {
@@ -75,7 +55,38 @@ class LessonsController extends PrivateController
             ]);
         }
 
-        $tmpl = Tmpl::init();
+        $lesson_invites = null;
+        $lesson_users = null;
+        $actions = null;
+
+        if ($can_edit) {
+            $actions[] = [
+                'title' => 'Rediģēt',
+                'path' => '/lessons/' . $lesson->lesson_id . '/edit',
+                'class_name' => 'js_modal'
+            ];
+
+            $lesson_invites = $this->getLessonInvites($lesson);
+        }
+
+        $actions[] = [
+            'title' => 'Jauns priekšmets',
+            'path' => '/lessons/new',
+            'class_name' => 'js_modal'
+        ];
+
+        if (
+            empty($lesson->organization_id) &&
+            $lesson->user_id == $this->current_user->id
+        ) {
+            $actions[] = [
+                'title' => 'Uzaicināt',
+                'path' => '/lessons/' . $lesson->lesson_id . '/invites/new',
+                'class_name' => 'js_modal'
+            ];
+
+            $lesson_users = $this->getLessonUsers($lesson);
+        }
         
         return View::init('tmpl/lessons/show.html', [
             'index' => $tmpl->file('tmpl/lessons/_index.tmpl', [
@@ -84,8 +95,8 @@ class LessonsController extends PrivateController
             'lesson_id'   => $lesson->lesson_id,
             'lesson_name' => $lesson->lesson_name,
             'lesson_description' => $lesson->lesson_description,
-            'lesson_invites' => $this->getLessonInvites($lesson),
-            'lesson_users' => $this->getLessonUsers($lesson),
+            'lesson_invites' => $lesson_invites,
+            'lesson_users' => $lesson_users,
             'actions' => $actions
         ])->main([
             'compact' => true
@@ -190,10 +201,14 @@ class LessonsController extends PrivateController
             ->select(
                 'l.lesson_id',
                 'l.lesson_name',
-                'concat(u.user_firstname, " ", u.user_lastname) as user_fullname'
+                'l.user_id',
+                'concat(u.user_firstname, " ", u.user_lastname) as user_fullname',
+                'o.organization_name'
             )
             ->from('lesson as l')
-            ->join('user as u on u.user_id = l.user_id');
+            ->join('user as u on u.user_id = l.user_id')
+            ->leftJoin('organization o on o.organization_id = l.organization_id')
+            ->order('l.lesson_name');
 
         if ($value = $this->request->get('q')) {
             $query->where('l.lesson_name like ?', '%' . $value . '%');
@@ -203,13 +218,14 @@ class LessonsController extends PrivateController
            $query->where('l.organization_id = ?', $this->current_user->organization_id);
         } else {
             $query
-                ->where('l.user_id = ?', $this->current_user->id)
-                ->where('l.organization_id is null');
+                ->leftJoin('group_lesson gl on gl.lesson_id = l.lesson_id')
+                ->leftJoin('group_user gu on gu.group_id = gl.group_id')
+                ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
+                ->where('(l.user_id = ? or ifnull(gu.user_id,lu.user_id) = ?)', [
+                    $this->current_user->id,
+                    $this->current_user->id
+                ]);
         }
-
-        $query
-            ->select('o.organization_name')
-            ->leftJoin('organization o on o.organization_id = l.organization_id');
 
         if (!$data = $query->fetchAll()) {
             return null;
@@ -218,12 +234,26 @@ class LessonsController extends PrivateController
         $lessons = null;
 
         foreach ($data as $r) {
+            $user_fullname = null;
+            $lesson_type = null;
+            
+            if ($r['user_id'] != $this->current_user->id) {
+                $user_fullname = $r['user_fullname'];
+            }
+
+            if (!$this->current_user->organization_id && $r['user_id'] != $this->current_user->id) {
+                $lesson_type = 'student';
+            } else {
+                $lesson_type = 'teacher';
+            }
+
             $lessons[] = [
                 'lesson_name' => $r['lesson_name'],
                 'lesson_path' => '/lessons/' . intval($r['lesson_id']),
-                'user_fullname' => $r['user_fullname'],
+                'lesson_type' => $lesson_type,
+                'user_fullname' => $user_fullname,
                 'organization_name' => $r['organization_name'] ?: 'Privats',
-                'active'      => $r['lesson_id'] == $id
+                'active' => $r['lesson_id'] == $id
             ];
         }
 
@@ -354,7 +384,26 @@ class LessonsController extends PrivateController
 
     }
 
+    private function isLessonStudent(Lesson $lesson): bool
+    {
+        if (
+            $this->current_user->organization_id ||
+            $this->current_user->id == $lesson->user_id
+        ) {
+            return false;
+        }
+
+        $query = new DataQuery();
+
+        $query
+            ->select('1 as one')
+            ->from('lesson l')
+            ->leftJoin('group_lesson gl on gl.lesson_id = l.lesson_id')
+            ->leftJoin('group_user gu on gu.group_id = gl.group_id')
+            ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
+            ->where('ifnull(gu.user_id,lu.user_id) = ?', $this->current_user->id);
+
+        return !!$query->first();
+    }
+
 }
-
-
-

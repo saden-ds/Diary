@@ -79,6 +79,9 @@ a.inherit:hover { text-decoration: underline; }
 .i_checkbox::before { background-image: url('../img/icons/checkbox.svg'); }
 .i_checkbox_warn::before { background-image: url('../img/icons/checkbox_warn.svg'); }
 .i_checkbox_ok::before { background-image: url('../img/icons/checkbox_ok.svg'); }
+.i_teacher::before { background-image: url('../img/icons/teacher.svg'); }
+.i_teacher::before { background-image: url('../img/icons/teacher.svg'); }
+.i_student::before { background-image: url('../img/icons/student.svg'); }
 
 
 .sort {
@@ -700,6 +703,37 @@ a.user:hover {
   color: #9C8D8D;
   font-size: 12px;
   line-height: normal;
+}
+.user-menu__item_separate {
+  border-top: 1px solid #E4DFD8;
+  margin-top: 16px;
+  padding-top: 4px;
+}
+.user-menu__label {
+  position: relative; left: 8px; top: -16px;
+  background: #FFF;
+  padding: 0 8px;
+  color: #9C8D8D;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.user-group {
+  margin-top: -8px;
+  padding: 0 16px 8px;
+}
+.user-group.i {
+  position: relative;
+  padding-left: 48px;
+  font-size: 14px;
+}
+.user-group.i::before {
+  position: absolute; top: 0; left: 16px;
+}
+.user-group__description {
+  color: #9C8D8D;
+  font-size: 12px;
+  line-height: 16px;
 }
 
 .report-chart {
@@ -1619,6 +1653,7 @@ a.user:hover {
 .chip_block {
   padding-top: 7px; padding-bottom: 7px;
   line-height: normal;
+  white-space: normal;
 }
 .chip_avatar {
   padding-left: 34px;
@@ -3012,14 +3047,14 @@ a.user-summary__abbr:hover {
   border-top: 1px solid #EBE7E2;
 }
 .data-table__th {
-  padding: 10px 12px 9px 4px;
+  padding: 10px 8px 9px;
   border-bottom: 1px solid #EBE7E2;
 }
 .data-table__th_separate {
   border-left: 1px solid #DEDAD5;
 }
 .data-table__td {
-  padding: 15px 12px 15px 4px;
+  padding: 15px 8px;
   border-top: 1px solid #EBE7E2;
 }
 .data-table__td_separate {
@@ -3038,6 +3073,9 @@ a.user-summary__abbr:hover {
 .data-table__td_header {
   padding-top: 7px; padding-bottom: 7px;
   background-color: #F9F8F6;
+}
+.data-table__td_highlight {
+  background-color: #FFFF00;
 }
 .data-table__tr_small {
   font-size: 12px;
@@ -3424,6 +3462,28 @@ a.user-summary__abbr:hover {
 .data-table__h3 .toggle-title__toggle::before,
 .data-table__toggle .toggle-title__toggle::before {
   left: -25px;
+}
+
+.droppable-anchor {
+  color: #9C8D8D;
+  text-decoration: none;
+  display: none;
+}
+.droppable-anchor:hover {
+  text-decoration: none;
+}
+.data-table__td.droppable {
+  padding: 0;
+}
+.data-table__td.droppable .droppable-anchor {
+  display: block;
+  padding: 15px 8px;
+  height: 48px;
+  text-align: center;
+  visibility: hidden;
+}
+.data-table__td.droppable:hover .droppable-anchor {
+  visibility: visible;
 }
 
 .data-action {
@@ -5594,13 +5654,14 @@ a.user-summary__abbr:hover {
   .data-table__thead_sticky {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 10;
   }
 
   .data-table__th_sticky,
   .data-table__td_sticky {
     position: sticky;
     left: 0;
+    z-index: 10;
     background: #f8f6f2;
   }
   .data-table__th_sticky {

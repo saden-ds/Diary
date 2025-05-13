@@ -39,6 +39,10 @@ class UserConfirmation extends Model
             return false;
         }
 
+        if (!filter_var($user->user_email, FILTER_VALIDATE_EMAIL)) {
+            return true;
+        }
+
         return $mailer->sendConfirmation($user, $this->user_confirmation_token);
     }
 

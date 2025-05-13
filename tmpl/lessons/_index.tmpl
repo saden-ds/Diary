@@ -1,10 +1,11 @@
 <block:lessons>
 <li class="aside-nav__item<if:active: active:>">
     <a class="js_aside_nav_item aside-nav__anchor" href="<var:lesson_path>">
-        <div class="nav-item">
+        <div class="nav-item<if:lesson_type: nav-item_icon i i_:><var:lesson_type>">
             <div class="nav-item__title"><var:lesson_name></div>
             <div class="nav-item__description">
-                <var:user_fullname>, <var:organization_name>
+                <var:user_fullname><if:user_fullname:, :>
+                <var:organization_name>
             </div>
         </div>
     </a>

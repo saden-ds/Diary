@@ -181,6 +181,19 @@
             <li class="user-menu__item">
               <a href="/signout" class="user-menu__anchor">Iziet</a>
             </li>
+            <if:groups>
+            <li class="user-menu__item user-menu__item_separate">
+              <span class="user-menu__label">Mācību iestādes</span>
+              <block:groups>
+              <div class="user-group i i_student">
+                <var:group_name>
+                <div class="user-group__description">
+                  <var:organization_name>
+                </div>
+              </div>
+              </block:groups>
+            </li>
+            </if:groups>
           </ul>
         </div>
       </li>

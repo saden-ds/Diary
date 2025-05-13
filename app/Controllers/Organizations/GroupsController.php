@@ -57,7 +57,7 @@ class GroupsController extends ApplicationController
 
         if ($this->request->isXhr()) {
             return View::init('tmpl/groups/_index.tmpl', [
-                'groups' => $this->getGroups()
+                'groups' => $this->getGroups($group->group_id)
             ]);
         }
 
@@ -72,7 +72,7 @@ class GroupsController extends ApplicationController
                 'class_name' => 'js_modal'
             ];
             $actions[] = [
-                'title' => 'Jauns skolēns',
+                'title' => 'Jauns audzēknis',
                 'path' => '/groups/' . $group->group_id . '/users/new',
                 'class_name' => 'js_modal'
             ];
@@ -90,7 +90,7 @@ class GroupsController extends ApplicationController
 
         return View::init('tmpl/groups/show.tmpl', [
             'index' => $tmpl->file('tmpl/groups/_index.tmpl', [
-                'groups' => $this->getGroups()
+                'groups' => $this->getGroups($group->group_id)
             ]),
             'group_name' => $group->group_name,
             'group_users' => $this->getGroupUsers($group),
@@ -221,7 +221,7 @@ class GroupsController extends ApplicationController
         return $options;
     }
 
-    private function getGroups(): ?array
+    private function getGroups(?int $group_id = null): ?array
     {
         $query = new DataQuery();
 
@@ -236,6 +236,10 @@ class GroupsController extends ApplicationController
 
         if (!$data = $query->fetchAll()) {
             return null;
+        }
+
+        foreach ($data as $k => $v) {
+            $data[$k]['active'] = $v['group_id'] == $group_id;
         }
 
         return $data;

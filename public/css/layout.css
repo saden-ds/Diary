@@ -560,7 +560,7 @@
 
 .nav-item_icon {
   position: relative;
-  padding-left: 40px;
+  padding-left: 32px;
 }
 .nav-item_icon::before {
   position: absolute; top: 0; left: 0; z-index: 1;
@@ -669,7 +669,7 @@
 .aside-draggable.ui-draggable-dragging {
   padding: 8px 10px 8px 16px;
   min-width: 200px;
-  background-color: #F2EFEC;
+  background-color: #EBE7E2;
   z-index: 100;
 }
 

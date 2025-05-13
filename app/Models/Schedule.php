@@ -68,18 +68,23 @@ class Schedule extends Model
         $query = new DataQuery();
 
         $query
-            ->select('schedule_id')
-            ->from('schedule')
-            ->where('lesson_id = ?', $this->lesson_id)
-            ->where('schedule_date = ?', $this->formatDate($this->schedule_date))
-            ->where('lesson_time_id = ?', $this->lesson_time_id);
+            ->select('u.user_firstname', 'u.user_lastname')
+            ->from('lesson x')
+            ->join('lesson l on l.user_id = x.user_id')
+            ->join('user u on u.user_id = l.user_id')
+            ->join('schedule s on s.lesson_id = l.lesson_id')
+            ->where('x.lesson_id = ?', $this->lesson_id)
+            ->where('s.schedule_date = ?', $this->formatDate($this->schedule_date))
+            ->where('s.lesson_time_id = ?', $this->lesson_time_id);
 
         if ($this->schedule_id) {
-            $query->where('schedule_id != ?', $this->schedule_id);
+            $query->where('s.schedule_id != ?', $this->schedule_id);
         }
 
-        if ($query->first()) {
-            $this->addError('base', $this->msg->t('schedule.message.error.exists'));
+        if ($data = $query->first()) {
+            $this->addError('base', $this->msg->t('schedule.message.error.user_busy', [
+                'name' => $data['user_firstname'] . ' ' . $data['user_lastname']
+            ]));
         }
     }
 

@@ -68,17 +68,20 @@
                         </table>
                     </td>
                     <block:groups>
-                    <td class="data-table__td data-table__td_border_left<if:lesson_name:: data_droppable>" data-url="<var:lesson_create_path>" data-group="<var:group_id>">
+                    <td class="data-table__td data-table__td_border_left<if:lesson_name:: droppable>" data-url="<var:lesson_create_path>" data-group="<var:group_id>">
                         <if:lesson_name>
-                        <div>
+                        <if:lesson_delete_path>
+                        <div class="chip chip_block chip_remove">
                             <var:lesson_name>
-                            <if:lesson_delete_path>
-                            <a class="js_lesson_remove" href="<var:lesson_delete_path>">&times;</a>
-                            </if:lesson_delete_path>
+                            <a class="js_lesson_remove chip__remove" href="<var:lesson_delete_path>"></a>
                         </div>
+                        </if:lesson_delete_path>
+                        <ifnot:lesson_delete_path>
+                        <var:lesson_name>
+                        </ifnot:lesson_delete_path>
                         </if:lesson_name>
                         <if:lesson_new_path>
-                        <a class="js_modal" href="<var:lesson_new_path>" style="display: block; height: 40px;"></a>
+                        <a class="js_modal droppable-anchor" href="<var:lesson_new_path>">Pievienot</a>
                         </if:lesson_new_path>
                     </td>
                     </block:groups>
@@ -89,11 +92,6 @@
         </table>
     </section>
 </div>
-<style>
-    .td-highlight {
-        background: yellow;
-    }
-</style>
 <script>
     (function(){
         function draggable() {
@@ -118,16 +116,16 @@
             }
         });
 
-        $('#droppable .data_droppable').droppable({
+        $('#droppable .droppable').droppable({
             accept: function($draggable) {
                 var $droppable = $(this),
                     groups     = $draggable.data('groups').toString().split(','),
                     group      = $droppable.data('group').toString();
 
-                return $droppable.hasClass('data_droppable') && groups.indexOf(group) !== -1;
+                return $droppable.hasClass('droppable') && groups.indexOf(group) !== -1;
             },
             classes: {
-                'ui-droppable-active': 'td-highlight',
+                'ui-droppable-active': 'data-table__td_highlight',
             },
             drop: function(event, ui) {
                 var $draggable = ui.draggable.clone();
@@ -137,23 +135,24 @@
                 var id = $draggable.data('id');
 
                 $new.hide();
-                $droppable.append($draggable).removeClass('data_droppable');
+                $droppable.append($draggable).removeClass('droppable');
 
                 $.post(url, {lesson_id: id}, function(response){
                     if (response.error) {
                         app.flash.error(response.error);
 
+                        $droppable.addClass('droppable');
                         $draggable.fadeOut(function(){
                             $(this).remove();
                             $new.show();
                         });         
                     } else {
                         $draggable.replaceWith(
-                            '<div>' +
+                            '<div class="chip chip_block chip_remove">' +
                                 $draggable.text() +
-                                ' <a class="js_lesson_remove" href="/schedules/' + 
+                                ' <a class="js_lesson_remove chip__remove" href="/schedules/' + 
                                     response.schedule_id + 
-                                '/groups/delete">×</a>' +
+                                '/groups/delete"></a>' +
                             
                             '</div>'
                         );
@@ -176,7 +175,7 @@
                 if (response.error) {
                     app.flash.error(response.error);     
                 } else {
-                    $lesson.closest('td').addClass('data_droppable ui-droppable');
+                    $lesson.closest('td').addClass('droppable ui-droppable');
                     $lesson.fadeOut('fast', function(){
                         $(this).remove();
                     });

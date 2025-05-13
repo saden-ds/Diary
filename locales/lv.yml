@@ -522,6 +522,7 @@ schedule:
   message:
     error:
       exists: Dotais mācību priekšmets jau eksistē
+      user_busy: Skolotājam %{name} jau ir priekšmets šaja laika
 
 organization_user:
   roles:

@@ -22,6 +22,7 @@ class CurrentUser
     private ?string $firstname = null;
     private ?string $lastname = null;
     private ?string $error = null;
+    private ?array $groups = null;
     private bool $confirmed = false;
     private bool $active = false;
 
@@ -141,15 +142,26 @@ class CurrentUser
             'confirmed' => $this->confirmed,
             'organization_user_role' => $this->organization_user_role,
             'organization_id' => $this->organization_id,
-            'organization_name' => $this->organization_name
+            'organization_name' => $this->organization_name,
+            'groups' => $this->groups
         ]);
 
         return $this->createFromSession();
     }
 
-    public function canAdmin($organization_id = null): bool
+    public function canAdmin(?int $organization_id = null): bool
     {
         if ($organization_id === null) {
+            return true;
+        }
+
+        return $organization_id == $this->organization_id &&
+            $this->organization_user_role === 'admin';
+    }
+
+    public function canEdit(?int $user_id, ?int $organization_id = null): bool
+    {
+        if ($this->id == $user_id) {
             return true;
         }
 
@@ -201,7 +213,8 @@ class CurrentUser
             'organization_id' => $this->organization_id,
             'organization_name' => $this->organization_name,
             'initials' => $this->getInitials(),
-            'fulname_digit' => $this->getFullnameDigit()
+            'fulname_digit' => $this->getFullnameDigit(),
+            'groups' => $this->groups
         ];
     }
 
@@ -237,7 +250,8 @@ class CurrentUser
             'confirmed' => $user->user_confirmed_at,
             'organization_user_role' => $organization_user_role,
             'organization_id' => $organization_id,
-            'organization_name' => $organization_name
+            'organization_name' => $organization_name,
+            'groups' => $this->queryGroups($user->user_id)
         ]);
         
         return $this->createFromSession();
@@ -323,7 +337,27 @@ class CurrentUser
         $this->organization_user_role = $user['organization_user_role'] ?? null;
         $this->organization_id = $user['organization_id'] ?? null;
         $this->organization_name = $user['organization_name'] ?? null;
+        $this->groups = $user['groups'] ?? null;
 
         return $this->is_signed_in;    
+    }
+
+    private function queryGroups(?int $user_id): ?array
+    {
+        $query = new DataQuery();
+
+        $query
+            ->select(
+                'g.group_id',
+                'g.group_name',
+                'o.organization_id',
+                'o.organization_name'
+            )
+            ->from('group_user as gu')
+            ->join('`group` as g on g.group_id = gu.group_id')
+            ->join('organization as o on o.organization_id = g.organization_id')
+            ->where('gu.user_id = ?', $user_id);
+
+        return $query->fetchAll();
     }
 }
