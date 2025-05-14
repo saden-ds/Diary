@@ -10,7 +10,12 @@
                 </li>
                 <block:organizations>
                 <li class="shield-list__item">
-                    <a class="shield-list__anchor i i_institution" href="/organizations/<var:organization_id>"><var:organization_name></a>
+                    <a class="shield-list__anchor i i_institution" href="/organizations/<var:organization_id>">
+                        <var:organization_name>
+                        <div class="shield-list__description">
+                            <var:organization_user_role>
+                        </div>
+                    </a>
                 </li>
                 </block:organizations>
             </ul>

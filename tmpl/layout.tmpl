@@ -155,6 +155,9 @@
             </div>
             <div class="user__description">
               <var:firstname> <var:lastname>
+              <if:organization_user_role>
+              (<var:organization_user_role>)
+              </if:organization_user_role>
             </div>
             </if:organization_name>
             <ifnot:organization_name>

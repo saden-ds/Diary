@@ -79,6 +79,12 @@ class ApplicationController
                     $current_user['unconfirmed_message'] = null;
                 }
 
+                if ($this->current_user->organization_user_role === 'admin') {
+                    $current_user['organization_user_role'] = $this->msg->t('organization_user.roles.admin');
+                } else {
+                    $current_user['organization_user_role'] = null;
+                }
+
                 $current_user['app_name'] = $this->config->get('title');
 
                 $current_user = [$current_user];
@@ -90,24 +96,34 @@ class ApplicationController
                 'active' => get_class($this) == 'App\Controllers\SchedulesController',
                 'icon' => 'schedule'
             ];
-            $header_nav[] = [
-                'name' => 'Atzīmes',
-                'path' => '/grades',
-                'active' => get_class($this) == 'App\Controllers\GradesController',
-                'icon' => 'grade'
-            ];
-            $header_nav[] = [
-                'name' => 'Kavējumi',
-                'path' => '/visits',
-                'active' => false,
-                'icon' => 'calendar_check'
-            ];
-            $header_nav[] = [
-                'name' => 'Uzdevumi',
-                'path' => '/assignments',
-                'active' => get_class($this) == 'App\Controllers\AssignmentsController',
-                'icon' => 'assignment'
-            ];
+
+            if (!$this->current_user->organization_id) {
+                $header_nav[] = [
+                    'name' => 'Atzīmes',
+                    'path' => '/grades',
+                    'active' => get_class($this) == 'App\Controllers\GradesController',
+                    'icon' => 'grade'
+                ];
+                $header_nav[] = [
+                    'name' => 'Kavējumi',
+                    'path' => '/visits',
+                    'active' => get_class($this) == 'App\Controllers\VisitsController',
+                    'icon' => 'calendar_check'
+                ];
+            }
+
+            if (
+                !$this->current_user->organization_id
+                || $this->current_user->organization_user_role !== 'admin'
+            ) {
+                $header_nav[] = [
+                    'name' => 'Uzdevumi',
+                    'path' => '/assignments',
+                    'active' => get_class($this) == 'App\Controllers\AssignmentsController',
+                    'icon' => 'assignment'
+                ];
+            }
+
             $header_nav[] = [
                 'name' => 'Priekšmeti',
                 'path' => '/lessons',

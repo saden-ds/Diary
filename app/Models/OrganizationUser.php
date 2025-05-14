@@ -25,6 +25,11 @@ class OrganizationUser extends Model
         return $this->validateAndCreateRecord($attributes);
     }
 
+    public function update($attributes = null): bool
+    {
+        return $this->validateAndUpdateRecord($attributes);
+    }
+
     public function delete(): bool
     {
         $db = DataStore::init();

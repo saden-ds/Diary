@@ -83,7 +83,7 @@ class User extends Model
         $name = $this->getUserFullname();
 
         if (!$name) {
-            return null;
+            return 1;
         }
 
         return crc32($name) % 10;

@@ -1,0 +1,33 @@
+<form id="organization_user_form" class="modal-section modal-section_480" method="post">
+    <div class="modal-section__header _modal_no _modal_holder">
+        <h2 class="modal-section__title"><var:title></h2>
+    </div>
+
+    <div class="modal-section__body _modal_o">
+        <div class="field-block field-block_label">
+            <select id="organization_user_form_role" class="field field_select field_stretch field-block__field" name="organization_user_role" autofocus>
+                <option value=""></option>
+                <block:role_options>
+                <option value="<var:value>"<if:selected: selected:>><var:name></option>
+                </block:role_options>
+            </select>
+            <label for="organization_user_form_role" class="field-block__label">Loma</label>
+        </div>
+    </div>
+
+    <div class="modal-section__footer _modal_no">
+        <a id="organization_user_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit"><msg:action.submit></button>
+    </div>
+</form>
+<script>
+(function(){
+  new app.Form('#organization_user_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

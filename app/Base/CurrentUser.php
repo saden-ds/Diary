@@ -275,16 +275,25 @@ class CurrentUser
         $query = new DataQuery();
 
         $query
-            ->select('o.*')
+            ->select(
+                'o.*',
+                'ou.organization_user_role'
+            )
             ->from('organization_user as ou')
             ->join('organization as o on o.organization_id = ou.organization_id')
             ->where('ou.user_id = ?', $this->id);
 
-        if ($data = $query->fetchAll()) {
-            return $data;
+        if (!$data = $query->fetchAll()) {
+            return null;
         }
 
-        return null;
+        foreach ($data as $k => $v) {
+            $data[$k]['organization_user_role'] = $this->msg->t(
+                'organization_user.roles.' . $v['organization_user_role']
+            );
+        }
+
+        return $data;
     }
 
     private function getInitials(): string

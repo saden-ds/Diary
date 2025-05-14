@@ -24,7 +24,7 @@ class GroupsController extends ApplicationController
         $tmpl = Tmpl::init();
         $actions = null;
 
-        if ($this->current_user->canAdmin()) {
+        if ($this->current_user->canAdmin($this->current_user->organization_id)) {
             $actions[] = [
                 'title' => 'Jauna grupa',
                 'path' => '/groups/new',
@@ -103,7 +103,7 @@ class GroupsController extends ApplicationController
 
     public function newAction(): ?View 
     {
-        if (!$this->current_user->canAdmin()) {
+        if (!$this->current_user->canAdmin($this->current_user->organization_id)) {
             throw new ForbiddenException();
         }
 
@@ -112,7 +112,7 @@ class GroupsController extends ApplicationController
 
     public function createAction(): ?View
     {
-        if (!$this->current_user->canAdmin()) {
+        if (!$this->current_user->canAdmin($this->current_user->organization_id)) {
             throw new ForbiddenException();
         }
 
@@ -134,7 +134,7 @@ class GroupsController extends ApplicationController
 
     public function editAction(): ?View 
     {
-        if (!$this->current_user->canAdmin()) {
+        if (!$this->current_user->canAdmin($this->current_user->organization_id)) {
             throw new ForbiddenException();
         }
 
@@ -153,7 +153,7 @@ class GroupsController extends ApplicationController
 
     public function updateAction(): ?View 
     {
-        if (!$this->current_user->canAdmin()) {
+        if (!$this->current_user->canAdmin($this->current_user->organization_id)) {
             throw new ForbiddenException();
         }
 
@@ -298,7 +298,7 @@ class GroupsController extends ApplicationController
                 $actions[] = [
                     'title' => 'Dzēst',
                     'path' => '/groups/' . $v['group_id'] . '/users/' . $v['group_user_id'] . '/delete',
-                    'class_name' => ''
+                    'class_name' => 'menu__anchor_warn'
                 ];
             }
 
@@ -334,7 +334,7 @@ class GroupsController extends ApplicationController
                     $actions[] = [
                         'title' => 'Dzēst',
                         'path' => '/groups/' . $r['group_id'] . '/lessons/' . $r['group_lesson_id'] . '/delete',
-                        'class_name' => ''
+                        'class_name' => 'menu__anchor_warn'
                     ];
                 }
 

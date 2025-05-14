@@ -842,7 +842,8 @@ a.user:hover {
   -webkit-box-shadow: 0 0 0 1px #e4d8d8;
           box-shadow: 0 0 0 1px #e4d8d8;
 }
-.box_overflow {
+.box_overflow,
+.box__overflow {
   overflow: auto;
   min-width: 0;
 }
@@ -941,16 +942,19 @@ a.user:hover {
 }
 
 .box__footnote {
-  padding: 4px 32px 4px 48px;
+  padding: 4px 32px 4px 32px;
   background: #EBE7E2;
   color: #9C8D8D;
   font-size: 12px;
 }
 
 .box__footer {
-  padding: 8px 32px 8px 48px;
+  padding: 8px 32px 8px 32px;
   background: #EBE7E2;
   text-align: right;
+}
+.box__footer_left {
+  text-align: left;
 }
 .box__footer_compact {
   padding-top: 4px;

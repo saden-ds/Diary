@@ -427,7 +427,7 @@ signin:
   action:
     recovery: Mainīt paroli
     sent_recovery: Aizmirsu paroli
-  email: Lietotājvārds (e-pasta adrese)
+  email: E-pasta adrese
   password: Parole
 
 signup:
@@ -437,7 +437,7 @@ signup:
     Jūsu reģistrēšanās pieteikums tiks nosūtīts uz Vides aizsardzības un reģionālās attīstības ministriju un izskatīts tuvākajā laikā.
   company_code: Uzņēmuma reģ. numurs
   company_name: Uzņēmuma nosaukums
-  email: Lietotājvārds (e-pasta adrese)
+  email: E-pasta adrese
   gdpr: Piekrītu reģistra lietošanas un personas datu apstrādes noteikumiem
   firstname: Jūsu vārds
   password: Parole (vismaz 9 simboli)

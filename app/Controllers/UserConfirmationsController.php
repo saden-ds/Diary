@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Base\Exceptions\NotFoundException;
+use App\Base\DataStore;
 use App\Base\DataQuery;
 use App\Base\View;
 use App\Models\User;
@@ -36,6 +37,7 @@ class UserConfirmationsController extends ApplicationController
 
         if ($user->update()) {
             $this->current_user->create($user);
+            $this->findAndSetUserGroup($user);
             $confirmation->delete();
         }
 
@@ -66,5 +68,19 @@ class UserConfirmationsController extends ApplicationController
         } else {
             return $view->error($this->msg->t('user_confirmation.message.error.send'));
         }
+    }
+
+    private function findAndSetUserGroup(User $user): void
+    {
+        $db = DataStore::init();
+
+        $db->query('
+            update group_user
+            set user_id = ?
+            where group_user_email = ?
+        ', [
+            $user->user_id,
+            $user->user_email
+        ]);
     }
 }

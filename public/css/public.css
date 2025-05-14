@@ -470,6 +470,10 @@ a:hover, a:focus { text-decoration: underline; }
   background: #EBE7E2;
   text-decoration: none;
 }
+.shield-list__description {
+  color: #9C8D8D;
+  font-size: 12px;
+}
 
 @-webkit-keyframes stars {
   from  { transform: translateY(0); }

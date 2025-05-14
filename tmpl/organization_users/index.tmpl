@@ -35,7 +35,7 @@
                 </thead>
                 <tbody id="organization_users" class="data-table__tbody">
                     <block:organization_users>
-                    <tr class="data-table__tr">
+                    <tr class="data-table__tr<if:actions: data-table__tr_actions:>">
                         <td class="data-table__td data-table__td_first">
                             <div class="user">
                                 <div class="user__avatar avatar avatar_<var:user_digit>">
@@ -50,11 +50,11 @@
                             </div>
                         </td>
                         <td class="data-table__td"><var:organization_user_role></td>
-                        <td class="data-table__td data-table__td_last <if:actions:: data-table__td_empty>">
+                        <td class="data-table__td data-table__td_last<if:actions: data-table__td_actions: data-table__td_empty>">
                             <if:actions>
                             <ul class="actions-list">
                                 <li class="js_menu_parent actions-list__item">
-                                    <a class="js_menu action- action_icon i i_menu i_only" href="#menu"></a>
+                                    <a class="js_menu action action_icon i i_menu i_only" href="#menu"></a>
                                     <ul class="menu menu_hidden">
                                         <block:actions>
                                         <li class="menu__item">
@@ -89,8 +89,9 @@
                 </thead>
                 <tbody id="organization_invites" class="data-table__tbody">
                     <block:organization_invites>
-                    <tr class="data-table__tr">
+                    <tr class="data-table__tr<if:actions: data-table__tr_actions:>">
                         <td class="data-table__td data-table__td_first">
+                            <if:user_firstname>
                             <div class="user">
                                 <div class="user__avatar avatar avatar_<var:user_digit>">
                                   <var:user_initials>
@@ -102,22 +103,27 @@
                                     <var:user_email>
                                 </div>
                             </div>
+                            </if:user_firstname>
+                            <ifnot:user_firstname>
+                            <var:organization_invite_email>
+                            </ifnot:user_firstname>
                         </td>
                         <td class="data-table__td"><var:organization_invite_role></td>
-                        <td class="data-table__td data-table__td_last">
-                          <ul class="actions-list">
-                            <li class="js_menu_parent actions-list__item">
-                                <a class="js_menu action- action_icon i i_menu i_only" href="#menu"></a>
-                                <ul class="menu menu_hidden">
-                                    <li class="menu__item">
-                                        <a href="#" class="menu__anchor js_modal">Rediģēt</a>
-                                    </li>
-                                    <li class="menu__item">
-                                        <a href="<var:schedule_edit_path>" class="menu__anchor js_modal">Dzēst</a>
-                                    </li>
-                                </ul>
-                            </li>
-                          </ul>
+                        <td class="data-table__td data-table__td_last<if:actions: data-table__td_actions: data-table__td_empty>">
+                            <if:actions>
+                            <ul class="actions-list">
+                                <li class="js_menu_parent actions-list__item">
+                                    <a class="js_menu action action_icon i i_menu i_only" href="#menu"></a>
+                                    <ul class="menu menu_hidden">
+                                        <block:actions>
+                                        <li class="menu__item">
+                                            <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                                        </li>
+                                        </block:actions>
+                                    </ul>
+                                </li>
+                            </ul>
+                            </if:actions>
                         </td>
                     </tr>
                     </block:organization_invites>

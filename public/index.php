@@ -14,6 +14,7 @@ use App\Controllers\Organizations\GroupsController;
 use App\Controllers\Organizations\GroupUsersController;   
 use App\Controllers\Organizations\GroupLessonsController;   
 use App\Controllers\Organizations\ScheduleGroupsController;   
+use App\Controllers\Organizations\UsersController as OrganizationUsersController;   
 use App\Controllers\Organizations\InvitesController as OrganizationInvitesController;   
 use App\Controllers\Organizations\ExcusedAbsenceController;   
 use App\Controllers\OrganizationInvitesController as UserOrganizationInvitesController;   
@@ -133,10 +134,14 @@ $router->get('/groups/{:group_id}/lessons/new', [GroupLessonsController::class, 
 $router->post('/groups/{:group_id}/lessons/create', [GroupLessonsController::class, 'createAction']);
 $router->get('/groups/{:group_id}/lessons/{:group_lesson_id}/delete', [GroupLessonsController::class, 'deleteAction']);
 
-$router->get('/organizations/users', [OrganizationInvitesController::class, 'indexAction']);
-$router->get('/organizations/users/new', [OrganizationInvitesController::class, 'newAction']);
-$router->post('/organizations/users/create', [OrganizationInvitesController::class, 'createAction']);
-$router->get('/organizations/users/{:id}/delete', [OrganizationInvitesController::class, 'deleteAction']);
+$router->get('/organizations/invites/new', [OrganizationInvitesController::class, 'newAction']);
+$router->post('/organizations/invites/create', [OrganizationInvitesController::class, 'createAction']);
+$router->get('/organizations/invites/{:id}/delete', [OrganizationInvitesController::class, 'deleteAction']);
+
+$router->get('/organizations/users', [OrganizationUsersController::class, 'indexAction']);
+$router->get('/organizations/users/{:id}/edit', [OrganizationUsersController::class, 'editAction']);
+$router->post('/organizations/users/{:id}/update', [OrganizationUsersController::class, 'updateAction']);
+$router->get('/organizations/users/{:id}/delete', [OrganizationUsersController::class, 'deleteAction']);
 
 $router->get('/organizations/invites/{:invite_id}/accept', [UserOrganizationInvitesController::class, 'acceptAction']);
 $router->get('/organizations/invites/{:invite_id}/decline', [UserOrganizationInvitesController::class, 'declineAction']);
