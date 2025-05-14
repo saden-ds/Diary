@@ -153,7 +153,7 @@ class UsersController extends ApplicationController
                     [
                         'title' => 'Dzēst',
                         'path' => '/organizations/users/' . intval($v['organization_user_id']) . '/delete',
-                        'class_name' => 'menu__anchor_warn'
+                        'class_name' => 'js_confirm_delete menu__anchor_warn'
                     ]
                 ];
             }
@@ -209,7 +209,7 @@ class UsersController extends ApplicationController
                     [
                         'title' => 'Dzēst',
                         'path' => '/organizations/invites/' . intval($v['organization_invite_id']) . '/delete',
-                        'class_name' => 'menu__anchor_warn'
+                        'class_name' => 'js_confirm_delete menu__anchor_warn'
                     ]
                 ];
             }

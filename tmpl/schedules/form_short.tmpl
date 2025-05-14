@@ -1,0 +1,42 @@
+<form id="shedule_form" class="modal-section modal-section_480" method="post">
+    <div class="modal-section__header modal-section__header_compact _modal_no _modal_holder">
+        <h2 class="modal-section__title">
+            <if:lesson_name>
+            <var:lesson_name>
+            </if:lesson_name>
+            <ifnot:lesson_name>
+            Nodarbību grafiks
+            </ifnot:lesson_name>
+        </h2>
+        <div class="modal-section__description">
+            <var:schedule_date>
+            <block:lesson_time_options>
+            <if:selected>
+            <var:name>
+            </if:selected>
+            </block:lesson_time_options>
+        </div>
+    </div>
+    <div class="modal-section__body _modal_o">
+        <div class="field-block field-block_label">
+            <input id="shedule_form_name" class="field field_stretch field-block__field" type="text" name="schedule_name" value="<var:schedule_name>" autofocus>
+            <label for="shedule_form_name" class="field-block__label">Mācību priekšmeta tēma</label>
+        </div>
+    </div>
+
+    <div class="modal-section__footer _modal_no">
+        <a id="shedule_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit">Saglabat</button>
+    </div>
+</form>
+<script>
+(function(){
+  new app.Form('#shedule_form', {
+    url: '<var:path>',
+    keepOverlay: true,
+    onSuccess: function(form, response){
+      window.location.reload();
+    }
+  });
+})();
+</script>

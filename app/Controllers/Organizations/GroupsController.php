@@ -298,7 +298,7 @@ class GroupsController extends ApplicationController
                 $actions[] = [
                     'title' => 'Dzēst',
                     'path' => '/groups/' . $v['group_id'] . '/users/' . $v['group_user_id'] . '/delete',
-                    'class_name' => 'menu__anchor_warn'
+                    'class_name' => 'js_confirm_delete menu__anchor_warn'
                 ];
             }
 
@@ -334,7 +334,7 @@ class GroupsController extends ApplicationController
                     $actions[] = [
                         'title' => 'Dzēst',
                         'path' => '/groups/' . $r['group_id'] . '/lessons/' . $r['group_lesson_id'] . '/delete',
-                        'class_name' => 'menu__anchor_warn'
+                        'class_name' => 'js_confirm_delete menu__anchor_warn'
                     ];
                 }
 

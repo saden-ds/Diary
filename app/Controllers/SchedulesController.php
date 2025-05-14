@@ -98,14 +98,31 @@ class SchedulesController extends ApplicationController
             $path = '/schedules/create';
         }
 
-        return View::init('tmpl/schedules/form.html', [
-            'schedule_id' => $schedule->schedule_id,
-            'schedule_date' => $this->msg->date($schedule->schedule_date),
-            'schedule_name' => $schedule->schedule_name,
-            'lesson_options' => $this->getLessonOptions($schedule),
-            'lesson_time_options' => $this->getLessonTimeOptions($schedule),
-            'path' => $path
-        ]);
+        if (!$this->current_user->canAdmin($this->current_user->organization_id)) {
+            $lesson_name = null;
+
+            if ($lesson = Lesson::find($schedule->lesson_id)) {
+                $lesson_name = $lesson->lesson_name;
+            }
+
+            return View::init('tmpl/schedules/form_short.tmpl', [
+                'schedule_id' => $schedule->schedule_id,
+                'schedule_date' => $this->msg->date($schedule->schedule_date),
+                'schedule_name' => $schedule->schedule_name,
+                'lesson_name' => $lesson_name,
+                'lesson_time_options' => $this->getLessonTimeOptions($schedule),
+                'path' => $path
+            ]);
+        } else {
+            return View::init('tmpl/schedules/form.tmpl', [
+                'schedule_id' => $schedule->schedule_id,
+                'schedule_date' => $this->msg->date($schedule->schedule_date),
+                'schedule_name' => $schedule->schedule_name,
+                'lesson_options' => $this->getLessonOptions($schedule),
+                'lesson_time_options' => $this->getLessonTimeOptions($schedule),
+                'path' => $path
+            ]);
+        }
     }
 
     private function getLessonOptions($schedule): ?array
@@ -118,7 +135,7 @@ class SchedulesController extends ApplicationController
                 lesson_id,
                 lesson_name
             from lesson 
-            where user_id = ? and organization_id is null
+            where user_id = ?
         ', [
             $this->current_user->id
         ]);

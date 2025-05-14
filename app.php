@@ -34,7 +34,7 @@ spl_autoload_register(function($class) {
 
 $config = \App\Base\Config::init([
     'version'           => '1.0.0',
-    'version_timestamp' => '2025051401',
+    'version_timestamp' => '2025051402',
     'default_title'     => 'Life',
     'default_locale'    => 'lv',
     'locales'           => ['lv'],

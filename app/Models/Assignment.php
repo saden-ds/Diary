@@ -28,10 +28,7 @@ class Assignment extends Model
     protected static ?string $primary_key = 'assignment_id';
 
 
-    public static function findAssignmentByIdAndUserIdAndOrganiztionId(
-        int $id,
-        int $user_id
-    ): ?Assignment
+    public static function findAssignmentByIdAndUserId(int $id, int $user_id): ?Assignment
     {
         $query = new DataQuery();
 
@@ -43,12 +40,11 @@ class Assignment extends Model
             ->leftJoin('group_user as gu on gu.group_id = s.group_id')
             ->leftJoin('lesson_user as lu on lu.lesson_id = s.lesson_id')
             ->join('user as u on u.user_id = ifnull(gu.user_id,lu.user_id)')
-            ->where('a.assignment_id = ?', $id);
-
-        $query->where('(l.user_id = ? or u.user_id = ?)', [
-            $user_id,
-            $user_id
-        ]);
+            ->where('a.assignment_id = ?', $id)
+            ->where('(l.user_id = ? or u.user_id = ?)', [
+                $user_id,
+                $user_id
+            ]);
 
         if (!$id || !$user_id || !$r = $query->fetch()) {
             return null;
@@ -96,7 +92,7 @@ class Assignment extends Model
         return !!$db->query('
             delete a, g
             from assignment a
-            left grade g on g.assignment_id = a.assignment_id
+            left join grade g on g.assignment_id = a.assignment_id
             where a.assignment_id = ? 
         ', $this->assignment_id);
     }

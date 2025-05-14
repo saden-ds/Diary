@@ -77,16 +77,32 @@ class AssignmentsController extends PrivateController
 
     public function showAction(): ?View
     {
-        $assignment = Assignment::find($this->request->get('id'));
+        $assignment = Assignment::findAssignmentByIdAndUserId(
+            $this->request->get('id'),
+            $this->current_user->id
+        );
 
         if (!$assignment) {
             throw new NotFoundException();
         }
 
+        $query = new DataQuery();
+        $lesson_name = null;
+
+        $query
+            ->select('l.lesson_name')
+            ->from('schedule as s')
+            ->join('lesson as l on l.lesson_id = s.lesson_id')
+            ->where('s.schedule_id = ?', $assignment->schedule_id);
+
+        if ($data = $query->fetch()) {
+            $lesson_name = $data['lesson_name'];
+        }
+
         if ($assignment->user_id == $this->current_user->id) {
-            return $this->renderShow($assignment);
+            return $this->renderShow($assignment, $lesson_name);
         } else {
-            return $this->renderUserShow($assignment);
+            return $this->renderUserShow($assignment, $lesson_name);
         }
     }
 
@@ -204,9 +220,10 @@ class AssignmentsController extends PrivateController
         return $minutes;
     }
 
-    private function renderShow(Assignment $assignment): View
+    private function renderShow(Assignment $assignment, ?string $lesson_name): View
     {
         return View::init('tmpl/assignments/show.tmpl', [
+            'lesson_name' => $lesson_name,
             'assignment_id' => $assignment->assignment_id,
             'assignment_type' => $this->msg->t('assignment.types.'.$assignment->assignment_type),
             'assignment_description' => $assignment->assignment_description,
@@ -227,17 +244,15 @@ class AssignmentsController extends PrivateController
         ]);
     }
 
-    private function renderUserShow(Assignment $assignment): View
+    private function renderUserShow(Assignment $assignment, ?string $lesson_name): View
     {
         return View::init('tmpl/assignments/show_user.tmpl', [
+            'lesson_name' => $lesson_name,
             'assignment_id' => $assignment->assignment_id,
             'assignment_type' => $this->msg->t('assignment.types.'.$assignment->assignment_type),
             'assignment_description' => $assignment->assignment_description,
             'assignment_end_datetime' => $this->msg->l($assignment->assignment_end_datetime),
             'assignment_created_at' => $this->msg->l($assignment->assignment_created_at),
-            'assignment_edit_path' => null,
-            'assignment_delete_path' => null,
-            'assignment_grade_path' => null,
             'assignment_files' => FilesCollection::renderAssignmentFiles($assignment, [
                 'user_id' => $assignment->user_id,
                 'current_user_id' => $this->current_user->id
@@ -304,7 +319,10 @@ class AssignmentsController extends PrivateController
             ->join('lesson as l on l.lesson_id = s.lesson_id')
             ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
             ->leftJoin('group_lesson as gl on gl.lesson_id = l.lesson_id')
-            ->leftJoin('group_user as gu on gu.group_id = gl.group_id')
+            ->leftJoin(
+                'group_user as gu on gu.group_id = gl.group_id' .
+                ' and gu.group_id = s.group_id'
+            )
             ->where('(
                     l.user_id = ? 
                     or lu.user_id = ?

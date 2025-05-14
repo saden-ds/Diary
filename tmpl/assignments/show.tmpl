@@ -1,7 +1,7 @@
 <div id="assignment" class="modal-section modal-section_640">
     <div class="modal-section__header modal-section__header_compact _modal_no _modal_holder">
         <h2 class="modal-section__title">
-            Latviesu valoda / 
+            <var:lesson_name><if:lesson_name: / :>
             <var:assignment_type>
         </h2>
         <div class="modal-section__description">
@@ -61,7 +61,7 @@
     <div class="modal-section__footer _modal_no">
         <a href="<var:assignment_grade_path>" class="js_modal button">Vērtējums</a>
         <a href="<var:assignment_edit_path>" class="js_modal button">Rediģēt</a>
-        <a href="<var:assignment_delete_path>" class="button">Dzēst</a>
+        <a href="<var:assignment_delete_path>" class="js_confirm_delete button">Dzēst</a>
     </div>
     </if:assignment_edit_path>
 </div>

@@ -207,7 +207,6 @@ class LessonsController extends PrivateController
             )
             ->from('lesson as l')
             ->join('user as u on u.user_id = l.user_id')
-            ->leftJoin('organization o on o.organization_id = l.organization_id')
             ->order('l.lesson_name');
 
         if ($value = $this->request->get('q')) {
@@ -215,11 +214,20 @@ class LessonsController extends PrivateController
         }
 
         if ($this->current_user->organization_id) {
-           $query->where('l.organization_id = ?', $this->current_user->organization_id);
+           $query
+                ->join('organization o on o.organization_id = l.organization_id')
+                ->join('organization_user ou on ou.organization_id = l.organization_id')
+                ->where('l.organization_id = ?', $this->current_user->organization_id)
+                ->where('ou.user_id = ?', $this->current_user->id)
+                ->where('(l.user_id = ou.user_id or organization_user_role = ?)', 'admin');
         } else {
             $query
+                ->leftJoin('organization o on o.organization_id = l.organization_id')
                 ->leftJoin('group_lesson gl on gl.lesson_id = l.lesson_id')
-                ->leftJoin('group_user gu on gu.group_id = gl.group_id')
+                ->leftJoin(
+                    'group_user gu on gu.group_id = gl.group_id' .
+                    ' and gu.group_id = s.group_id'
+                )
                 ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
                 ->where('(l.user_id = ? or ifnull(gu.user_id,lu.user_id) = ?)', [
                     $this->current_user->id,
@@ -399,7 +407,10 @@ class LessonsController extends PrivateController
             ->select('1 as one')
             ->from('lesson l')
             ->leftJoin('group_lesson gl on gl.lesson_id = l.lesson_id')
-            ->leftJoin('group_user gu on gu.group_id = gl.group_id')
+            ->leftJoin(
+                'group_user gu on gu.group_id = gl.group_id' .
+                ' and gu.group_id = s.group_id'
+            )
             ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
             ->where('ifnull(gu.user_id,lu.user_id) = ?', $this->current_user->id);
 

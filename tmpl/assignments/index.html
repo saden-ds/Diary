@@ -76,21 +76,17 @@
         });
     });
 
-    $('#content').on('click', '.sort', function(event){
+    $('#filter .js_filter_reset').on('click.reset', function(event){
         event.preventDefault();
 
-        url = this.href;
+        $('#filter').get(0).reset();
+        $('#filter').trigger('submit');
+    });
+
+    $('#content').on('click', '.sort', function(event){
+        event.preventDefault();
 
         $('#filter').trigger('submit');
     });
 })();
-    // $('#select_filter_lesson').change(function() {
-    //     $('#form_filter').trigger('submit');
-    // });
-    $(document).ready(function() {
-        $('#select_filter_lesson, #select_filter_owner').change(function() {
-            $('#form_filter').submit();
-        });
-    });
-
 </script>

@@ -129,6 +129,7 @@ class MainController extends ApplicationController
                 left join organization o on o.organization_id = l.organization_id
                 left join group_lesson gl on gl.lesson_id = l.lesson_id
                 left join group_user gu on gu.group_id = gl.group_id
+                    and gu.group_id = s.group_id
                 left join lesson_user as lu on lu.lesson_id = l.lesson_id
                 join lesson_time as lt on lt.lesson_time_id = s.lesson_time_id
                 left join user as u on u.user_id = l.user_id
@@ -205,11 +206,13 @@ class MainController extends ApplicationController
 
         $actions = null;
 
-        $actions[] = [
-            'title' => 'Izveidot grafiku',
-            'path' => '/schedules/new',
-            'class_name' => 'js_modal'
-        ];
+        if (!$this->current_user->organization_id) {
+            $actions[] = [
+                'title' => 'Izveidot grafiku',
+                'path' => '/schedules/new',
+                'class_name' => 'js_modal'
+            ];
+        }
 
         return View::init('tmpl/schedules/index.html')
             ->data([
@@ -282,8 +285,7 @@ class MainController extends ApplicationController
             ->select(
                 'v.schedule_id',
                 'sum(v.visit_presence) as visit_presence',
-                'count(gu.group_user_id) as group_users_count',
-                'count(lu.lesson_user_id) as lesson_users_count'
+                'count(ifnull(gu.group_user_id,lu.lesson_user_id)) as total_count'
             )
             ->from('visit as v')
             ->join('schedule as s on s.schedule_id = v.schedule_id')
@@ -293,6 +295,7 @@ class MainController extends ApplicationController
                 'v.schedule_id in ('.$query->placeholders($visits).')',
                 array_keys($visits)
             )
+            ->where('ifnull(gu.user_id,lu.user_id) = v.user_id')
             ->group('v.schedule_id');
 
         if (!$data = $query->fetchAll()) {
@@ -302,7 +305,7 @@ class MainController extends ApplicationController
         foreach ($data as $value) {
             $visits[$value['schedule_id']] = [[
                 'presence_count' => $value['visit_presence'],
-                'total_count' => intval($value['group_users_count'] ?: $value['lesson_users_count'])
+                'total_count' => $value['total_count']
             ]];
         }
 

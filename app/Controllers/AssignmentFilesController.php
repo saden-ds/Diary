@@ -21,7 +21,7 @@ class AssignmentFilesController extends PrivateController
             throw new NotFoundException();
         }
 
-        $assignment = Assignment::findAssignmentByIdAndUserIdAndOrganiztionId(
+        $assignment = Assignment::findAssignmentByIdAndUserId(
             $this->request->get('assignment_id'),
             $this->current_user->id
         );
@@ -47,7 +47,7 @@ class AssignmentFilesController extends PrivateController
             throw new NotFoundException();
         }
 
-        $assignment = Assignment::findAssignmentByIdAndUserIdAndOrganiztionId(
+        $assignment = Assignment::findAssignmentByIdAndUserId(
             $assignment_file->assignment_id,
             $this->current_user->id
         );
@@ -74,7 +74,7 @@ class AssignmentFilesController extends PrivateController
 
     public function createAction(): View
     {
-        $assignment = Assignment::findAssignmentByIdAndUserIdAndOrganiztionId(
+        $assignment = Assignment::findAssignmentByIdAndUserId(
             $this->request->get('assignment_id'),
             $this->current_user->id
         );

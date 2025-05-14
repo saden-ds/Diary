@@ -2,7 +2,6 @@
     <div class="modal-section__header _modal_no _modal_holder">
         <h2 class="modal-section__title">Nodarbību grafiks</h2>
     </div>
-
     <div class="modal-section__body _modal_o">
         <div class="field-grid">
             <div class="field-grid__span field-grid__span_6">
@@ -13,7 +12,7 @@
             </div>
             <div class="field-grid__span field-grid__span_6">
                 <div class="field-block field-block_label">
-                    <select id="shedule_form_lesson_time" class="field field_select field_stretch field-block__field" name="lesson_time_id" autofocus>
+                    <select id="shedule_form_lesson_time" class="field field_select field_stretch field-block__field" name="lesson_time_id">
                         <option value=""></option>
                         <block:lesson_time_options>
                         <option value="<var:value>"<if:selected: selected:>><var:name></option>
@@ -24,7 +23,7 @@
             </div>
         </div>
         <div class="field-block field-block_label">
-            <select id="shedule_form_lesson" class="field field_select field_stretch field-block__field" name="lesson_id" autofocus>
+            <select id="shedule_form_lesson" class="field field_select field_stretch field-block__field" name="lesson_id">
                 <option value=""></option>
                 <block:lesson_options>
                 <option value="<var:value>"<if:selected: selected:>><var:name></option>
@@ -33,7 +32,7 @@
             <label for="shedule_form_lesson" class="field-block__label">Mācību priekšmets</label>
         </div>
         <div class="field-block field-block_label">
-            <input id="shedule_form_name" class="field field_stretch field-block__field" type="text" name="schedule_name" value="<var:schedule_name>" autofocus>
+            <input id="shedule_form_name" class="field field_stretch field-block__field" type="text" name="schedule_name" value="<var:schedule_name>">
             <label for="shedule_form_name" class="field-block__label">Mācību priekšmeta tēma</label>
         </div>
     </div>

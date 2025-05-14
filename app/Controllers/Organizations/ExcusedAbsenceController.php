@@ -144,7 +144,7 @@ class ExcusedAbsenceController extends ApplicationController
             $v['actions'] = [[
                 'title' => $this->msg->t('action.delete'),
                 'path' => '/groups/users/absences/' . intval($v['excused_absence_id']) . '/delete',
-                'class_name' => 'menu__anchor_warn'
+                'class_name' => 'js_confirm_delete menu__anchor_warn'
             ]];
 
             $data[$k] = $v;

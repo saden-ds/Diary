@@ -93,7 +93,7 @@ class ApplicationController
             $header_nav[] = [
                 'name' => 'Dienasgrāmata',
                 'path' => '/',
-                'active' => get_class($this) == 'App\Controllers\SchedulesController',
+                'active' => get_class($this) == 'App\Controllers\MainController',
                 'icon' => 'schedule'
             ];
 

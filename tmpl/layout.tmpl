@@ -1,321 +1,336 @@
 <!DOCTYPE html>
 <html lang="<var:locale>">
 <head>
-  <meta charset="utf-8">
-  <title><var:title></title>
+    <meta charset="utf-8">
+    <title><var:title></title>
 <block:meta>
-  <meta name="<var:name>"<if:property> property="<var:property>"</if:property><if:itemprop> itemprop="<var:itemprop>"</if:itemprop><if:content> content="<var:content>"</if:content>>
+    <meta name="<var:name>"<if:property> property="<var:property>"</if:property><if:itemprop> itemprop="<var:itemprop>"</if:itemprop><if:content> content="<var:content>"</if:content>>
 </block:meta>
-  <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#8D837B">
-  <meta name="msapplication-TileColor" content="#FFFFFF">
-  <meta name="theme-color" content="#FFFFFF">
-  <link rel="manifest" href="/manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="#FFFFFF">
-  <meta name="msapplication-config" content="/browserconfig.xml"> -->
-  <meta name="format-detection" content="telephone=no">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
-  <link href="/css_<var:assets_version>/reset.css" media="screen" type="text/css" rel="stylesheet">
-  <link href="/css_<var:assets_version>/modal.css" media="screen" type="text/css" rel="stylesheet">
-  <link href="/css_<var:assets_version>/jquery.ui.custom.css" media="screen" type="text/css" rel="stylesheet">
-  <link href="/css_<var:assets_version>/buttons.css" media="screen" type="text/css" rel="stylesheet">
-  <link href="/css_<var:assets_version>/form.css" media="screen" type="text/css" rel="stylesheet">
-  <link href="/css_<var:assets_version>/layout.css" media="screen" type="text/css" rel="stylesheet">
-  <link href="/css_<var:assets_version>/application.css" media="screen" type="text/css" rel="stylesheet">
-  <script src="/js_<var:assets_version>/jquery.js"></script>
-  <script src="/js_<var:assets_version>/jquery.ui.min.js"></script>
-  <script src="/js_<var:assets_version>/jquery.highlight.js"></script>
-  <script src="/js_<var:assets_version>/mustache.js"></script>
-  <script src="/js_<var:assets_version>/modal.js"></script>
-  <script src="/js_<var:assets_version>/application.js"></script>
+    <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#8D837B">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="theme-color" content="#FFFFFF">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#FFFFFF">
+    <meta name="msapplication-config" content="/browserconfig.xml"> -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <link href="/css_<var:assets_version>/reset.css" media="screen" type="text/css" rel="stylesheet">
+    <link href="/css_<var:assets_version>/modal.css" media="screen" type="text/css" rel="stylesheet">
+    <link href="/css_<var:assets_version>/jquery.ui.custom.css" media="screen" type="text/css" rel="stylesheet">
+    <link href="/css_<var:assets_version>/buttons.css" media="screen" type="text/css" rel="stylesheet">
+    <link href="/css_<var:assets_version>/form.css" media="screen" type="text/css" rel="stylesheet">
+    <link href="/css_<var:assets_version>/layout.css" media="screen" type="text/css" rel="stylesheet">
+    <link href="/css_<var:assets_version>/application.css" media="screen" type="text/css" rel="stylesheet">
+    <script src="/js_<var:assets_version>/jquery.js"></script>
+    <script src="/js_<var:assets_version>/jquery.ui.min.js"></script>
+    <script src="/js_<var:assets_version>/jquery.highlight.js"></script>
+    <script src="/js_<var:assets_version>/mustache.js"></script>
+    <script src="/js_<var:assets_version>/modal.js"></script>
+    <script src="/js_<var:assets_version>/application.js"></script>
 </head>
 <body>
 <div id="layout" class="layout">
-  <block:current_user>
-  <ifnot:organization_name>
-  <a class="layout__logo" href="/"></a>
-  </ifnot:organization_name>
-  </block:current_user>
-
-  <header class="layout__header layout-header">
     <block:current_user>
-    <if:organization_name>
-    <div class="layout-header__organization">
-      <var:organization_name>
-    </div>
-    </if:organization_name>
+    <ifnot:organization_name>
+    <a class="layout__logo" href="/"></a>
+    </ifnot:organization_name>
     </block:current_user>
-    <ul class="layout-bar">
-      <li class="layout-bar__item">
-        <a class="js_toggle layout-bar__anchor i i_notification" href="#notification_lates" data-autohide="true"><if:lesson_invites:*:></a>
-        <!-- data-url="/notifications/latest" -->
-        <div id="notification_lates" class="layout-bar__content hidden">
-          <ul class="tabs">
-            <li class="tabs__item active">
-              <a href="#nontification_grades" class="js_notification tabs__anchor">Jaunākie vērtējumi</a>
-            </li>
-            <li class="tabs__item">
-              <a href="#nontification_messages" class="js_notification tabs__anchor">Jaunākie ziņojumi</a>
-            </li>
-          </ul>
-          <div class="tabs-content">
-            <div id="nontification_grades" class="tabs-content__item">
-              <if:user_grades>
-              <ul class="nontifications-list">
-                <block:user_grades>
-                <li class="nontifications-list__item">
-                  <a href="" class="nontification">
-                    <div class="nontification__name"><var:lesson_name></div>
-                    <div class="nontification__work">
-                      <var:assignment_type>
-                      <div class="nontification__date"><var:schedule_date></div>
-                    </div>
-                    <div class="nontification__grade"><var:grade_value></div>
-                  </a>
-                </li>
-                </block:user_grades>
-              </ul>
-              </if:user_grades>
-              <ifnot:user_grades>
-              <div class="tabs-content__empty">Nav jaunu vērtējumu</div>
-              </ifnot:user_grades>
-            </div>
-            <div id="nontification_messages" class="tabs-content__item hidden">
-              <ul class="nontifications-list">
-                <block:lesson_invites>
-                <li class="nontifications-list__item">
-                  <div class="nontification">
-                    <div class="nontification__name">Ielugums <var:lesson_name></div>
-                    <div class="nontification__work">
-                      <var:user_firstname> <var:user_lastname>
-                    </div>
-                    <div class="nontification__button">
-                      <a href="/lessons/invites/<var:lesson_invite_id>/decline" class="button button_small button_reject">Noraidīt</a>
-                      <a href="/lessons/invites/<var:lesson_invite_id>/accept" class="button button_small button_accept">Pieņemt</a>
-                    </div>
-                  </div>
-                </li>
-                </block:lesson_invites>
-                <block:organization_invites>
-                <li class="nontifications-list__item">
-                  <div class="nontification">
-                    <div class="nontification__name">Ielugums <var:organization_name></div>
-                    <div class="nontification__work">
-                      <var:user_firstname> <var:user_lastname>
-                    </div>
-                    <div class="nontification__button">
-                      <a href="/organizations/invites/<var:organization_invite_id>/decline" class="button button_small button_reject">Noraidīt</a>
-                      <a href="/organizations/invites/<var:organization_invite_id>/accept" class="button button_small button_accept">Pieņemt</a>
-                    </div>
-                  </div>
-                </li>
-                </block:organization_invites>
-                <block:user_assignments>
-                <li class="nontifications-list__item">
-                  <a href="" class="nontification">
-                    <div class="nontification__name"><var:assignment_type></div>
-                    <div class="nontification__work">
-                      <var:lesson_name>
-                      <div class="nontification__date"><var:schedule_date></div>
-                    </div>
-                  </a>
-                </li>
-                </block:user_assignments>
-                <li class="nontifications-list__item">
-                  <a href="" class="nontification">
-                    <div class="nontification__name">Latviešu valoda</div>
-                    <div class="nontification__work">
-                      Mācību stunda
-                      <div class="nontification__date">17.11.</div>
-                    </div>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+
+    <header class="layout__header layout-header">
+        <block:current_user>
+        <if:organization_name>
+        <div class="layout-header__organization">
+            <var:organization_name>
         </div>
-      </li>
-      <block:current_user>
-      <li class="layout-bar__item">
-        <a class="js_toggle layout-bar__avatar" href="#user" data-autohide="true">
-          <span class="avatar avatar_<var:fulname_digit>"><var:initials></span>
-        </a>
-        <div id="user" class="layout-bar__content hidden">
-          <a class="user user_big" href="/profiles">
-            <if:organization_name>
-            <div class="user__organization">
-            </div>
-            <div class="user__title">
-              <var:organization_name>
-            </div>
-            <div class="user__description">
-              <var:firstname> <var:lastname>
-              <if:organization_user_role>
-              (<var:organization_user_role>)
-              </if:organization_user_role>
-            </div>
-            </if:organization_name>
-            <ifnot:organization_name>
-            <div class="user__avatar avatar avatar_<var:fulname_digit>">
-              <var:initials>
-            </div>
-            <div class="user__title">
-              <var:firstname> <var:lastname>
-            </div>
-            <div class="user__description">
-              Privatpersona
-            </div>
-            </ifnot:organization_name>
-          </a>
-          <ul class="user-menu">
-            <li class="user-menu__item">
-              <a href="/profile" class="user-menu__anchor js_modal">Uzstādījumi</a>
-            </li>
-            <ifnot:organization_name>
-            <li class="user-menu__item">
-              <a href="/organizations/new" class="user-menu__anchor">Izveidot organizāciju</a>
-            </li>
-            </ifnot:organization_name>
-            <li class="user-menu__item">
-              <a href="/signout" class="user-menu__anchor">Iziet</a>
-            </li>
-            <if:groups>
-            <li class="user-menu__item user-menu__item_separate">
-              <span class="user-menu__label">Mācību iestādes</span>
-              <block:groups>
-              <div class="user-group i i_student">
-                <var:group_name>
-                <div class="user-group__description">
-                  <var:organization_name>
+        </if:organization_name>
+        </block:current_user>
+        <ul class="layout-bar">
+            <li class="layout-bar__item">
+                <a class="js_toggle layout-bar__anchor i i_notification" href="#notification_lates" data-autohide="true"><if:lesson_invites:*:></a>
+                <!-- data-url="/notifications/latest" -->
+                <div id="notification_lates" class="layout-bar__content hidden">
+                    <ul class="tabs">
+                        <li class="tabs__item active">
+                            <a href="#nontification_grades" class="js_notification tabs__anchor">Jaunākie vērtējumi</a>
+                        </li>
+                        <li class="tabs__item">
+                            <a href="#nontification_messages" class="js_notification tabs__anchor">Jaunākie ziņojumi</a>
+                        </li>
+                    </ul>
+                    <div class="tabs-content">
+                        <div id="nontification_grades" class="tabs-content__item">
+                            <if:user_grades>
+                            <ul class="nontifications-list">
+                                <block:user_grades>
+                                <li class="nontifications-list__item">
+                                    <a href="" class="nontification">
+                                        <div class="nontification__name"><var:lesson_name></div>
+                                        <div class="nontification__work">
+                                            <var:assignment_type>
+                                            <div class="nontification__date"><var:schedule_date></div>
+                                        </div>
+                                        <div class="nontification__grade"><var:grade_value></div>
+                                    </a>
+                                </li>
+                                </block:user_grades>
+                            </ul>
+                            </if:user_grades>
+                            <ifnot:user_grades>
+                            <div class="tabs-content__empty">Nav jaunu vērtējumu</div>
+                            </ifnot:user_grades>
+                        </div>
+                        <div id="nontification_messages" class="tabs-content__item hidden">
+                            <ul class="nontifications-list">
+                                <block:lesson_invites>
+                                <li class="nontifications-list__item">
+                                    <div class="nontification">
+                                        <div class="nontification__name">Ielugums <var:lesson_name></div>
+                                        <div class="nontification__work">
+                                            <var:user_firstname> <var:user_lastname>
+                                        </div>
+                                        <div class="nontification__button">
+                                            <a href="/lessons/invites/<var:lesson_invite_id>/decline" class="button button_small button_reject">Noraidīt</a>
+                                            <a href="/lessons/invites/<var:lesson_invite_id>/accept" class="button button_small button_accept">Pieņemt</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                </block:lesson_invites>
+                                <block:organization_invites>
+                                <li class="nontifications-list__item">
+                                    <div class="nontification">
+                                        <div class="nontification__name">Ielugums <var:organization_name></div>
+                                        <div class="nontification__work">
+                                            <var:user_firstname> <var:user_lastname>
+                                        </div>
+                                        <div class="nontification__button">
+                                            <a href="/organizations/invites/<var:organization_invite_id>/decline" class="button button_small button_reject">Noraidīt</a>
+                                            <a href="/organizations/invites/<var:organization_invite_id>/accept" class="button button_small button_accept">Pieņemt</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                </block:organization_invites>
+                                <block:user_assignments>
+                                <li class="nontifications-list__item">
+                                    <a href="" class="nontification">
+                                        <div class="nontification__name"><var:assignment_type></div>
+                                        <div class="nontification__work">
+                                            <var:lesson_name>
+                                            <div class="nontification__date"><var:schedule_date></div>
+                                        </div>
+                                    </a>
+                                </li>
+                                </block:user_assignments>
+                                <li class="nontifications-list__item">
+                                    <a href="" class="nontification">
+                                        <div class="nontification__name">Latviešu valoda</div>
+                                        <div class="nontification__work">
+                                            Mācību stunda
+                                            <div class="nontification__date">17.11.</div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              </block:groups>
             </li>
-            </if:groups>
-          </ul>
+            <block:current_user>
+            <li class="layout-bar__item">
+                <a class="js_toggle layout-bar__avatar" href="#user" data-autohide="true">
+                    <span class="avatar avatar_<var:fulname_digit>"><var:initials></span>
+                </a>
+                <div id="user" class="layout-bar__content hidden">
+                    <a class="user user_big" href="/profiles">
+                        <if:organization_name>
+                        <div class="user__organization">
+                        </div>
+                        <div class="user__title">
+                            <var:organization_name>
+                        </div>
+                        <div class="user__description">
+                            <var:firstname> <var:lastname>
+                            <if:organization_user_role>
+                            (<var:organization_user_role>)
+                            </if:organization_user_role>
+                        </div>
+                        </if:organization_name>
+                        <ifnot:organization_name>
+                        <div class="user__avatar avatar avatar_<var:fulname_digit>">
+                            <var:initials>
+                        </div>
+                        <div class="user__title">
+                            <var:firstname> <var:lastname>
+                        </div>
+                        <div class="user__description">
+                            Privatpersona
+                        </div>
+                        </ifnot:organization_name>
+                    </a>
+                    <ul class="user-menu">
+                        <li class="user-menu__item">
+                            <a href="/profile" class="user-menu__anchor js_modal">Uzstādījumi</a>
+                        </li>
+                        <ifnot:organization_name>
+                        <li class="user-menu__item">
+                            <a href="/organizations/new" class="user-menu__anchor">Izveidot organizāciju</a>
+                        </li>
+                        </ifnot:organization_name>
+                        <li class="user-menu__item">
+                            <a href="/signout" class="user-menu__anchor">Iziet</a>
+                        </li>
+                        <if:groups>
+                        <li class="user-menu__item user-menu__item_separate">
+                            <span class="user-menu__label">Mācību iestādes</span>
+                            <block:groups>
+                            <div class="user-group i i_student">
+                                <var:group_name>
+                                <div class="user-group__description">
+                                    <var:organization_name>
+                                </div>
+                            </div>
+                            </block:groups>
+                        </li>
+                        </if:groups>
+                    </ul>
+                </div>
+            </li>
+            </block:current_user>
+        </ul>
+    </header>
+
+    <div id="sidebar" class="layout__sidebar layout-sidebar<if:compact: compact:>">
+        <div class="layout-sidebar__body">
+            <ul class="nav">
+                <block:header_nav>
+                <li class="nav__item<if:active: active:>">
+                    <a href="<var:path>" class="nav__anchor<if:icon: i i_:><var:icon>"><var:name></a>
+                </li>
+                </block:header_nav>
+            </ul>
+
+            <ul class="drawer-languages">
+                <block:admin_language_options>
+                <li class="drawer-languages__item">
+                    <a class="js_language drawer-languages__anchor<if:selected: drawer-languages__anchor_active:>" href="#<var:value>"><var:name></a>
+                </li>
+                </block:admin_language_options>
+            </ul>
         </div>
-      </li>
-      </block:current_user>
-    </ul>
-  </header>
-
-  <div id="sidebar" class="layout__sidebar layout-sidebar<if:compact: compact:>">
-    <div class="layout-sidebar__body">
-      <ul class="nav">
-        <block:header_nav>
-        <li class="nav__item<if:active: active:>">
-          <a href="<var:path>" class="nav__anchor<if:icon: i i_:><var:icon>"><var:name></a>
-        </li>
-        </block:header_nav>
-      </ul>
-
-      <ul class="drawer-languages">
-        <block:admin_language_options>
-        <li class="drawer-languages__item">
-          <a class="js_language drawer-languages__anchor<if:selected: drawer-languages__anchor_active:>" href="#<var:value>"><var:name></a>
-        </li>
-        </block:admin_language_options>
-      </ul>
+        
+        <div class="layout-sidebar__footer">
+            <div class="layout-sidebar__app">
+                <msg:app.version> <var:version>
+            </div>
+            <div class="layout-sidebar__copyright">
+                &copy; 2025, Deniss Samsonovs
+            </div>
+        </div>
     </div>
-    
-    <div class="layout-sidebar__footer">
-      <div class="layout-sidebar__app">
-        <msg:app.version> <var:version>
-      </div>
-      <div class="layout-sidebar__copyright">
-        &copy; 2025, Deniss Samsonovs
-      </div>
-    </div>
-  </div>
 
-  <var:body:r>
-  <div class="layout__spacer"></div>
+    <var:body:r>
+    <div class="layout__spacer"></div>
 </div>
 <script>
 jQuery(function($){
-  $.datepicker.regional['lv'] = {
-    closeText: 'Aizvērt',
-    prevText: 'Iepr.',
-    nextText: 'Nāk.',
-    currentText: 'Šodien',
-    monthNames: [ 'Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs',
-    'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris' ],
-    monthNamesShort: [ 'Jan', 'Feb', 'Mar', 'Apr', 'Maijs', 'Jūn',
-    'Jūl', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec' ],
-    dayNames: [
-      'svētdiena',
-      'pirmdiena',
-      'otrdiena',
-      'trešdiena',
-      'ceturtdiena',
-      'piektdiena',
-      'sestdiena'
-    ],
-    dayNamesShort: [ 'svt', 'prm', 'otr', 'tre', 'ctr', 'pkt', 'sst' ],
-    dayNamesMin: [ 'Sv', 'Pr', 'Ot', 'Tr', 'Ct', 'Pk', 'Ss' ],
-    weekHeader: 'Ned.',
-    dateFormat: 'dd.mm.yy.',
-    firstDay: 1,
-    isRTL: false,
-    showMonthAfterYear: false,
-    yearSuffix: ''
-  };
+    $.datepicker.regional['lv'] = {
+        closeText: 'Aizvērt',
+        prevText: 'Iepr.',
+        nextText: 'Nāk.',
+        currentText: 'Šodien',
+        monthNames: [ 'Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs',
+        'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris' ],
+        monthNamesShort: [ 'Jan', 'Feb', 'Mar', 'Apr', 'Maijs', 'Jūn',
+        'Jūl', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec' ],
+        dayNames: [
+            'svētdiena',
+            'pirmdiena',
+            'otrdiena',
+            'trešdiena',
+            'ceturtdiena',
+            'piektdiena',
+            'sestdiena'
+        ],
+        dayNamesShort: [ 'svt', 'prm', 'otr', 'tre', 'ctr', 'pkt', 'sst' ],
+        dayNamesMin: [ 'Sv', 'Pr', 'Ot', 'Tr', 'Ct', 'Pk', 'Ss' ],
+        weekHeader: 'Ned.',
+        dateFormat: 'dd.mm.yy.',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+    };
 });
 </script>
 <block:flash>
 <script>
-  app.flash.message('<var:message>', null, '<var:type>');
+    app.flash.message('<var:message>', null, '<var:type>');
 </script>
 </block:flash>
 <script>
-  $('.js_notification').click(function(event){ 
-    event.preventDefault();
+    $(document).on('click.confirm', '.js_confirm_delete', function(event){
+        event.preventDefault();
 
-    $('.tabs__item').removeClass('active');
+        var url = this.href;
 
-    $(this).parent().addClass('active');
-
-    $('.tabs-content__item').addClass('hidden');
-
-    $(this.hash).removeClass('hidden');
-
-  });
-
-  $('#notification_badge').click(function(event){
-    event.preventDefault();
-
-    var $this      = $(this),
-        $container = $(this.hash),
-        $burger    = $('#burger'),
-        url        = null; //$this.data('url');
-
-    if ($this.hasClass('active')) {
-      $container.slideUp();
-      $this.removeClass('active');
-    } else {
-      if (!$burger.hasClass('active')) {
-        $burger.trigger('click');
-      }
-
-      if (url) {
-        $this.data('url', null);
-
-        $.get(url, function(html){
-          $container.html(html);
-          $container.slideDown();
-          $this.addClass('active');
+        new app.Dialog(function(){
+            window.location.href = url;
+        }, {
+            message: '<msg:confirm.delete_message:j>',
+            yes: '<msg:confirm.delete:j>',
+            no: '<msg:confirm.cancel:j>',
+            type: 'red'
         });
-      } else {
-        $container.slideDown();
-        $this.addClass('active');
-      }
-    }
-  });
+    });
+
+    $('.js_notification').click(function(event){ 
+        event.preventDefault();
+
+        $('.tabs__item').removeClass('active');
+
+        $(this).parent().addClass('active');
+
+        $('.tabs-content__item').addClass('hidden');
+
+        $(this.hash).removeClass('hidden');
+
+    });
+
+    $('#notification_badge').click(function(event){
+        event.preventDefault();
+
+        var $this      = $(this),
+                $container = $(this.hash),
+                $burger    = $('#burger'),
+                url        = null; //$this.data('url');
+
+        if ($this.hasClass('active')) {
+            $container.slideUp();
+            $this.removeClass('active');
+        } else {
+            if (!$burger.hasClass('active')) {
+                $burger.trigger('click');
+            }
+
+            if (url) {
+                $this.data('url', null);
+
+                $.get(url, function(html){
+                    $container.html(html);
+                    $container.slideDown();
+                    $this.addClass('active');
+                });
+            } else {
+                $container.slideDown();
+                $this.addClass('active');
+            }
+        }
+    });
 </script>
 </body>
 </html>
