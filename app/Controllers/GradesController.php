@@ -224,7 +224,7 @@ class GradesController extends PrivateController
                 'g.grade_numeric',
                 'g.grade_percent',
                 'g.grade_included',
-                'ifnull(g.grade_numeric,ifnull(g.grade_percent,g.grade_included)) as user_grade'
+                'ifnull(g.grade_numeric,ifnull(g.grade_percent,g.grade_included)) as grade'
             )
             ->from('assignment as a')
             ->join('schedule as s on s.schedule_id = a.schedule_id')
@@ -236,8 +236,14 @@ class GradesController extends PrivateController
                 ->join('user as u on u.user_id = gu.user_id');
         } else {
             $query
-                ->join('lesson_user as lu on lu.lesson_id = s.lesson_id')
-                ->join('user as u on u.user_id = lu.user_id');
+                ->join('lesson as l on l.lesson_id = s.lesson_id')
+                ->leftJoin('group_lesson gl on gl.lesson_id = l.lesson_id')
+                ->leftJoin(
+                    'group_user gu on gu.group_id = gl.group_id' .
+                    ' and gu.group_id = s.group_id'
+                )
+                ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
+                ->join('user as u on u.user_id = ifnull(gu.user_id,lu.user_id)');
         }
 
         $query

@@ -61,7 +61,7 @@ class LessonsController extends PrivateController
 
         if ($can_edit) {
             $actions[] = [
-                'title' => 'Rediģēt',
+                'title' => 'Rediģēt priekšmetu',
                 'path' => '/lessons/' . $lesson->lesson_id . '/edit',
                 'class_name' => 'js_modal'
             ];
@@ -226,13 +226,15 @@ class LessonsController extends PrivateController
                 ->leftJoin('group_lesson gl on gl.lesson_id = l.lesson_id')
                 ->leftJoin(
                     'group_user gu on gu.group_id = gl.group_id' .
-                    ' and gu.group_id = s.group_id'
+                    ' and gu.user_id = ?',
+                    $this->current_user->id
                 )
                 ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
                 ->where('(l.user_id = ? or ifnull(gu.user_id,lu.user_id) = ?)', [
                     $this->current_user->id,
                     $this->current_user->id
-                ]);
+                ])
+                ->group('l.lesson_id');
         }
 
         if (!$data = $query->fetchAll()) {
@@ -272,13 +274,16 @@ class LessonsController extends PrivateController
     {
         $path = null;
 
-        if ($lesson->lesson_id) {  
+        if ($lesson->lesson_id) { 
+            $title = 'Rediģēt priekšmetu';
             $path = '/lessons/' . $lesson->lesson_id . '/update';
         } else {
+            $title = 'Jauns priekšmets';
             $path = '/lessons/create';
         }
 
         return View::init('tmpl/lessons/form.tmpl', [
+            'title' => $title,
             'lesson_name' => $lesson->lesson_name,
             'lesson_description' => $lesson->lesson_description,
             'organization_users_options' => $this->getLessonOrganizationUsersOptions($lesson),
@@ -409,7 +414,8 @@ class LessonsController extends PrivateController
             ->leftJoin('group_lesson gl on gl.lesson_id = l.lesson_id')
             ->leftJoin(
                 'group_user gu on gu.group_id = gl.group_id' .
-                ' and gu.group_id = s.group_id'
+                ' and gu.user_id = ?',
+                $this->current_user->id
             )
             ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
             ->where('ifnull(gu.user_id,lu.user_id) = ?', $this->current_user->id);

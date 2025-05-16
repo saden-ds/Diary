@@ -16,6 +16,7 @@ use App\Base\Session;
 use App\Base\Tmpl;
 use App\Base\View;
 use App\Middleware\SyncDog\Client;
+use App\Models\Grade;
 use Exception;
 use Throwable;
 
@@ -182,6 +183,18 @@ class ApplicationController
             }
 
             if (!$view->isException()) {
+                $lesson_invites = $this->getLessonsInvites($current_user);
+                $organization_invites = $this->getOrganizationsInvites($current_user);
+                $notification_count = 0;
+
+                if ($lesson_invites) {
+                    $notification_count += count($lesson_invites);
+                }
+
+                if ($organization_invites) {
+                    $notification_count += count($organization_invites);
+                }
+
                 $view->csrf($this->session->get('csrf'));
                 $view->main([
                     'app_name' => $this->config->get('title'), 
@@ -189,8 +202,9 @@ class ApplicationController
                     'assets_version' => $this->config->get('version_timestamp'),
                     'current_user' => $current_user,
                     'header_nav' => $header_nav,
-                    'lesson_invites' => $this->getLessonsInvites($current_user),
-                    'organization_invites' => $this->getOrganizationsInvites($current_user),
+                    'notification_count' => $notification_count,
+                    'lesson_invites' => $lesson_invites,
+                    'organization_invites' => $organization_invites,
                     'user_grades' => $this->getUserGrades($current_user),
                     'user_assignments' => $this->getUserAssignments($current_user),
                     'navigation' => $this->getMainNavigation(),
@@ -436,57 +450,50 @@ class ApplicationController
 
     private function getUserGrades($current_user): ?array
     {
-        $db = DataStore::init();
+        if (!$this->current_user->id) {
+            return null;
+        }
+        
+        $query = new DataQuery();
 
-        $data = $db->data('
-            select
-                l.lesson_name,
-                g.grade_type,
-                g.grade_numeric,
-                g.grade_percent,
-                g.grade_included,
-                a.assignment_type,
-                a.assignment_created_at,
-                s.schedule_date
-            from grade as g
-            join assignment as a on a.assignment_id = g.assignment_id
-            left join schedule as s on s.schedule_id = a.schedule_id
-            left join lesson as l on l.lesson_id = s.lesson_id
-            where g.user_id = ?
-            order by a.assignment_created_at desc
-        ', [
-            $this->current_user->id
-        ]);
+        $query
+            ->select(
+                'l.lesson_name',
+                'g.grade_type',
+                'g.grade_numeric',
+                'g.grade_percent',
+                'g.grade_included',
+                'a.assignment_id',
+                'a.assignment_type',
+                'a.assignment_created_at',
+                's.schedule_date'
+            )
+            ->from('grade as g')
+            ->join('assignment as a on a.assignment_id = g.assignment_id')
+            ->leftJoin('schedule as s on s.schedule_id = a.schedule_id')
+            ->leftJoin('lesson as l on l.lesson_id = s.lesson_id')
+            ->where('g.user_id = ?', $this->current_user->id)
+            ->order('a.assignment_created_at desc')
+            ->limit(10);
 
-        if (!$data) {
+        if (!$data = $query->fetchAll()) {
             return null;
         }
 
         foreach ($data as $k => $v) {
+            $grade = new Grade($v, true);
+
             if ($v['assignment_type'] === 'work') {
                 $v['assignment_type'] = 'Mācību stunda';
             } elseif ($v['assignment_type'] === 'test') {
                 $v['assignment_type'] = 'Pārbaudes darbs';
             }
 
-            switch ($v['grade_type']) {
-                case 'numeric':
-                    $v['grade_value'] = $v['grade_numeric'];
-                    break;
-                case 'percent':
-                    $v['grade_value'] = $v['grade_percent'] . '%';
-                    break;
-                case 'included':
-                    $v['grade_value'] = $v['grade_included'] ? 'i' : 'ni';
-                    break;
-                default:
-                    $v['grade_value'] = 'error';
-                    break;
-            }
+            $v['grade'] = $grade->formatted_grade;
+            $v['schedule_date'] = $this->msg->date($v['schedule_date']) ?? null;
+            $v['path'] = '/assignments/' . intval($v['assignment_id']);
 
-             $v['schedule_date'] = $this->msg->date($v['schedule_date']) ?? null;
-
-             $data[$k] = $v;
+            $data[$k] = $v;
         }
 
         return $data;
@@ -518,10 +525,19 @@ class ApplicationController
                 ' and gu.user_id = ?', $this->current_user->id
             )
             ->where('lu.user_id is not null or gu.user_id is not null')
-            ->order('a.assignment_created_at desc');
+            ->order('a.assignment_created_at desc')
+            ->limit(10);
 
         if (!$data = $query->fetchAll()) {
             return null;
+        }
+
+        foreach ($data as $k => $v) {
+            $v['path'] = '/assignments/' . intval($v['assignment_id']);
+            $v['assignment_type'] = $this->msg->t('assignment.types.' . $v['assignment_type']);
+            $v['schedule_date'] = $this->msg->date($v['schedule_date']);
+
+            $data[$k] = $v;
         }
 
         return $data;

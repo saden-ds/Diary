@@ -40,13 +40,13 @@
             <th class="data-table__th">Priekšmets</th>
             <th class="data-table__th" width="4%">Apmeklējumi</th>
             <th class="data-table__th" width="20%">Uzdevumi</th>
-            <th class="data-table__th" width="30%">Tēma</th>
+            <th class="data-table__th" width="20%">Tēma</th>
             <th class="data-table__th data-table__th_last" width="1%"></th>
           </tr>
         </thead>
         <tbody id="assignments" class="data-table__tbody">
           <block:lessons>
-          <tr class="data-table__tr">
+          <tr class="data-table__tr<if:actions: data-table__tr_actions:>">
             <td class="data-table__td data-table__td_first">
               <div class="data-table__mbadge"><var:lesson_time_number>.</div>
             </td>
@@ -55,14 +55,14 @@
               <if:lesson_name>
               <div class="data-summary">
                 <div><var:lesson_name></div>
-                <if:lesson_participant>
+                <if:lesson_teacher>
                 <div class="data-summary__description">
-                  <var:lesson_participant>
+                  <var:lesson_teacher>
                 </div>
-                </if:lesson_participant>
+                </if:lesson_teacher>
                 <if:organization_name>
                 <div class="data-summary__description">
-                  <var:organization_name>
+                  <var:group_name>, <var:organization_name>
                 </div>
                 </if:organization_name>
               </div>
@@ -98,39 +98,30 @@
             </td>
             <td class="data-table__td<if:assignments:: data-table__td_empty>">
               <block:assignments>
-              <table width="100%">
-                <tr>
-                  <td><a href="/assignments/<var:assignment_id>" class="js_modal"><var:assignment_type></a></td>
-                  <td width="20%"><var:user_grade></td>
+              <table class="values" width="100%">
+                <tr class="values__row">
+                  <td class="values__title"><a href="/assignments/<var:assignment_id>" class="js_modal"><var:assignment_type></a></td>
+                  <td class="values__value" width="20%"><var:grade></td>
                 </tr>
               </table>
               </block:assignments>
-              <!-- <a href=" "><var:assignment_type></a> -->
-              <!-- <if:assignment_new_path>
-              <a href="<var:assignment_new_path>" class="js_modal button">Pievienot</a>
-              </if:assignment_new_path> -->
             </td>
             <td class="data-table__td<if:schedule_name:: data-table__td_empty>"><var:schedule_name></td>
-            <td class="data-table__td data-table__td_last<if:schedule_edit_path:: data-table__td_empty>">
-              <!-- <if:is_owner:xxxx:yyyy> -->
-              <if:schedule_edit_path>
+            <td class="data-table__td data-table__td_last<if:actions: data-table__td_actions: data-table__td_empty>">
+              <if:actions>
               <ul class="actions-list">
-                <li class="js_menu_parent actions-list__item">
-                  <a class="js_menu action action_icon i i_menu i_only" href="#menu"></a>
-                  <ul class="menu menu_hidden">
-                    <li class="menu__item">
-                      <a href="<var:schedule_edit_path>" class="menu__anchor js_modal">Rediģēt grafiku</a>
-                    </li>
-                    <li class="menu__item">
-                      <a href="<var:assignment_new_path>" class="menu__anchor js_modal">Pievienot uzdevumu</a>
-                    </li>
-                    <li class="menu__item">
-                      <a href="<var:schedule_visits_path>" class="menu__anchor js_modal">Atzīmēt apmeklējumu</a>
-                    </li>
-                  </ul>
-                </li>
+                  <li class="js_menu_parent actions-list__item">
+                      <a class="js_menu action action_icon i i_menu i_only" href="#menu"></a>
+                      <ul class="menu menu_hidden">
+                          <block:actions>
+                          <li class="menu__item">
+                              <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                          </li>
+                          </block:actions>
+                      </ul>
+                  </li>
               </ul>
-              </if:schedule_edit_path>
+              </if:actions>
             </td>
           </tr>
           </block:lessons>

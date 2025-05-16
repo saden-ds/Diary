@@ -118,6 +118,10 @@ a.inherit:hover { text-decoration: underline; }
   width: 100%;
 }
 
+.values__value {
+  text-align: right;
+}
+
 .toggle {
   color: #522B2A;
   border-bottom: 1px dotted #683736;
@@ -1985,7 +1989,7 @@ a.user:hover {
 .tabs__item {
   position: relative;
   display: inline-block;
-  padding: 0 16px;
+  padding: 0 8px;
   font-size: 14px; font-weight: bold;
 }
 .tabs__anchor_status_gray::before,
@@ -7204,11 +7208,11 @@ a.user-summary__abbr:hover {
 
 
 
-.nontifications-list {
+.notifications-list {
   background: red;
 }
 
-.nontifications-list__item {
+.notifications-list__item {
   background: #f7f7f7;
   padding: 8px 8px;
   border-bottom: 1px solid #ddd;
@@ -7216,12 +7220,24 @@ a.user-summary__abbr:hover {
   min-height: 56px;
 }
 
+.notification-badge__count {
+  display: block;
+  position: absolute; top: 0; right: 0; z-index: 1;
+  padding: 0 2px;
+  background: #E7391E;
+  border-radius: 7px;
+  min-width: 14px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  text-align: center;
+}
 
-.nontification {
+.notification {
   display: block;
   padding-right: 32px;
 }
-.nontification__name {
+.notification__name {
   white-space: nowrap;
   font-size: 16px;
   line-height: 22px;
@@ -7230,19 +7246,19 @@ a.user-summary__abbr:hover {
   color: #72605E;
 }
 
-.nontification__work {
+.notification__work {
   font-size: 12px;
   color: #B3B3B3;
 }
 
-.nontification__date {
+.notification__date {
   display: inline-block;
   font-size: 12px;
   color: #B3B3B3;
 
 }
 
-.nontification__grade {
+.notification__grade {
   width: 52px;
   position: absolute;
   right: 8px;
@@ -7253,7 +7269,7 @@ a.user-summary__abbr:hover {
   text-align: center;
 }
 
-.nontification__button {
+.notification__button {
   padding: 8px 0 8px 0;
 }
 

@@ -10,6 +10,7 @@ use App\Base\View;
 use App\Base\DataQuery;
 use App\Models\GroupUser;
 use App\Models\Group;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -50,7 +51,16 @@ class GroupUsersController extends ApplicationController
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $filename = $group->group_name . '_users.xlsx';
-        $row = 1;
+
+        $sheet->mergeCells('A1:B1');
+        $sheet->setCellValue('A1', $group->group_name);
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+
+        $row = 2;
 
         $sheet->setTitle($this->msg->t('group.users'));
         
@@ -58,7 +68,7 @@ class GroupUsersController extends ApplicationController
 
         $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFEBE7E2');
 
-        $sheet->setCellValue('A' . $row, $this->msg->t('user.name'));
+        $sheet->setCellValue('A' . $row, $this->msg->t('user.fullname'));
 
         $style = $sheet->getStyle('B' . $row);
 

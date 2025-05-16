@@ -6,7 +6,6 @@ use App\Base\Exceptions\NotFoundException;
 use App\Base\Exceptions\ForbiddenException;
 use App\Base\View;
 use App\Base\DataQuery;
-use App\Base\DataStore;
 use App\Models\Schedule;
 use App\Models\Lesson;
 
@@ -66,7 +65,7 @@ class SchedulesController extends ApplicationController
             throw new ForbiddenException();
         }
 
-        return $this->renderForm($schedule);
+        return $this->renderForm($schedule, $lesson);
     }
 
     public function updateAction(): ?View
@@ -88,7 +87,7 @@ class SchedulesController extends ApplicationController
     }
 
 
-    private function renderForm($schedule): ?View
+    private function renderForm(Schedule $schedule, ?Lesson $lesson = null): ?View
     {
         $path = null;
 
@@ -98,12 +97,8 @@ class SchedulesController extends ApplicationController
             $path = '/schedules/create';
         }
 
-        if (!$this->current_user->canAdmin($this->current_user->organization_id)) {
+        if ($lesson && !$this->current_user->canAdmin($lesson->organization_id)) {
             $lesson_name = null;
-
-            if ($lesson = Lesson::find($schedule->lesson_id)) {
-                $lesson_name = $lesson->lesson_name;
-            }
 
             return View::init('tmpl/schedules/form_short.tmpl', [
                 'schedule_id' => $schedule->schedule_id,
@@ -129,18 +124,23 @@ class SchedulesController extends ApplicationController
     {
         $options = null;
 
-        $db = DataStore::init();
-        $data = $db->data('
-            select 
-                lesson_id,
-                lesson_name
-            from lesson 
-            where user_id = ?
-        ', [
-            $this->current_user->id
-        ]);
+        $query = new DataQuery();
 
-        if (!$data) {
+        $query
+            ->select(
+                'lesson_id',
+                'lesson_name'
+            )
+            ->from('lesson')
+            ->where('user_id = ?', $this->current_user->id);
+        
+        if ($this->current_user->organization_id) {
+            $query->where('organization_id = ?', $this->current_user->organization_id);
+        } else {
+            $query->where('organization_id is null');
+        }
+
+        if (!$data = $query->fetchAll()) {
             return $options;
         }
 
@@ -159,16 +159,17 @@ class SchedulesController extends ApplicationController
     {
         $options = null;
 
-        $db = DataStore::init();
-        $data = $db->data('
-            select 
-                lesson_time_id,
-                lesson_time_start_at,
-                lesson_time_end_at
-            from lesson_time
-        ');
+        $query = new DataQuery();
 
-        if (!$data) {
+        $query
+            ->select(
+                'lesson_time_id',
+                'lesson_time_start_at',
+                'lesson_time_end_at'
+            )
+            ->from('lesson_time');
+
+        if (!$data = $query->fetchAll()) {
             return $options;
         }
 

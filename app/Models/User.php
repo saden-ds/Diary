@@ -126,6 +126,9 @@ class User extends Model
 
         // error_log($this->user_password);
         // error_log($this->user_password_repeat);
+        if ($this->user_email && !filter_var($this->user_email, FILTER_VALIDATE_EMAIL)) {
+            $this->addError('user_email', $this->msg->t('error.email.format'));
+        }
 
         if (!$this->user_id || $this->user_password) {
             if (!$this->user_password_repeat) {
@@ -168,22 +171,54 @@ class User extends Model
 
     private function validateUserPassword(): void
     {
+        // if (!$this->user_password) {
+        //     $this->addError('user_password', $this->msg->t('error.blank'));
+        //     return;
+        // }
+
+        // $min = $this->config->get('user.password.min') ?: 8;
+        // $max = $this->config->get('user.password.max') ?: 72;
+
+        // if (strlen($this->user_password) < $min) {
+        //     $this->addError('user_password', $this->msg->t('error.password.min', [
+        //         'count' => $min
+        //     ]));
+        // } elseif (strlen($this->user_password) > $max) {
+        //     $this->addError('user_password', $this->msg->t('error.password.max', [
+        //         'count' => $max
+        //   ]));
+        // }
+
         if (!$this->user_password) {
             $this->addError('user_password', $this->msg->t('error.blank'));
             return;
         }
 
-        $min = $this->config->get('user.password.min') ?: 8;
+        $length = mb_strlen(strval($this->user_password));
+        $min = $this->config->get('user.password.min') ?: 9;
         $max = $this->config->get('user.password.max') ?: 72;
+        $complexity_pattern = '/(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_=\-])/';
 
-        if (strlen($this->user_password) < $min) {
+        if ($min && $length < $min) {
             $this->addError('user_password', $this->msg->t('error.password.min', [
                 'count' => $min
             ]));
-        } elseif (strlen($this->user_password) > $max) {
+            return;
+        }
+
+        if ($max && $length > $max) {
             $this->addError('user_password', $this->msg->t('error.password.max', [
                 'count' => $max
-          ]));
+            ]));
+            return;
+        }
+
+        if (!preg_match($complexity_pattern, $this->user_password)) {
+            $this->addError(
+                'user_password',
+                $this->msg->t('error.password.complexity')
+            );
+            return;
         }
     }
 }

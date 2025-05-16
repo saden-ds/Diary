@@ -39,7 +39,8 @@ class FilesCollection
             'assignment_file_id' => null,
             'user_id' => null,
             'except_user_id' => null,
-            'current_user_id' => null 
+            'current_user_id' => null,
+            'readonly' => false 
         ], $params);
 
         $query
@@ -67,7 +68,7 @@ class FilesCollection
                 $v['assignment_file_path'] = '/assignments/files/' 
                     . intval($v['assignment_file_id']);
 
-                if ($params['current_user_id'] == $v['user_id']) {
+                if (!$params['readonly'] && $params['current_user_id'] == $v['user_id']) {
                     $v['assignment_file_delete_path'] = '/assignments/files/' 
                         . intval($v['assignment_file_id']) . '/delete';
                 } else {

@@ -6,6 +6,7 @@ use App\Base\Exceptions\NotFoundException;
 use App\Base\DataStore;
 use App\Base\DataQuery;
 use App\Base\View;
+use App\Models\Grade;
 use DateTime;
 
 class MainController extends ApplicationController
@@ -123,13 +124,15 @@ class MainController extends ApplicationController
                     l.user_id,
                     u.user_firstname,
                     u.user_lastname,
-                    o.organization_name
+                    o.organization_name,
+                    g.group_name
                 from schedule as s
                 join lesson as l on l.lesson_id = s.lesson_id
                 left join organization o on o.organization_id = l.organization_id
                 left join group_lesson gl on gl.lesson_id = l.lesson_id
                 left join group_user gu on gu.group_id = gl.group_id
                     and gu.group_id = s.group_id
+                left join `group` g on g.group_id = gl.group_id
                 left join lesson_user as lu on lu.lesson_id = l.lesson_id
                 join lesson_time as lt on lt.lesson_time_id = s.lesson_time_id
                 left join user as u on u.user_id = l.user_id
@@ -167,37 +170,42 @@ class MainController extends ApplicationController
 
         if ($schedule_data) {
             foreach ($schedule_data as $value) {
+                $actions = null;
+
                 if ($value['user_id'] == $this->current_user->id) {
                     $value['is_owner'] = true;
-                    $value['schedule_edit_path'] = '/schedules/' . intval($value['schedule_id']) . '/edit';
-                    $value['assignment_new_path'] = '/schedules/' . intval($value['schedule_id']) . 
-                        '/assignments/new';
-                    $value['schedule_visits_path'] = '/schedules/' . intval($value['schedule_id']) . 
-                        '/visits/new';
+
+                    $actions[] = [
+                        'title' => 'Rediģēt grafiku',
+                        'path' => '/schedules/' . intval($value['schedule_id']) . '/edit',
+                        'class_name' => 'js_modal'
+                    ];
+                    $actions[] = [
+                        'title' => 'Pievienot uzdevumu',
+                        'path' =>  '/schedules/' . intval($value['schedule_id']) . '/assignments/new',
+                        'class_name' => 'js_modal'
+                    ];
+                    $actions[] = [
+                        'title' => 'Atzīmēt apmeklējumu',
+                        'path' => '/schedules/' . intval($value['schedule_id']) . 
+                        '/visits/new',
+                        'class_name' => 'js_modal'
+                    ];
                 } else {
                     $value['is_owner'] = false;
-                    $value['schedule_edit_path'] = null;
-
                 }
 
-                if ($this->current_user->organization_id) {
-                    $value['lesson_participant'] = $value['group_name'] ?? null;
-                } else {
-                    if ($value['user_firstname']) {
-                        $value['lesson_participant'] = $value['user_firstname'] . '  ' . $value['user_lastname'];
-                    }
 
-                    if ($value['user_id'] == $this->current_user->id) {
-                        $value['organization_name'] = 'Jūsu priekšmets';
-                        $value['lesson_participant'] = null;
-                    } else {
-                        $value['organization_name'] = $value['organization_name'] ?: 'Privats';
-                    }
+                if ($value['user_id'] == $this->current_user->id) {
+                    $value['lesson_teacher'] = null;
+                } else {
+                    $value['lesson_teacher'] = $value['user_firstname'] . ' ' . $value['user_firstname'];
                 }
 
                 $value['assignments'] = $schedules_assignments[$value['schedule_id']] ?? null;
                 $value['visits_count'] = $schedules_visits[$value['schedule_id']] ?? null;
                 $value['presence'] = $schedules_presences[$value['schedule_id']] ?? null;
+                $value['actions'] = $actions;
 
                 $schedule[$value['schedule_date']]['lessons'][$value['lesson_time_id']] = $value;
 
@@ -244,8 +252,7 @@ class MainController extends ApplicationController
                 'g.grade_type',
                 'g.grade_numeric',
                 'g.grade_percent',
-                'g.grade_included',
-                'ifnull(g.grade_numeric,ifnull(g.grade_percent,g.grade_included)) as user_grade'
+                'g.grade_included'
             )
             ->from('assignment a')
             ->leftJoin(
@@ -263,10 +270,12 @@ class MainController extends ApplicationController
         }
 
         foreach ($data as $value) {
+            $grade = new Grade($value, true);
+
             $assignments[$value['schedule_id']][] = [
                 'assignment_id' => $value['assignment_id'],
                 'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
-                'user_grade' => $value['user_grade']
+                'grade' => $grade->formatted_grade
             ];
         }
 

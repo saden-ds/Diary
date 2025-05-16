@@ -52,31 +52,38 @@
         </block:current_user>
         <ul class="layout-bar">
             <li class="layout-bar__item">
-                <a class="js_toggle layout-bar__anchor i i_notification" href="#notification_lates" data-autohide="true"><if:lesson_invites:*:></a>
-                <!-- data-url="/notifications/latest" -->
+                <a class="js_toggle notification-badge layout-bar__anchor i i_notification" href="#notification_lates" data-autohide="true">
+                    <if:notification_count>
+                    <span class="notification-badge__count">
+                        <var:notification_count>
+                    </span>
+                    </if:notification_count>
+                </a>
                 <div id="notification_lates" class="layout-bar__content hidden">
                     <ul class="tabs">
                         <li class="tabs__item active">
-                            <a href="#nontification_grades" class="js_notification tabs__anchor">Jaunākie vērtējumi</a>
+                            <a href="#notification_grades" class="js_notification tabs__anchor">Jaunākie vērtējumi</a>
                         </li>
                         <li class="tabs__item">
-                            <a href="#nontification_messages" class="js_notification tabs__anchor">Jaunākie ziņojumi</a>
+                            <a href="#notification_messages" class="js_notification tabs__anchor">Jaunākie ziņojumi</a>
                         </li>
                     </ul>
                     <div class="tabs-content">
-                        <div id="nontification_grades" class="tabs-content__item">
+                        <div id="notification_grades" class="tabs-content__item">
                             <if:user_grades>
-                            <ul class="nontifications-list">
+                            <ul class="notifications-list">
                                 <block:user_grades>
-                                <li class="nontifications-list__item">
-                                    <a href="" class="nontification">
-                                        <div class="nontification__name"><var:lesson_name></div>
-                                        <div class="nontification__work">
-                                            <var:assignment_type>
-                                            <div class="nontification__date"><var:schedule_date></div>
+                                <li class="notifications-list__item">
+                                    <div class="notification">
+                                        <div class="notification__name">
+                                            <a href="<var:path>" class="js_modal toggle"><var:lesson_name></a>
                                         </div>
-                                        <div class="nontification__grade"><var:grade_value></div>
-                                    </a>
+                                        <div class="notification__work">
+                                            <var:assignment_type>
+                                            <div class="notification__date"><var:schedule_date></div>
+                                        </div>
+                                        <div class="notification__grade"><var:grade></div>
+                                    </div>
                                 </li>
                                 </block:user_grades>
                             </ul>
@@ -85,16 +92,16 @@
                             <div class="tabs-content__empty">Nav jaunu vērtējumu</div>
                             </ifnot:user_grades>
                         </div>
-                        <div id="nontification_messages" class="tabs-content__item hidden">
-                            <ul class="nontifications-list">
+                        <div id="notification_messages" class="tabs-content__item hidden">
+                            <ul class="notifications-list">
                                 <block:lesson_invites>
-                                <li class="nontifications-list__item">
-                                    <div class="nontification">
-                                        <div class="nontification__name">Ielugums <var:lesson_name></div>
-                                        <div class="nontification__work">
+                                <li class="notifications-list__item">
+                                    <div class="notification">
+                                        <div class="notification__name">Ielugums <var:lesson_name></div>
+                                        <div class="notification__work">
                                             <var:user_firstname> <var:user_lastname>
                                         </div>
-                                        <div class="nontification__button">
+                                        <div class="notification__button">
                                             <a href="/lessons/invites/<var:lesson_invite_id>/decline" class="button button_small button_reject">Noraidīt</a>
                                             <a href="/lessons/invites/<var:lesson_invite_id>/accept" class="button button_small button_accept">Pieņemt</a>
                                         </div>
@@ -102,13 +109,13 @@
                                 </li>
                                 </block:lesson_invites>
                                 <block:organization_invites>
-                                <li class="nontifications-list__item">
-                                    <div class="nontification">
-                                        <div class="nontification__name">Ielugums <var:organization_name></div>
-                                        <div class="nontification__work">
+                                <li class="notifications-list__item">
+                                    <div class="notification">
+                                        <div class="notification__name">Ielugums <var:organization_name></div>
+                                        <div class="notification__work">
                                             <var:user_firstname> <var:user_lastname>
                                         </div>
-                                        <div class="nontification__button">
+                                        <div class="notification__button">
                                             <a href="/organizations/invites/<var:organization_invite_id>/decline" class="button button_small button_reject">Noraidīt</a>
                                             <a href="/organizations/invites/<var:organization_invite_id>/accept" class="button button_small button_accept">Pieņemt</a>
                                         </div>
@@ -116,25 +123,18 @@
                                 </li>
                                 </block:organization_invites>
                                 <block:user_assignments>
-                                <li class="nontifications-list__item">
-                                    <a href="" class="nontification">
-                                        <div class="nontification__name"><var:assignment_type></div>
-                                        <div class="nontification__work">
-                                            <var:lesson_name>
-                                            <div class="nontification__date"><var:schedule_date></div>
+                                <li class="notifications-list__item">
+                                    <div class="notification">
+                                        <div class="notification__name">
+                                            <a href="<var:path>" class="js_modal toggle"><var:assignment_type></a>
                                         </div>
-                                    </a>
+                                        <div class="notification__work">
+                                            <var:lesson_name>
+                                            <div class="notification__date"><var:schedule_date></div>
+                                        </div>
+                                    </div>
                                 </li>
                                 </block:user_assignments>
-                                <li class="nontifications-list__item">
-                                    <a href="" class="nontification">
-                                        <div class="nontification__name">Latviešu valoda</div>
-                                        <div class="nontification__work">
-                                            Mācību stunda
-                                            <div class="nontification__date">17.11.</div>
-                                        </div>
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -178,7 +178,7 @@
                         </li>
                         <ifnot:organization_name>
                         <li class="user-menu__item">
-                            <a href="/organizations/new" class="user-menu__anchor">Izveidot organizāciju</a>
+                            <a href="/organizations/new" class="user-menu__anchor">Izveidot mācību iestādi</a>
                         </li>
                         </ifnot:organization_name>
                         <li class="user-menu__item">

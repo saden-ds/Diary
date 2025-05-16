@@ -34,46 +34,6 @@ authorization:
       empty_password: Ievadiet paroli
       fail: Autorizācijas kļūda
 
-certificate:
-  date: Sertifikāta datums
-  delete_confirm: Vai jūs tiešam vēlaties dzēst šo sertifikātu?
-  file: Fails
-  form_new: Jauns dokuments
-  link: Saite uz ārējo resursu
-  link_hint: Saite uz ražotāja vai iepakojuma izstrādātāja sertifikāta lapu internetā
-  message:
-    error:
-      create: Neizdevās pievienot sertifikātu
-      update: Neizdevās atjaunināt sertifikātu
-      delete: Neizdevās izdzēst sertifikātu
-  name: Sertifikāta nosaukums
-
-classifier:
-  components: Komponenti
-  recyclabilities: Pārstrādājamais īpatsvars
-
-cookie_confirm:
-  action:
-    remove: Aizvērt
-  message: |
-    Mēs izmantojam tikai tehniskās, nepieciešamās sīkdates, kuras nodrošina tīmekļa vietnes darbību un kuru izmantošanai nav nepieciešams iegūt lietotāja piekrišanu.
-  title: Sīkdatnes
-
-company:
-  address: Adrese
-  code: Reg.Nr.
-  nace: NACE
-  name: Nosaukums
-  search_hint: Nosaukums vai reģistrācijas numura
-
-component:
-  code: Kods
-  name: Komponente
-  recycle: Pārstrādājamais īpatsvars
-  laboratory_comment: Laboratorijas komentārs
-  product_type: Produkta / iepakojuma veida nosaukums
-  type: Pamatkomponentes veids
-
 confirm:
   cancel: Atcelt
   delete: Dzēst
@@ -161,16 +121,6 @@ datetime:
     many: minutes
   units:
     hour: h
-
-document:
-  date: Dokumenta datums
-  date_small_short: datums
-  file: Fails
-  form_new: Jauns dokuments
-  link: Saite uz ārējo resursu
-  name: Dokumenta nosaukums
-  types:
-    certificate: Sertifikāts
 
 email_confirmation:
   action:
@@ -317,6 +267,10 @@ http_error:
     description: |
       Pieeja pieprasītajai lapai ir aizliegta. <a href="/">Atgriezieties sākumlapā</a>.
 
+user:
+  fullname: Vārds, uzvārds
+  email: E-pasts
+
 user_confirmation:
   title: Lūdzu, apstipriniet savu <nobr>e-pasta adresi!</nobr>
   description: |
@@ -353,13 +307,6 @@ mail:
       Lūdzu, aktivizējiet kontu!
       To var veikt, sekojot saitei zemāk:
       %{url}
-
-meta:
-  description:
-    classifiers: Informācija par vietnes lietotajiem klasifikatoriem
-    laboratories: Laboratoriju saraksts
-    main: Plastmasas izstrādājumu pārstrādājamības reģistrs
-    manufacturers: Ražotāju saraksts
 
 navigation:
   signin: Pieslēgties
@@ -513,7 +460,7 @@ assignment:
     few: '%{count} minutes'
     many: '%{count} minutes'
   types:
-    test: PD
+    test: Parbaudes darbs
     work: Nodarbība 
 
 group:
@@ -533,6 +480,9 @@ organization_user:
 lesson:
   search_placeholder: Priekšmeta nosaukums
 
+file:
+  processing: Apstrāde
+  upload_error: Neizdevās augšupielādēt failu
 
 
 

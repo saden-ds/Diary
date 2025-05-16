@@ -67,7 +67,7 @@ class GroupsController extends ApplicationController
 
         if ($this->current_user->canAdmin($group->organization_id)) {
             $actions[] = [
-                'title' => 'Rediģēt',
+                'title' => 'Rediģēt grupu',
                 'path' => '/groups/' . $group->group_id . '/edit',
                 'class_name' => 'js_modal'
             ];
@@ -329,6 +329,7 @@ class GroupsController extends ApplicationController
         if ($data) {
             foreach ($data as $r) {
                 $user = new User($r, true);
+                $actions = null;
 
                 if ($is_admin) {
                     $actions[] = [

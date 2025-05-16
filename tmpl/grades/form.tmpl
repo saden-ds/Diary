@@ -1,6 +1,6 @@
 <form id="grade_form" class="modal-section modal-section_640">
   <div class="modal-section__header _modal_no _modal_holder">
-    <h2 class="modal-section__title">Jauns uzdevums</h2>
+    <h2 class="modal-section__title">Jauns vērtējums</h2>
   </div>
   <div class="modal-section__overflow _modal_o">
     <div class="modal-section__body">
@@ -28,7 +28,7 @@
             <var:user_firstname> <var:user_lastname>
           </td>
           <td class="data-options__td data-options__td_last data-options__td_input" width="20%">
-            <select class="js_grades field field_select field_stretch" name="grades[<var:user_id>]" data-value="<var:user_grade>">
+            <select class="js_grades field field_select field_stretch" name="grades[<var:user_id>]" data-value="<var:grade>">
               <option value=""></option>
             </select>
           </td>
@@ -39,7 +39,7 @@
   </div>
   <div class="modal-section__footer _modal_no">
     <a id="grade_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
-    <button class="button button_submit" type="submit">Saglabat</button>
+    <button class="button button_submit" type="submit">Saglabāt</button>
   </div>
 </form>
 <script>

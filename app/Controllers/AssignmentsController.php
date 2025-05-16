@@ -246,6 +246,13 @@ class AssignmentsController extends PrivateController
 
     private function renderUserShow(Assignment $assignment, ?string $lesson_name): View
     {
+        $readonly = $assignment->assignment_end_datetime < gmdate('Y-m-d H:i:s');
+        $assignment_file_create_path = null;
+
+        if (!$readonly) {
+            $assignment_file_create_path = '/assignments/' . $assignment->assignment_id . '/files/create';
+        }
+
         return View::init('tmpl/assignments/show_user.tmpl', [
             'lesson_name' => $lesson_name,
             'assignment_id' => $assignment->assignment_id,
@@ -259,9 +266,10 @@ class AssignmentsController extends PrivateController
             ]),
             'assignment_user_files' => FilesCollection::renderAssignmentFiles($assignment, [
                 'user_id' => $this->current_user->id,
-                'current_user_id' => $this->current_user->id
+                'current_user_id' => $this->current_user->id,
+                'readonly' => $readonly
             ]),
-            'assignment_file_create_path' => '/assignments/' . $assignment->assignment_id . '/files/create'
+            'assignment_file_create_path' => $assignment_file_create_path
         ]);
     }
 

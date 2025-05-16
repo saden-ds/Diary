@@ -136,8 +136,14 @@ class VisitsController extends PrivateController
                 ->join('user as u on u.user_id = gu.user_id');
         } else {
             $query
-                ->join('lesson_user as lu on lu.lesson_id = s.lesson_id')
-                ->join('user as u on u.user_id = lu.user_id');
+                ->join('lesson as l on l.lesson_id = s.lesson_id')
+                ->leftJoin('group_lesson gl on gl.lesson_id = l.lesson_id')
+                ->leftJoin(
+                    'group_user gu on gu.group_id = gl.group_id' .
+                    ' and gu.group_id = s.group_id'
+                )
+                ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
+                ->join('user as u on u.user_id = ifnull(gu.user_id,lu.user_id)');
         }
 
         $query
