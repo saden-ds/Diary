@@ -150,6 +150,7 @@ error:
   authorization: Autorizācijas kļūda
   blank: ir jābūt aizpildītam
   datetime_format: nepareizs datuma formāts
+  date_in_past: Datums pagātnē
   error: kļūda
   format: ir nepareizs formāts
   greater_than: ir jābūt lielākam par %{count}

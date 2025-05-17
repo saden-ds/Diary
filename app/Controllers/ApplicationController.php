@@ -152,7 +152,7 @@ class ApplicationController
                     'icon' => 'representative'
                 ];
                 $header_nav[] = [
-                    'name' => 'Grafika plānotājs',
+                    'name' => 'Grafiku plānotājs',
                     'path' => '/schedules/groups',
                     'active' => get_class($this) == 'App\Controllers\Organizations\ScheduleGroupsController',
                     'icon' => 'schedule_edit'

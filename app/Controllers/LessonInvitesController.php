@@ -47,6 +47,25 @@ class LessonInvitesController extends PrivateController
         } 
     }
 
+    public function deleteAction(): ?View
+    {
+        $invite = LessonInvite::find($this->request->get('id'));
+
+        if (!$invite) {
+            throw new NotFoundException();
+        }
+
+        $lesson = Lesson::find($invite->lesson_id);
+
+        if (!$lesson || $lesson->user_id != $this->current_user->id) {
+            throw new ForbiddenException();
+        }
+
+        $invite->delete();
+
+        return $this->redirect('/lessons/' . $invite->lesson_id);
+    }
+
     public function acceptAction(): ?View
     {
         $invite = LessonInvite::find($this->request->get('id'));

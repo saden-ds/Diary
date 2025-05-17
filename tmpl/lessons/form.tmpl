@@ -9,7 +9,7 @@
             <label for="lesson_form_name" class="field-block__label">Nosaukums</label>
         </div>
         <div class="field-block field-block_label">
-            <input id="lesson_form_description" class="field field_stretch field-block__field" type="text" name="lesson_description" value="<var:lesson_description>">
+            <textarea id="lesson_form_description" class="field field_stretch field_textarea field-block__field" name="lesson_description" rows="2"><var:lesson_description></textarea>
             <label for="lesson_form_description" class="field-block__label">Apraksts</label>
         </div>
         <if:organization_users_options>
@@ -32,12 +32,14 @@
 </form>
 <script>
 (function(){
-  new app.Form('#lesson_form', {
-    url: '<var:path>',
-    keepOverlay: true,
-    onSuccess: function(form, response){
-      window.location.reload();
-    }
-  });
+    $('#lesson_form_description').autogrow({min: 60});
+
+    new app.Form('#lesson_form', {
+        url: '<var:path>',
+        keepOverlay: true,
+        onSuccess: function(form, response){
+            window.location.reload();
+        }
+    });
 })();
 </script>

@@ -111,6 +111,12 @@ namespace('app');
     if (options === 'reset') {
       return this.filter('textarea').height('auto');
     } else {
+      var min = 0;
+
+      if (typeof(options) === 'object') {
+        min = options.min || min;
+      }
+
       return this.filter('textarea').each(function(){
         var $shadow,
             self    = this,
@@ -149,8 +155,8 @@ namespace('app');
 
             $shadow.css('width', $self.width());
             $shadow.html(value);
-            $self.outerHeight($shadow.height());
-            $self.outerHeight(self.scrollHeight);
+            $self.outerHeight(Math.max(min, $shadow.height()));
+            $self.outerHeight(self.scrollHeight + 2);
           }
 
           $self.addClass('grown');

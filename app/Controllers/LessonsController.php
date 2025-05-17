@@ -22,10 +22,20 @@ class LessonsController extends PrivateController
         }
 
         $tmpl = Tmpl::init();
+        $actions = null;
+
+        if ($this->current_user->canAdmin($this->current_user->organization_id)) {
+            $actions[] = [
+                'title' => 'Jauns priekšmets',
+                'path' => '/lessons/new',
+                'class_name' => 'js_modal'
+            ];
+        }
 
         return View::init('tmpl/lessons/index.tmpl', [
+            'actions' => $actions,
             'index' => $tmpl->file('tmpl/lessons/_index.tmpl', [
-                'lessons' => $this->getLessons(),
+                'lessons' => $this->getLessons()
             ])
         ])->main([
             'compact' => true
@@ -69,18 +79,20 @@ class LessonsController extends PrivateController
             $lesson_invites = $this->getLessonInvites($lesson);
         }
 
-        $actions[] = [
-            'title' => 'Jauns priekšmets',
-            'path' => '/lessons/new',
-            'class_name' => 'js_modal'
-        ];
+        if ($this->current_user->canAdmin($this->current_user->organization_id)) {
+            $actions[] = [
+                'title' => 'Jauns priekšmets',
+                'path' => '/lessons/new',
+                'class_name' => 'js_modal'
+            ];
+        }
 
         if (
             empty($lesson->organization_id) &&
             $lesson->user_id == $this->current_user->id
         ) {
             $actions[] = [
-                'title' => 'Uzaicināt',
+                'title' => 'Uzaicināt audzēkni',
                 'path' => '/lessons/' . $lesson->lesson_id . '/invites/new',
                 'class_name' => 'js_modal'
             ];
@@ -262,7 +274,7 @@ class LessonsController extends PrivateController
                 'lesson_path' => '/lessons/' . intval($r['lesson_id']),
                 'lesson_type' => $lesson_type,
                 'user_fullname' => $user_fullname,
-                'organization_name' => $r['organization_name'] ?: 'Privats',
+                'organization_name' => $r['organization_name'] ?: 'Privāts',
                 'active' => $r['lesson_id'] == $id
             ];
         }
@@ -296,10 +308,12 @@ class LessonsController extends PrivateController
         $db = DataStore::init();
         $data = $db->data('
             select
+                li.lesson_invite_id,
                 u.user_id,
                 u.user_email,
                 u.user_firstname,
-                u.user_lastname
+                u.user_lastname,
+                l.user_id as owner_id
             from lesson_invite as li
             left join user as u on u.user_email = li.lesson_invite_email
             join lesson as l on l.lesson_id = li.lesson_id
@@ -316,6 +330,16 @@ class LessonsController extends PrivateController
         
         foreach ($data as $k => $v) {
             $user = new User($v, true);
+
+            if ($v['owner_id'] == $this->current_user->id) {
+                $v['actions'] = [[
+                    'title' => $this->msg->t('action.delete'),
+                    'path' => '/lessons/invites/' . intval($v['lesson_invite_id']) . '/delete',
+                    'class_name' => 'js_confirm_delete menu__anchor_warn'
+                ]];
+            } else {
+                $v['actions'] = null;
+            }
 
             $v['user_digit'] = $user->user_digit;
             $v['user_initials'] = $user->user_initials;
@@ -352,6 +376,16 @@ class LessonsController extends PrivateController
         
         foreach ($data as $k => $v) {
             $user = new User($v, true);
+
+            if ($v['owner_id'] == $this->current_user->id) {
+                $v['actions'] = [[
+                    'title' => $this->msg->t('action.delete'),
+                    'path' => '/lessons/users/' . intval($v['lesson_user_id']) . '/delete',
+                    'class_name' => 'js_confirm_delete menu__anchor_warn'
+                ]];
+            } else {
+                $v['actions'] = null;
+            }
 
             $v['user_digit'] = $user->user_digit;
             $v['user_initials'] = $user->user_initials;

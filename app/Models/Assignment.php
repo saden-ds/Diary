@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Base\DataQuery;
 use App\Base\DataStore;
 use App\Validators\Presence as ValidatorPresence;
+use DateTime;
 
 class Assignment extends Model
 {
@@ -105,8 +106,26 @@ class Assignment extends Model
 
         $presence->validate($this);
 
+        $this->validateAssignmentEndDatetime();
+    }
+
+
+    private function validateAssignmentEndDatetime(): void
+    {
         if ($this->assignment_end_datetime && date_create($this->assignment_end_datetime) === false) {
             $this->addError('assignment_end_datetime', $this->msg->t('error.invalid_date_format'));
+
+            return;
+        }
+
+        if (!$this->isAttributeChanged('assignment_end_datetime')) {
+            return;
+        }
+
+        $datetime = new DateTime($this->assignment_end_datetime);
+
+        if ($datetime->format('Y-m-d H:i:s') < date('Y-m-d H:i:s')) {
+            $this->addError('assignment_end_datetime', $this->msg->t('error.date_in_past'));
         }
     }
 

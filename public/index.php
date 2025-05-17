@@ -79,11 +79,12 @@ $router->post('/lessons/create', [LessonsController::class, 'createAction']);
 $router->post('/lessons/{:id}/update', [LessonsController::class, 'updateAction']);
 
 $router->get('/lessons/{:lesson_id}/invites/new', [LessonInvitesController::class, 'newAction']);
+$router->post('/lessons/invites/create', [LessonInvitesController::class, 'createAction']);
 $router->get('/lessons/invites/{:id}/accept', [LessonInvitesController::class, 'acceptAction']);
 $router->get('/lessons/invites/{:id}/decline', [LessonInvitesController::class, 'declineAction']);
-$router->post('/lessons/invites/create', [LessonInvitesController::class, 'createAction']);
+$router->get('/lessons/invites/{:id}/delete', [LessonInvitesController::class, 'deleteAction']);
 
-$router->get('/lessons/users/{:lesson_user_id}/delete', [LessonUsersController::class, 'deleteAction']);
+$router->get('/lessons/users/{:id}/delete', [LessonUsersController::class, 'deleteAction']);
 
 $router->any('/assignments', [AssignmentsController::class, 'indexAction']);
 $router->get('/schedules/{:schedule_id}/assignments/new', [AssignmentsController::class, 'newAction']);

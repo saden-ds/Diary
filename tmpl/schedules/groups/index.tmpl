@@ -17,21 +17,20 @@
 <div id="content" class="layout__content">
     <header class="content-header">
         <h1 class="content-header__h1">Dienasgrāmata</h1>
+        <if:actions>
         <ul class="actions-list content-header__actions">
           <li class="js_menu_parent actions-list__item">
             <a href="#menu" class="js_menu action action_icon i i_menu i_only"></a>
             <ul class="menu menu_hidden">
-              <li class="menu__item">
-                <if:active>
-                <a class="menu__anchor" href="<var:unpublish_path>">Atcelt publicēšanu</a>
-                </if:active>
-                <ifnot:active>
-                <a class="menu__anchor" href="<var:publish_path>">Publicēt</a>
-                </ifnot:active>
-              </li>
+                <block:actions>
+                <li class="menu__item">
+                    <a class="menu__anchor<if:class_name: :><var:class_name>" href="<var:path>" target="<if:blank:_blank:_self>"><var:title></a>
+                </li>
+                </block:actions>
             </ul>
           </li>
         </ul>
+        </if:actions>
     </header>
 
     <div class="period">

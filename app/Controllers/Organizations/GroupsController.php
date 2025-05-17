@@ -82,7 +82,7 @@ class GroupsController extends ApplicationController
                 'class_name' => 'js_modal'
             ];
             $actions[] = [
-                'title' => 'Lejupielādet lietotājus',
+                'title' => 'Lejupielādēt audzēkņu sarakstu',
                 'path' => '/groups/' . $group->group_id . '/users.xlsx',
                 'class_name' => null
             ];

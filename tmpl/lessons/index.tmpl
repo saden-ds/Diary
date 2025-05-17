@@ -18,19 +18,23 @@
 <div id="content" class="layout__content">
     <header class="content-header">
         <h1 class="content-header__h1">Priekšmeti</h1>
+        <if:actions>
         <ul class="actions-list content-header__actions">
-          <li class="js_menu_parent actions-list__item">
-            <a href="#menu" class="js_menu action action_icon i i_menu i_only"></a>
-            <ul class="menu menu_hidden">
-              <li class="menu__item">
-                <a class="menu__anchor js_modal" href="/lessons/new">Jauns priekšmets</a>
-              </li>
-            </ul>
-          </li>
+            <li class="js_menu_parent actions-list__item">
+                <a href="#menu" class="js_menu action action_icon i i_menu i_only"></a>
+                <ul class="menu menu_hidden">
+                    <block:actions>
+                    <li class="menu__item">
+                        <a href="<var:path>" class="menu__anchor<if:class_name: :><var:class_name>"><var:title></a>
+                    </li>
+                    </block:actions>
+                </ul>
+            </li>
         </ul>
+        </if:actions>
     </header>
 
-    <div class="empty-block">Nav izvēlētas neviens mācību priekšmets</div>
+    <div class="empty-block">Nav izvēlēts neviens mācību priekšmets</div>
 </div>
 <script>
     (function(){

@@ -21,7 +21,7 @@ class UsersController extends ApplicationController
             $organization_user_new_path = '/organizations/invites/new';
 
             $actions[] = [
-                'title' => 'Uzaicināt',
+                'title' => 'Uzaicināt lietotāju',
                 'path' => $organization_user_new_path,
                 'class_name' => 'js_modal'
             ];

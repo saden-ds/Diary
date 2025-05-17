@@ -39,12 +39,7 @@ class ScheduleGroupsController extends ApplicationController
         $schedule_lessons = $this->getScheduleLessons(clone $datetime_start);
         $grid = null;
         $active = false;
-        $actions = [[
-            'title' => 'Lejupielādēt pdf',
-            'path' => $this->request->getPath() . '.pdf',
-            'class_name' => null,
-            'target' => true
-        ]];
+        $actions = null;
 
         $datetime_end = clone $datetime_start;
         $datetime_next_week = clone $datetime_start;
@@ -126,6 +121,31 @@ class ScheduleGroupsController extends ApplicationController
         $tmpl = Tmpl::init();
 
         if ($this->current_user->organization_user_role === 'admin') {
+            if ($active) {
+                if ($schedule_lessons) {
+                    $actions[] = [
+                        'title' => 'Lejupielādēt pdf',
+                        'path' => $this->request->getPath() . '.pdf',
+                        'class_name' => null,
+                        'blank' => true
+                    ];
+                }
+
+                $actions[] = [
+                    'title' => 'Atcelt publicēšanu',
+                    'path' => '/schedules/groups/' . $datetime_start->format('Y/m/d') . '/status/disabled',
+                    'class_name' => null,
+                    'blank' => false
+                ];
+            } else {
+                $actions[] = [
+                    'title' => 'Publicēt',
+                    'path' => '/schedules/groups/' . $datetime_start->format('Y/m/d') . '/status/active',
+                    'class_name' => null,
+                    'blank' => false
+                ];
+            }
+
             return View::init('tmpl/schedules/groups/index.tmpl', [
                 'index' => $tmpl->file('tmpl/schedules/groups/_index.tmpl', [
                     'lessons' => $this->getLessons(),
@@ -136,13 +156,19 @@ class ScheduleGroupsController extends ApplicationController
                 'datetime_end' => $datetime_end->format('d.m.Y.'),
                 'previous_path' => '/schedules/groups/' . $datetime_previous_week->format('Y/m/d'),
                 'next_path' =>  '/schedules/groups/' . $datetime_next_week->format('Y/m/d'),
-                'publish_path' => '/schedules/groups/' . $datetime_start->format('Y/m/d') . '/status/active',
-                'unpublish_path' => '/schedules/groups/' . $datetime_start->format('Y/m/d') . '/status/disabled',
-                'active' => $active,
                 'actions' => $actions
             ])->main([
                 'compact' => true
             ]);      
+        }
+
+        if ($schedule_lessons) {
+            $actions[] = [
+                'title' => 'Lejupielādēt pdf',
+                'path' => $this->request->getPath() . '.pdf',
+                'class_name' => null,
+                'blank' => true
+            ];
         }
 
         return View::init('tmpl/schedules/groups/index_readonly.tmpl', [
@@ -344,6 +370,10 @@ class ScheduleGroupsController extends ApplicationController
             ->where('s.schedule_date between ? and ?', [$from, $to])
             ->where('s.group_id = gl.group_id')
             ->where('g.organization_id = ?', $this->current_user->organization_id);
+
+        if ($this->current_user->organization_user_role !== 'admin') {
+            $query->where('s.schedule_active = 1');
+        }
 
         if (!$data = $query->fetchAll()) {
             return $lessons;
