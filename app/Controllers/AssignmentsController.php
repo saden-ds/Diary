@@ -10,6 +10,7 @@ use App\Base\DataQuery;
 use App\Base\ParamsCollection;
 use App\Base\View;
 use App\Models\Assignment;
+use App\Models\Grade;
 use App\Models\Schedule;
 use App\Services\Assignment\FilesCollection;
 use DateTime;
@@ -299,13 +300,18 @@ class AssignmentsController extends PrivateController
         ]);
         $params = new ParamsCollection($this->request->get('filter'));
         $header = [
-          $collection->getSortBlock('assignment_end_datetime', 'Termiņš'),
-          $collection->getSortBlock('lesson_name', 'Priekšmets'),
-          $collection->getSortBlock('assignment_type', 'Apraksts'),
-          [
-            'title' => 'Vērtējums',
-            'path' => null
-          ]
+          $collection->getSortBlock('assignment_end_datetime', 'Termiņš', [
+            'column_class_name' => 'data-table__th_first'
+          ]),
+          $collection->getSortBlock('lesson_name', 'Priekšmets', [
+            'column_class_name' => null
+          ]),
+          $collection->getSortBlock('assignment_type', 'Apraksts', [
+            'column_class_name' => null
+          ]),
+          $collection->getSortBlock('grade', 'Vērtējums', [
+            'column_class_name' => 'data-table__th_num data-table__th_last'
+          ])
         ];
         $items = null;
         $more = null;
@@ -313,12 +319,29 @@ class AssignmentsController extends PrivateController
         $query
             ->select(
                 'a.*',
+                'u.user_id',
                 'u.user_firstname', 
                 'u.user_lastname', 
                 's.schedule_date',
                 'lt.lesson_time_start_at',
                 'lt.lesson_time_end_at',
-                'l.lesson_name'
+                'l.lesson_name',
+                'gr.grade_id',
+                'gr.grade_type',
+                'gr.grade_numeric',
+                'gr.grade_percent',
+                'gr.grade_included',
+                '(if(ifnull(gl.group_lesson_id,0),' .
+                ' (select count(xgu.group_user_id) ' .
+                '  from group_user as xgu' .
+                '  join group_lesson as xgl on xgl.group_id = xgu.group_id' .
+                '  where xgl.lesson_id = l.lesson_id' .
+                ' ),' .
+                ' (select count(xlu.lesson_user_id) from lesson_user as xlu where xlu.lesson_id = l.lesson_id)' .
+                ')) as students_count',
+                '(' .
+                ' select count(xgr.grade_id) from grade as xgr where xgr.assignment_id = a.assignment_id' .
+                ') as grades_count'
             )
             ->from('assignment as a')
             ->join('user as u on u.user_id = a.user_id')
@@ -331,18 +354,14 @@ class AssignmentsController extends PrivateController
                 'group_user as gu on gu.group_id = gl.group_id' .
                 ' and gu.group_id = s.group_id'
             )
-            ->where('(
-                    l.user_id = ? 
-                    or lu.user_id = ?
-                    or gu.user_id = ?
-                )', [
-                $this->current_user->id, 
-                $this->current_user->id,
+            ->leftJoin(
+                'grade as gr on gr.assignment_id = a.assignment_id' .
+                ' and gr.user_id = ?',
                 $this->current_user->id
-            ])
+            )
             ->limit($collection->limit + 1)
             ->offset($collection->offset)
-            ->group('a.assignment_id');
+            ->group('a.assignment_id', 'gr.grade_id', 'gl.group_lesson_id');
 
         if ($value = $params->get('lesson_id')) {
           $query->where('l.lesson_id = ?', $value);
@@ -352,8 +371,13 @@ class AssignmentsController extends PrivateController
             if ($value == 1) {
                 $query->where('l.user_id = ?', $this->current_user->id);
             } elseif ($value == 2) {
-                $query->where('lu.user_id = ?', $this->current_user->id);
+                $query->where('ifnull(gu.user_id,lu.user_id) = ?', $this->current_user->id);
             }
+        } else {
+            $query->where('(l.user_id = ? or ifnull(gu.user_id,lu.user_id) = ?)', [
+                $this->current_user->id, 
+                $this->current_user->id
+            ]);
         }
 
         if ($value = $params->get('assignment_description')) {
@@ -381,6 +405,9 @@ class AssignmentsController extends PrivateController
                 case 'assignment_type':
                     $query->order('a.assignment_type '.$sort_param[1]);
                     break;
+                case 'grade':
+                    $query->order('gr.grade_id is not null '.$sort_param[1]);
+                    break;
                 default:
                     $query->order('a.assignment_id desc');
              }
@@ -390,8 +417,10 @@ class AssignmentsController extends PrivateController
 
         if (!$collection->isEmpty()) {
             foreach ($collection->data as $key => $value) {
+                $grade = new Grade($value, true);
                 $assignment_end_count = $this->getAssignmentEndCount($value['assignment_end_datetime']);
                 $assignment_days_text = '';
+                $user_fullname = null;
 
                 if ($assignment_end_count < 0) {
                     $assignment_days_text = $this->msg->t('assignment.expired');
@@ -413,10 +442,14 @@ class AssignmentsController extends PrivateController
                     ]);
                 }
 
+                if ($value['user_id'] != $this->current_user->id) {
+                    $user_fullname = $value['user_firstname'] . '  ' . $value['user_lastname'];
+                }
+
                 $items[] = [
                     'assignment_row_number' => $key + 1,
                     'assignment_id'=> $value['assignment_id'],
-                    'user_fullname' => $value['user_firstname'] . '  ' . $value['user_lastname'],
+                    'user_fullname' => $user_fullname,
                     'assignment_description' => $value['assignment_description'],
                     'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
                     'assignment_end_datetime' => $this->msg->l($value['assignment_end_datetime']),
@@ -424,7 +457,11 @@ class AssignmentsController extends PrivateController
                     'lesson_time' => $value['lesson_time_start_at'] . ' - ' . $value['lesson_time_end_at'],
                     'lesson_name' => $value['lesson_name'],
                     'assignment_expired' => $assignment_end_count < 0,
-                    'assignment_days_count' => $assignment_days_text
+                    'assignment_days_count' => $assignment_days_text,
+                    'is_owner' => $value['user_id'] == $this->current_user->id,
+                    'students_count' => $value['students_count'],
+                    'grades_count' => $value['grades_count'],
+                    'grade' => $grade->grade_formatted
                 ];
             }
         }

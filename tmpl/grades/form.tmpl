@@ -28,7 +28,7 @@
             <var:user_firstname> <var:user_lastname>
           </td>
           <td class="data-options__td data-options__td_last data-options__td_input" width="20%">
-            <select class="js_grades field field_select field_stretch" name="grades[<var:user_id>]" data-value="<var:grade>">
+            <select class="js_grades field field_select field_stretch" name="grades[<var:user_id>]" data-value="<var:grade_value>">
               <option value=""></option>
             </select>
           </td>
@@ -52,9 +52,11 @@
       var options = [],
           value   = $(this).data('value');
 
+      options.push('<option value=""></option>');
+
       for (var i = 0; i <= 10; i++) {
         options.push(
-          '<option value="' + i + '"' + (value == i ? ' selected' : '') + '>' +
+          '<option value="' + i + '"' + (value === i ? ' selected' : '') + '>' +
             (i === 0 ? 'n/v' : i) +
           '</option>'
         );
@@ -69,9 +71,11 @@
       var options = [],
           value   = $(this).data('value');
 
+      options.push('<option value=""></option>');
+
       for (var i = 0; i <= 100; i++) {
         options.push(
-          '<option value="' + i + '"' + (value == i ? ' selected' : '') + '>' +
+          '<option value="' + i + '"' + (value === i ? ' selected' : '') + '>' +
             i +
           '</option>'
         );
@@ -86,11 +90,12 @@
       var options = [],
           value   = $(this).data('value');
 
+      options.push('<option value=""></option>');
       options.push(
-        '<option value="1"' + (value === '1' ? ' selected' : '') + '>i</option>'
+        '<option value="1"' + (value === 1 ? ' selected' : '') + '>i</option>'
       );
       options.push(
-        '<option value="0"' + (value === '0' ? ' selected' : '') + '>ni</option>'
+        '<option value="0"' + (value === 0 ? ' selected' : '') + '>ni</option>'
       );
 
       $(this).html(options.join(' '));

@@ -5,7 +5,7 @@
             <thead class="data-table__thead">
                 <tr class="data-table__tr data-table__tr_first_last">
                     <block:header>
-                    <th class="data-table__th">
+                    <th class="data-table__th<if:column_class_name: :><var:column_class_name>">
                         <if:path>
                         <a class="<var:class_name>" href="<var:path>"><var:title></a>
                         </if:path>
@@ -38,13 +38,20 @@
                     </td>
                     <td class="data-table__td">
                         <div class="data-summary">
-                            <a href="/assignments/<var:assignment_id>" class="js_modal toggle"><var:assignment_description></a>
+                            <var:assignment_description>
                             <div class="data-summary__description">
                                 <var:assignment_type>
                             </div>
                         </div>
                     </td>
-                    <td class="data-table__td"></td>
+                    <td class="data-table__td data-table__td_num  data-table__td_last">
+                        <if:is_owner>
+                        <var:grades_count> / <var:students_count>
+                        </if:is_owner>
+                        <ifnot:is_owner>
+                        <var:grade>
+                        </ifnot:is_owner>
+                    </td>
                 </tr>
                 </block:items>
                 <block:more>

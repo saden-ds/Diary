@@ -1,9 +1,9 @@
 .layout__logo {
   position: absolute; top: 0; left: 0; z-index: 13;
   margin: 0; padding: 0 48px 0 48px;
-  width: 160px; height: 46px;
-  background: url(/img/logo_white.png) no-repeat 16px 50%;
-  background-size: auto 40px;
+  width: 180px; height: 46px;
+  background: url(/img/logo_white.svg) no-repeat 16px 50%;
+  background-size: auto 24px;
   color: #FFF;
   font-size: 16px;
   font-weight: bold;

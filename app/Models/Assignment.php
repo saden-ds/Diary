@@ -40,7 +40,7 @@ class Assignment extends Model
             ->join('lesson as l on l.lesson_id = s.lesson_id')
             ->leftJoin('group_user as gu on gu.group_id = s.group_id')
             ->leftJoin('lesson_user as lu on lu.lesson_id = s.lesson_id')
-            ->join('user as u on u.user_id = ifnull(gu.user_id,lu.user_id)')
+            ->leftJoin('user as u on u.user_id = ifnull(gu.user_id,lu.user_id)')
             ->where('a.assignment_id = ?', $id)
             ->where('(l.user_id = ? or u.user_id = ?)', [
                 $user_id,

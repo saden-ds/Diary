@@ -271,6 +271,11 @@ http_error:
 user:
   fullname: Vārds, uzvārds
   email: E-pasts
+  error:
+    password_old: nepareizi norādīta parole
+  message:
+    error:
+      already_exists: Lūdzu meģiniet pieslēgties
 
 user_confirmation:
   title: Lūdzu, apstipriniet savu <nobr>e-pasta adresi!</nobr>

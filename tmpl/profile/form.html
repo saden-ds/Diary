@@ -1,38 +1,94 @@
-<form id="profile_form" class="modal-section modal-section_640">
-  <div class="modal-section__header _modal_no _modal_holder">
-    <h2 class="modal-section__title">Mainīt manus datus</h2>
-  </div>
-  <div class="modal-section__body _modal_o">
-    <div class="field-block field-block_label">
-      <input id="profile_form_firstname" class="field field_stretch field-block__field" type="text" name="user_firstname" value="<var:user_firstname>">
-      <label for="profile_form_firstname" class="field-block__label">Vārds</label>
+<form id="profile_form" class="modal-section modal-section_480">
+    <div class="modal-section__header _modal_no _modal_holder">
+        <h2 class="modal-section__title">Mainīt manus datus</h2>
     </div>
-    <div class="field-block field-block_label">
-      <input id="profile_form_lastname" class="field field_stretch field-block__field" type="text" name="user_lastname" value="<var:user_lastname>">
-      <label for="profile_form_lastname" class="field-block__label">Uzvārds</label>
+    <div class="modal-section__body _modal_o">
+        <div class="field-block field-block_label">
+            <input id="profile_form_firstname" class="field field_stretch field-block__field" type="text" name="user_firstname" value="<var:user_firstname>">
+            <label for="profile_form_firstname" class="field-block__label">Vārds</label>
+        </div>
+        <div class="field-block field-block_label">
+            <input id="profile_form_lastname" class="field field_stretch field-block__field" type="text" name="user_lastname" value="<var:user_lastname>">
+            <label for="profile_form_lastname" class="field-block__label">Uzvārds</label>
+        </div>
+        <div class="field-block field-block_label">
+            <input id="profile_form_password" class="field field_stretch field-block__field" type="password" name="user_password">
+            <label for="profile_form_password" class="field-block__label">Parole</label>
+            <ul class="checklist">
+                <li id="profile_form_password_letters" class="checklist__item">
+                    <msg:checklist.password.letters>
+                </li>
+                <li id="profile_form_password_number" class="checklist__item">
+                    <msg:checklist.password.number>
+                </li>
+                <li id="profile_form_password_symbol_special" class="checklist__item">
+                    <msg:checklist.password.symbol_special>
+                </li>
+                <li id="profile_form_password_symbol_count" class="checklist__item">
+                    <msg:checklist.password.symbol_count>
+                </li>
+            </ul>
+        </div>
+        <div class="field-block field-block_label">
+            <input id="profile_form_confirm" class="field field_stretch field-block__field" type="password" name="user_password_repeat">
+            <label for="profile_form_confirm" class="field-block__label">Apstiprini paroli</label>
+        </div>
+        <div class="field-block field-block_label">
+            <input id="profile_form_password_old" class="field field_stretch field-block__field" type="password" name="user_password_old">
+            <label for="profile_form_password_old" class="field-block__label">Veca parole izmaiņu apstiprinašanai</label>
+        </div>
     </div>
-    <div class="field-block field-block_label">
-      <input id="profile_form_password" class="field field_stretch field-block__field" type="password" name="user_password">
-      <label for="profile_form_password" class="field-block__label">Parole</label>
+    <div class="modal-section__footer _modal_no">
+        <a id="profile_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
+        <button class="button button_submit" type="submit">Saglabāt</button>
     </div>
-    <div class="field-block field-block_label">
-      <input id="profile_form_confirm" class="field field_stretch field-block__field" type="password" name="user_password_repeat">
-      <label for="profile_form_confirm" class="field-block__label">Apstiprini paroli</label>
-    </div>
-  </div>
-  <div class="modal-section__footer _modal_no">
-    <a id="profile_form_cancel" class="js_modal_close button button_simple" href="#cancel"><msg:action.cancel></a>
-    <button class="button button_submit" type="submit">Saglabāt</button>
-  </div>
 </form>
 <script>
 (function(){
-  new app.Form('#profile_form', {
-    url: '/profile/update',
-    keepOverlay: true,
-    onSuccess: function(form, response){
-      window.location.reload();
-    }
-  });
+    $('#profile_form_password').on('keyup paste', function(){
+        var disabled = false;
+
+        if (/[a-z]/.test(this.value) && /[A-Z]/.test(this.value)) {
+            $('#profile_form_password_letters').addClass('checked');
+        } else {
+            disabled = true;
+
+            $('#profile_form_password_letters').removeClass('checked');
+        }
+
+        if (/\d/.test(this.value)) {
+            $('#profile_form_password_number').addClass('checked');
+        } else {
+            disabled = true;
+
+            $('#profile_form_password_number').removeClass('checked');
+        }
+
+        if (/[#?!@$%^&*_=\-]/.test(this.value)) {
+            $('#profile_form_password_symbol_special').addClass('checked');
+        } else {
+            disabled = true;
+
+            $('#profile_form_password_symbol_special').removeClass('checked');
+        }
+
+        if (this.value.length >= 9) {
+            $('#profile_form_password_symbol_count').addClass('checked');
+        } else {
+            disabled = true;
+
+            $('#profile_form_password_symbol_count').removeClass('checked');
+        }
+
+        $('#profile_form_button').prop('disabled', disabled);
+    });
+
+    new app.Form('#profile_form', {
+        url: '/profile/update',
+        keepOverlay: true,
+        onSuccess: function(form, response){
+            window.location.reload();
+        }
+    });
 })();
 </script>

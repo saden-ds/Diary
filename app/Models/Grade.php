@@ -24,11 +24,26 @@ class Grade extends Model
     protected static ?string $primary_key = 'grade_id';
 
 
-    public function getFormattedGrade(): ?string
+    public function isGradeNumeric(): bool
     {
-        if ($this->grade_type === 'percent') {
+        return $this->grade_type === 'numeric';
+    }
+
+    public function isGradePercent(): bool
+    {
+        return $this->grade_type === 'percent';
+    }
+
+    public function isGradeIncluded(): bool
+    {
+        return $this->grade_type === 'included';
+    }
+
+    public function getGradeFormatted(): ?string
+    {
+        if ($this->isGradePercent()) {
             return $this->grade_percent . '%';
-        } elseif ($this->grade_type === 'included') {
+        } elseif ($this->isGradeIncluded()) {
             return $this->grade_included ? 'i' : 'ni';
         } elseif ($this->grade_numeric !== null && !$this->grade_numeric) {
             return 'n/v';

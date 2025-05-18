@@ -92,8 +92,10 @@ class SchedulesController extends ApplicationController
         $path = null;
 
         if ($schedule->schedule_id) {  
+            $title = 'Rediģēt grafiku';
             $path = '/schedules/' . $schedule->schedule_id . '/update';
         } else {
+            $title = 'Jauns grafiks';
             $path = '/schedules/create';
         }
 
@@ -110,6 +112,7 @@ class SchedulesController extends ApplicationController
             ]);
         } else {
             return View::init('tmpl/schedules/form.tmpl', [
+                'title' => $title,
                 'schedule_id' => $schedule->schedule_id,
                 'schedule_date' => $this->msg->date($schedule->schedule_date),
                 'schedule_name' => $schedule->schedule_name,

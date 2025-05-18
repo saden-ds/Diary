@@ -95,7 +95,7 @@ class Collection
         return [$sort_column, $sort_direction];
     }
 
-    public function getSortBlock($column, $title): array
+    public function getSortBlock(string $column, string $title, ?array $vars = null): array
     {
         $sort = [$column];
         $sort_param = $this->getSortParam();
@@ -119,13 +119,13 @@ class Collection
             $path .= '&';
         }
 
-        return [
+        return array_merge($vars ?: [], [
             'title' => $title,
             'path' => $path . http_build_query([
                 'sort' => implode('.', $sort)
             ]),
             'class_name' => $class_name
-        ];
+        ]);
     }
 
     public function append($value): void

@@ -44,69 +44,58 @@ class GradesController extends PrivateController
                     }
 
                     foreach ($months as $index => $month) {
-                        if (isset($vv['grades'][$index])) {
-                            $r = $vv['grades'][$index];
-                            $grade_numeric = $r['grade_numeric'];
-
-                            if ($grade_numeric === '0') {
-                                $grade_numeric = 'n\v';
+                        if (isset($vv['months'][$index])) {
+                            $r = $vv['months'][$index];
+ 
+                            if ($r['average_count']) {
+                                $r['average'] = round($r['average_sum'] / $r['average_count'], 2);
                             }
 
-                            $lesson_grades[] = [
-                                'first' => $month['first'],
-                                'grade_numeric' => $grade_numeric,
-                                'grade_percent' => $r['grade_percent'],
-                                'grade_included' => $r['grade_included'],
-                            ];
+                            $r['first'] = $month['first'];
+
+                            $lesson_grades[] = $r;
                         } else {
                             $lesson_grades[] = [
                                 'first' => $month['first'],
-                                'grade_numeric' => null,
-                                'grade_percent' => null,
-                                'grade_included' => null
+                                'average' => 0,
+                                'average_sum' => 0,
+                                'average_count' => 0
                             ];
                         }
 
-                        foreach ($vv['types'] as $kkk => $vvv) {
-                            $type_grades = null;
-                            $type_average = 0;
+                        if ($vv['types']) {
+                            foreach ($vv['types'] as $kkk => $vvv) {
+                                $type_grades = null;
+                                $type_average = 0;
 
-                            if ($vvv['average_count']) {
-                                $type_average = round($vvv['average_sum'] / $vvv['average_count'], 2);
-                            }
-
-                            foreach ($months as $index => $month) {
-                                if (isset($vvv['grades'][$index])) {
-                                    $r = $vvv['grades'][$index];
-                                    $grade_numeric = $r['grade_numeric'];
-
-                                    if ($grade_numeric === '0') {
-                                        $grade_numeric = 'n\v';
-                                    }
-
-                                    $type_grades[] = [
-                                        'first' => $month['first'],
-                                        'grade_numeric' => $grade_numeric,
-                                        'grade_percent' => $r['grade_percent'],
-                                        'grade_included' => $r['grade_included'],
-                                    ];
-                                } else {
-                                    $type_grades[] = [
-                                        'first' => $month['first'],
-                                        'grade_numeric' => null,
-                                        'grade_percent' => null,
-                                        'grade_included' => null
-                                    ];
+                                if ($vvv['average_count']) {
+                                    $type_average = round($vvv['average_sum'] / $vvv['average_count'], 2);
                                 }
-                            }
 
-                            $grades[$k]['lessons'][$kk]['types'][$kkk]['average'] = $type_average;
-                            $grades[$k]['lessons'][$kk]['types'][$kkk]['grades'] = $type_grades;
+                                foreach ($months as $index => $month) {
+                                    if (isset($vvv['months'][$index])) {
+                                        $r = $vvv['months'][$index];
+
+                                        $type_grades[] = [
+                                            'first' => $month['first'],
+                                            'grades' => $r
+                                        ];
+                                    } else {
+                                        $type_grades[] = [
+                                            'first' => $month['first'],
+                                            'grades' => null
+                                        ];
+                                    }
+                                }
+
+                                $grades[$k]['lessons'][$kk]['types'][$kkk]['average'] = $type_average;
+                                $grades[$k]['lessons'][$kk]['types'][$kkk]['months'] = $type_grades;
+                            }
                         }
                     }
 
                     $grades[$k]['lessons'][$kk]['average'] = $lesson_average;
-                    $grades[$k]['lessons'][$kk]['grades'] = $lesson_grades;
+                    $grades[$k]['lessons'][$kk]['months'] = $lesson_grades;
                 }
 
                 $grades[$k]['months'] = $months;
@@ -224,7 +213,7 @@ class GradesController extends PrivateController
                 'g.grade_numeric',
                 'g.grade_percent',
                 'g.grade_included',
-                'ifnull(g.grade_numeric,ifnull(g.grade_percent,g.grade_included)) as grade'
+                'ifnull(g.grade_numeric,ifnull(g.grade_percent,g.grade_included)) as grade_value'
             )
             ->from('assignment as a')
             ->join('schedule as s on s.schedule_id = a.schedule_id')
@@ -285,25 +274,6 @@ class GradesController extends PrivateController
         return $options;
     }
 
-    // private function getGradeIncludedOptions(?int $grade_included): array
-    // {
-    //     $options = [[
-    //         'name' => null,
-    //         'value' => null,
-    //         'selected' => false
-    //     ], [
-    //         'name' => 'i',
-    //         'value' => '1',
-    //         'selected' => '1' === strval($grade_included ?? '')
-    //     ], [
-    //         'name' => 'ni',
-    //         'value' => '0',
-    //         'selected' => '0' === strval($grade_included ?? '')
-    //     ]];
-
-    //     return $options;
-    // }
-
     private function getGroupLessons(): ?array
     {
         $query = new DataQuery();
@@ -336,10 +306,13 @@ class GradesController extends PrivateController
                 'x.*',
                 'o.organization_name',
                 'month(s.schedule_date) as month',
+                'a.assignment_id',
                 'a.assignment_type',
-                'group_concat(gr.grade_numeric separator ", ") as grade_numeric',
-                'group_concat(gr.grade_percent separator ", ") as grade_percent',
-                'group_concat(gr.grade_included separator ", ") as grade_included'
+                'gr.grade_id',
+                'gr.grade_type',
+                'gr.grade_numeric',
+                'gr.grade_percent',
+                'gr.grade_included'
             )
             ->from('(
                 select
@@ -373,7 +346,13 @@ class GradesController extends PrivateController
                 ' and gr.user_id = x.user_id'
             )
             ->leftJoin('organization as o on o.organization_id = x.organization_id')
-            ->group('x.lesson_id, x.group_id, month(s.schedule_date)', 'a.assignment_type');
+            ->group(
+                'x.group_id',
+                'x.lesson_id',
+                'month(s.schedule_date)',
+                'a.assignment_id',
+                'gr.grade_id'
+            );
 
         $data = $query->fetchAll();
         $grades = null;
@@ -393,18 +372,19 @@ class GradesController extends PrivateController
                 $grades[$r['group_id']]['lessons'][$r['lesson_id']] = [
                     'lesson_id' => $r['lesson_id'],
                     'lesson_name' => $r['lesson_name'],
+                    'average' => 0,
                     'average_sum' => 0,
                     'average_count' => 0,
-                    'assignment_types' => null,
-                    'grades' => null
+                    'types' => null
                 ];
             }
 
-            if (!isset($grades[$r['group_id']]['lessons'][$r['lesson_id']]['grades'][$r['month']])) {
-                $grades[$r['group_id']]['lessons'][$r['lesson_id']]['grades'][$r['month']] = [
-                    'grade_numeric' => null,
-                    'grade_percent' => null,
-                    'grade_included' => null
+            if (!isset($grades[$r['group_id']]['lessons'][$r['lesson_id']]['months'][$r['month']])) {
+                $grades[$r['group_id']]['lessons'][$r['lesson_id']]['months'][$r['month']] = [
+                    'first' => false,
+                    'average' => 0,
+                    'average_sum' => 0,
+                    'average_count' => 0
                 ];
             }
 
@@ -414,29 +394,37 @@ class GradesController extends PrivateController
 
             if (!isset($grades[$r['group_id']]['lessons'][$r['lesson_id']]['types'][$r['assignment_type']])) {
                 $grades[$r['group_id']]['lessons'][$r['lesson_id']]['types'][$r['assignment_type']] = [
-                    'assignment_type' => $r['assignment_type'],
+                    'assignment_type' => $this->msg->t(
+                        'assignment.types.' . $r['assignment_type']
+                    ),
+                    'average' => 0,
                     'average_sum' => 0,
                     'average_count' => 0,
-                    'grades' => null
+                    'months' => null
                 ];
             }
 
-            if ($r['grade_numeric'] !== null) {
-                $values = explode(', ', $r['grade_numeric']);
-
-                foreach ($values as $value) {
-                    $grades[$r['group_id']]['lessons'][$r['lesson_id']]['average_sum'] += $value;
-                    $grades[$r['group_id']]['lessons'][$r['lesson_id']]['average_count'] += 1;
-
-                    $grades[$r['group_id']]['lessons'][$r['lesson_id']]['types'][$r['assignment_type']]['average_sum'] += $value;
-                    $grades[$r['group_id']]['lessons'][$r['lesson_id']]['types'][$r['assignment_type']]['average_count'] += 1;
-                }
+            if (empty($r['grade_id'])) {
+                continue;
             }
 
-            $grades[$r['group_id']]['lessons'][$r['lesson_id']]['types'][$r['assignment_type']]['grades'][$r['month']] = [
-                'grade_numeric' => $r['grade_numeric'],
-                'grade_percent' => $r['grade_percent'],
-                'grade_included' => $r['grade_included']
+            $grade = new Grade($r, true);
+
+            if ($grade->isGradeNumeric() && $grade->grade) {
+                $grades[$r['group_id']]['lessons'][$r['lesson_id']]['average_sum'] += $grade->grade;
+                $grades[$r['group_id']]['lessons'][$r['lesson_id']]['average_count'] += 1;
+                
+                $grades[$r['group_id']]['lessons'][$r['lesson_id']]['months'][$r['month']]['average_sum'] += $grade->grade;
+                $grades[$r['group_id']]['lessons'][$r['lesson_id']]['months'][$r['month']]['average_count'] += 1;
+
+                $grades[$r['group_id']]['lessons'][$r['lesson_id']]['types'][$r['assignment_type']]['average_sum'] += $grade->grade;
+                $grades[$r['group_id']]['lessons'][$r['lesson_id']]['types'][$r['assignment_type']]['average_count'] += 1;
+            }
+
+            $grades[$r['group_id']]['lessons'][$r['lesson_id']]['types'][$r['assignment_type']]['months'][$r['month']][] = [
+                'grade_color' => $grade->isGradeNumeric() ? 'blue' : 'gray',
+                'grade_value' => $grade->grade_formatted,
+                'assignment_path' => '/assignments/' . intval($r['assignment_id'])
             ];
         }
 

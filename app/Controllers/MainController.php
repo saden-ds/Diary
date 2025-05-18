@@ -275,7 +275,7 @@ class MainController extends ApplicationController
             $assignments[$value['schedule_id']][] = [
                 'assignment_id' => $value['assignment_id'],
                 'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
-                'grade' => $grade->formatted_grade
+                'grade' => $grade->grade_formatted
             ];
         }
 

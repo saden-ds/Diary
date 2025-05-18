@@ -1,7 +1,7 @@
 <form id="schedule_group_lesson_form" class="modal-section modal-section_480" method="post">
     <input type="hidden" name="schedule_date" value="<var:schedule_date>">
     <div class="modal-section__header modal-section__header_compact _modal_no _modal_holder">
-        <h2 class="modal-section__title">Pievienot nodarbibu</h2>
+        <h2 class="modal-section__title">Pievienot mācību priekšmetu</h2>
         <div class="modal-section__description">
             <var:group_name>, <var:schedule_date_formatted>
             <block:lesson_time>
@@ -19,7 +19,7 @@
                 <option value="<var:value>"<if:selected: selected:>><var:name></option>
                 </block:lesson_options>
             </select>
-            <label for="schedule_group_lesson_form_name" class="field-block__label">Prieksmeti</label>
+            <label for="schedule_group_lesson_form_name" class="field-block__label">Mācību priekšmets</label>
         </div>
     </div>
 

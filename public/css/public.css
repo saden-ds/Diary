@@ -106,9 +106,9 @@ a:hover, a:focus { text-decoration: underline; }
 .logo {
   position: relative;
   display: inline-block;
-  width: 120px; height: 40px;
+  width: 146px; height: 40px;
   background: url(/img/logo.png) no-repeat 0 50%;
-  background-size: auto 40px;
+  background-size: auto 24px;
 }
 
 .overlay {
@@ -130,46 +130,47 @@ a:hover, a:focus { text-decoration: underline; }
 }
 
 .checklist {
-    padding-top: 4px;
+  padding-top: 4px;
+  padding-left: 8px;
 }
 .checklist__item {
-    position: relative;
-    padding-left: 12px;
-    font-weight: 300;
-    font-size: 0.813rem;
+  position: relative;
+  padding-left: 12px;
+  font-weight: 300;
+  font-size: 0.813rem;
 }
 .checklist__item::before,
 .checklist__item::after {
-    content: '';
-    display: block;
-    position: absolute; left: 0;
-    background: #FE5F1E;
-    width: 8px; height: 2px;
-    border-radius: 1px;
+  content: '';
+  display: block;
+  position: absolute; left: 0;
+  background: #FE5F1E;
+  width: 8px; height: 2px;
+  border-radius: 1px;
 }
 .checklist__item::before {
-    top: 8px;
-    transform: rotate(45deg);
+  top: 8px;
+  transform: rotate(45deg);
 }
 .checklist__item::after {
-    top: 8px;
-    transform: rotate(135deg);
+  top: 8px;
+  transform: rotate(135deg);
 }
 .checklist__item.checked::before {
-    top: 8px;
-    background: #007A42;
-    transform: rotate(135deg);
+  top: 8px;
+  background: #007A42;
+  transform: rotate(135deg);
 }
 .checklist__item.checked::after {
-    top: 9px;
-    left: -2px;
-    background: #007A42;
-    content: '';
-    width: 5px; 
-    transform: rotate(45deg);
+  top: 9px;
+  left: -2px;
+  background: #007A42;
+  content: '';
+  width: 5px; 
+  transform: rotate(45deg);
 }
 .checked {
-    color: #007A42;
+  color: #007A42;
 }
 
 .button {

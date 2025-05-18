@@ -101,8 +101,7 @@ class User extends Model
 
     public function isEqualsPassword($password): bool
     {
-        // return true;
-        return !strcmp(
+        return strcmp(
             $this->encryptPassword($password, $this->user_salt),
             $this->user_encrypted_password
         );
@@ -124,8 +123,6 @@ class User extends Model
 
         $presence->validate($this);
 
-        // error_log($this->user_password);
-        // error_log($this->user_password_repeat);
         if ($this->user_email && !filter_var($this->user_email, FILTER_VALIDATE_EMAIL)) {
             $this->addError('user_email', $this->msg->t('error.email.format'));
         }
@@ -136,6 +133,25 @@ class User extends Model
             } elseif ($this->user_password_repeat != $this->user_password) {
                 $this->addError('user_password_repeat', 'nav vienāds');
             }
+        }
+
+        if (!$this->user_id && !$this->hasErrors()) {
+            $this->validateUniquiness();
+        }
+    }
+
+
+    private function validateUniquiness(): void
+    {
+        $query = new DataQuery();
+
+        $query
+            ->select('1 as one')
+            ->from('user')
+            ->where('user_email = ?', $this->user_email);
+
+        if ($data = $query->first()) {
+            $this->addError('base', $this->msg->t('user.message.error.already_exists'));
         }
     }
 

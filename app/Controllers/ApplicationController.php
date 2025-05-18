@@ -148,7 +148,7 @@ class ApplicationController
                 $header_nav[] = [
                     'name' => 'Pārstāvji',
                     'path' => '/organizations/users',
-                    'active' => get_class($this) == 'App\Controllers\Organizations\InvitesController',
+                    'active' => get_class($this) == 'App\Controllers\Organizations\UsersController',
                     'icon' => 'representative'
                 ];
                 $header_nav[] = [
@@ -489,7 +489,7 @@ class ApplicationController
                 $v['assignment_type'] = 'Pārbaudes darbs';
             }
 
-            $v['grade'] = $grade->formatted_grade;
+            $v['grade'] = $grade->grade_formatted;
             $v['schedule_date'] = $this->msg->date($v['schedule_date']) ?? null;
             $v['path'] = '/assignments/' . intval($v['assignment_id']);
 

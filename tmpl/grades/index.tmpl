@@ -4,61 +4,73 @@
 <div id="content" class="layout__content">
   <block:lesson_grades>
   <section class="box-section">
-    <div class="js_toggle_parent box-section__header box-section__header_m_grid active">
+    <div class="js_toggle_parent box-section__header active">
       <if:group_id>
-      <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#grades_<var:group_id>"><var:group_name></a></h2>
+      <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#grades_<var:group_id>"><var:group_name>, <var:organization_name></a></h2>
       </if:group_id>
       <ifnot:group_id>
-      <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#grades_">Privatnodarbibas</a></h2>
+      <h2 class="h2 h2_toggle"><a class="js_toggle toggle active" href="#grades_">Privātnodarbības</a></h2>
       </ifnot:group_id>
     </div>
-    <div id="grades_<var:group_id>" class="box box_data box_overflow">
-      <table class="data-table data-table_sticky" width="100%">
-        <thead class="data-table__thead">
-          <tr class="data-table__tr">
-            <th class="data-table__th data-table__th_first data-table__th_sticky" width="32%"></th>
-            <block:months>
-            <th class="data-table__th data-table__th_month data-table__th<if:first:: data-table__th_separate>"><var:month></th>
-            </block:months>
-            <th class="data-table__th data-table__th_last data-table__th_sticky_right">Vidējāis</th>
-          </tr>
-        </thead>
-        <tbody class="data-table__tbody">
-          <block:lessons>
-          <tr class="data-table__tr">
-            <td class="data-table__td data-table__td_first data-table__td_sticky"><b><var:lesson_name></b></td>
-            <block:grades>
-            <td class="data-table__td<if:first:: data-table__td_separate>">
-              <b>
-                <var:grade_numeric>
-                <var:grade_percent>
-                <var:grade_included>
-              </b>
-            </td>
-            </block:grades>
-            <td class="data-table__td data-table__td_last data-table__td_sticky_right">
-              <b><var:average></b>
-            </td>
-          </tr>
-          <block:types>
-          <tr class="data-table__tr">
-            <td class="data-table__td data-table__td_indent data-table__td_first data-table__td_sticky"><var:assignment_type></td>
-            <block:grades>
-            <td class="data-table__td<if:first:: data-table__td_separate>">
-              <var:grade_numeric>
-              <var:grade_percent>
-              <var:grade_included>
-            </td>
-            </block:grades>
-            <td class="data-table__td data-table__td_last data-table__td_sticky_right">
-              <var:average>
-            </td>
-          </tr>
-          </block:types>
-          </block:lessons>
-        </tbody>
-      </table>
+    <div id="grades_<var:group_id>" class="box box_data">
+      <div class="box__overflow">
+        <table class="data-table data-table_sticky" width="100%">
+          <thead class="data-table__thead">
+            <tr class="data-table__tr">
+              <th class="data-table__th data-table__th_first data-table__th_sticky" width="32%"></th>
+              <block:months>
+              <th class="data-table__th data-table__th_month data-table__th<if:first:: data-table__th_separate>"><var:month></th>
+              </block:months>
+              <th class="data-table__th data-table__th_last data-table__th_sticky_right">Vidējāis</th>
+            </tr>
+          </thead>
+          <tbody class="data-table__tbody">
+            <block:lessons>
+            <tr class="data-table__tr">
+              <td class="data-table__td data-table__td_first data-table__td_sticky"><b><var:lesson_name></b></td>
+              <block:months>
+              <td class="data-table__td<if:first:: data-table__td_separate>">
+                <if:average>
+                <var:average>
+                </if:average>
+              </td>
+              </block:months>
+              <td class="data-table__td data-table__td_last data-table__td_sticky_right">
+                <if:average>
+                <b><var:average></b>
+                </if:average>
+              </td>
+            </tr>
+            <block:types>
+            <tr class="data-table__tr">
+              <td class="data-table__td data-table__td_indent data-table__td_first data-table__td_sticky"><var:assignment_type></td>
+              <block:months>
+              <td class="data-table__td<if:first:: data-table__td_separate>">
+                <block:grades>
+                <a class="js_modal badge badge_<var:grade_color>" href="<var:assignment_path>"><var:grade_value></a>
+                </block:grades>
+              </td>
+              </block:months>
+              <td class="data-table__td data-table__td_last data-table__td_sticky_right">
+                <if:average>
+                <var:average>
+                </if:average>
+              </td>
+            </tr>
+            </block:types>
+            </block:lessons>
+          </tbody>
+        </table>
+      </div>
+      <div class="box__footnote">
+        <span class="badge badge_blue">Atzīme</span>
+        <span class="badge badge_gray">Procenti</span>
+        <span class="badge badge_gray">i/ni</span>
+      </div>
     </div>
   </section>
   </block:lesson_grades>
+  <ifnot:lesson_grades>
+  <div class="empty-block">Nav atzīmju</div>
+  </ifnot:lesson_grades>
 </div>

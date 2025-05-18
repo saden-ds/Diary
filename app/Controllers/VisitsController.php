@@ -12,13 +12,20 @@ class VisitsController extends PrivateController
 {
     public function indexAction(): ?View
     {
-        $datetime = new DateTime('2024-09-01');
+        $datetime = new DateTime();
+
+        if ($datetime->format('n') < 9) {
+            $datetime->modify('-1 year');
+        }
+
+        $datetime->setDate($datetime->format('Y'), 9, 1);
+
         $start = $datetime->format('Y-m-d');
         $month_names = $this->msg->t('date.standalone_abbr_month_names', [
             'default' => []
         ]);
         $months = [];
-        $range = 9;
+        $range = 10;
 
         foreach (range(0, $range - 1) as $r) {
             $months[$datetime->format('n')] = [
@@ -36,6 +43,7 @@ class VisitsController extends PrivateController
                 foreach ($v['lessons'] as $kk => $vv) {
                     $lesson_visits = null;
                     $lesson_count = 0;
+                    $absences_count = 0;
                     $unjustified_count = 0;
                     $justified_count = 0;
 
@@ -44,13 +52,16 @@ class VisitsController extends PrivateController
                             $counts = $vv['visits'][$index];
 
                             $lesson_count += $counts['lesson_count'];
+                            $absences_count += $counts['absences_count'];
                             $unjustified_count += $counts['unjustified_count'];
                             $justified_count += $counts['justified_count'];
 
                             $lesson_visits[] = $counts;
                         } else {
                             $lesson_visits[] = [
+                                'group_id' => $vv['group_id'],
                                 'lesson_count' => 0,
+                                'absences_count' => 0,
                                 'unjustified_count' => 0,
                                 'justified_count' => 0
                             ];
@@ -59,6 +70,7 @@ class VisitsController extends PrivateController
 
                     $visits[$k]['lessons'][$kk]['visits'] = $lesson_visits;
                     $visits[$k]['lessons'][$kk]['lesson_count'] = $lesson_count;
+                    $visits[$k]['lessons'][$kk]['absences_count'] = $absences_count;
                     $visits[$k]['lessons'][$kk]['unjustified_count'] = $unjustified_count;
                     $visits[$k]['lessons'][$kk]['justified_count'] = $justified_count;
                 }
@@ -166,6 +178,7 @@ class VisitsController extends PrivateController
                 x.group_name,
                 x.month,
                 count(x.schedule_id) as lesson_count,
+                sum(if(x.visit_presence = 0,1,0)) as absences_count,
                 sum(if(x.visit_presence = 0,if(x.excused_absence,0,1),0)) as unjustified_count,
                 sum(if(x.visit_presence = 0,if(x.excused_absence,1,0),0)) as justified_count
             from (
@@ -189,16 +202,15 @@ class VisitsController extends PrivateController
                         g.group_id,
                         g.organization_id,
                         g.group_name,
-                        gu.user_id,
+                        ifnull(gu.user_id,lu.user_id) as user_id,
                         gu.group_user_id
                     from lesson l
                     left join lesson_user as lu on lu.lesson_id = l.lesson_id
                     left join group_lesson as gl on gl.lesson_id = l.lesson_id
                     left join group_user as gu on gu.group_id = gl.group_id
                     left join `group` as g on g.group_id = gl.group_id
-                    join user u on u.user_id = ifnull(lu.user_id,gu.user_id)
-                    where gu.user_id = ?
-                    group by l.lesson_id, gu.group_user_id
+                    where ifnull(gu.user_id,lu.user_id) = ?
+                    group by l.lesson_id, g.group_id, gu.group_user_id, user_id
                 ) x
                 left join schedule as s on s.lesson_id = x.lesson_id
                     and s.schedule_date >= ?
@@ -232,7 +244,9 @@ class VisitsController extends PrivateController
                 $visits[$r['group_id']]['lessons'][$r['lesson_id']] = [
                     'lesson_id' => $r['lesson_id'],
                     'lesson_name' => $r['lesson_name'],
+                    'group_id' => $r['group_id'],
                     'lesson_count' => 0,
+                    'absences_count' => 0,
                     'unjustified_count' => 0,
                     'justified_count' => 0,
                     'visits' => null
@@ -240,7 +254,9 @@ class VisitsController extends PrivateController
             }
 
             $visits[$r['group_id']]['lessons'][$r['lesson_id']]['visits'][$r['month']] = [
+                'group_id' => $r['group_id'],
                 'lesson_count' => $r['lesson_count'],
+                'absences_count' => $r['absences_count'],
                 'unjustified_count' => $r['unjustified_count'],
                 'justified_count' => $r['justified_count']
             ];

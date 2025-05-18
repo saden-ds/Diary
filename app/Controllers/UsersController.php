@@ -30,6 +30,10 @@ class UsersController extends PrivateController
         $user = User::find($this->current_user->id);
         $view = new View();
 
+        if ($user->isEqualsPassword($this->request->get('user_password_old'))) {
+            $user->addError('user_password_old', $this->msg->t('user.error.password_old'));
+        }
+
         $user->setAttributes($this->request->permit([
             'user_firstname', 'user_lastname', 'user_password', 'user_password_repeat'
         ]));
