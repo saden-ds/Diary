@@ -34,6 +34,32 @@ class OrganizationUser extends Model
     {
         $db = DataStore::init();
 
+        if ($db->row('
+            select 1 as one
+            from lesson
+            where user_id = ?
+        ', $this->user_id)) {
+            $this->addError(
+                'base',
+                $this->msg->t('organization_user.message.error.delete_lesson_user')
+            );
+
+            return false;
+        }
+
+        if ($db->row('
+            select 1 as one
+            from `group`
+            where organization_user_id = ?
+        ', $this->user_id)) {
+            $this->addError(
+                'base',
+                $this->msg->t('organization_user.message.error.delete_organization_user')
+            );
+
+            return false;
+        }
+
         return !!$db->query('
             delete from organization_user 
             where organization_user_id = ? 

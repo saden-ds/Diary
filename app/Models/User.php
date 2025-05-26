@@ -101,7 +101,7 @@ class User extends Model
 
     public function isEqualsPassword($password): bool
     {
-        return strcmp(
+        return !strcmp(
             $this->encryptPassword($password, $this->user_salt),
             $this->user_encrypted_password
         );

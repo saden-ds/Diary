@@ -30,7 +30,7 @@ class UsersController extends PrivateController
         $user = User::find($this->current_user->id);
         $view = new View();
 
-        if ($user->isEqualsPassword($this->request->get('user_password_old'))) {
+        if (!$user->isEqualsPassword($this->request->get('user_password_old'))) {
             $user->addError('user_password_old', $this->msg->t('user.error.password_old'));
         }
 
@@ -39,6 +39,8 @@ class UsersController extends PrivateController
         ]));
 
         if ($user->update()) {
+            $this->current_user->update($user);
+
             return $view->data([
                 'user_id' => $user->user_id
             ]);

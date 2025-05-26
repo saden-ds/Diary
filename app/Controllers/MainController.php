@@ -199,7 +199,7 @@ class MainController extends ApplicationController
                 if ($value['user_id'] == $this->current_user->id) {
                     $value['lesson_teacher'] = null;
                 } else {
-                    $value['lesson_teacher'] = $value['user_firstname'] . ' ' . $value['user_firstname'];
+                    $value['lesson_teacher'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
                 }
 
                 $value['assignments'] = $schedules_assignments[$value['schedule_id']] ?? null;

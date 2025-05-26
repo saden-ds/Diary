@@ -92,7 +92,7 @@
                                 <block:lesson_invites>
                                 <li class="notifications-list__item">
                                     <div class="notification">
-                                        <div class="notification__name">Ielugums <var:lesson_name></div>
+                                        <div class="notification__name">Uzaicinājums <var:lesson_name></div>
                                         <div class="notification__work">
                                             <var:user_firstname> <var:user_lastname>
                                         </div>
@@ -106,7 +106,7 @@
                                 <block:organization_invites>
                                 <li class="notifications-list__item">
                                     <div class="notification">
-                                        <div class="notification__name">Ielugums <var:organization_name></div>
+                                        <div class="notification__name">Uzaicinājums <var:organization_name></div>
                                         <div class="notification__work">
                                             <var:user_firstname> <var:user_lastname>
                                         </div>
@@ -271,7 +271,9 @@ jQuery(function($){
 </script>
 <block:flash>
 <script>
-    app.flash.message('<var:message>', null, '<var:type>');
+    app.flash.message('<var:message>', {
+        type: '<var:type>'
+    });
 </script>
 </block:flash>
 <script>

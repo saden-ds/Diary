@@ -94,7 +94,9 @@ class UsersController extends ApplicationController
             throw new ForbiddenException();
         }
 
-        $organization_user->delete();
+        if (!$organization_user->delete()) {
+            $this->flash->error($organization_user->getBaseError());
+        }
 
         return $this->redirect('/organizations/users');
     }

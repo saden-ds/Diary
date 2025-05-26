@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Base\DataQuery;
 use App\Base\DataStore;
 use App\Validators\Presence as ValidatorPresence;
+use App\Validators\Length as ValidatorLength;
 
 class Schedule extends Model
 {
@@ -52,6 +53,13 @@ class Schedule extends Model
         ]);
 
         $presence->validate($this);
+
+        $length = new ValidatorLength([
+            'schedule_name'
+        ], [
+            'maximum' => 255, 'allow_empty' => true
+        ]);
+        $length->validate($this);
 
         if ($this->schedule_date && date_create($this->schedule_date) === false) {
             $this->addError('schedule_date', $this->msg->t('error.invalid_date_format'));

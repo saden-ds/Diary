@@ -9,6 +9,7 @@ use App\Base\DataQuery;
 use App\Base\Exceptions\BadRequestException;
 use App\Base\Exceptions\ForbiddenException;
 use App\Base\Exceptions\NotFoundException;
+use App\Base\Flash;
 use App\Base\Logger;
 use App\Base\Message;
 use App\Base\Request;
@@ -24,6 +25,7 @@ class ApplicationController
 {
     protected Config $config;
     protected CurrentUser $current_user;
+    protected Flash $flash;
     protected Message $msg;
     protected Request $request;
     protected Session $session;
@@ -37,6 +39,7 @@ class ApplicationController
         $this->request = Request::init();
         $this->session = Session::init();
         $this->tmpl = Tmpl::init();
+        $this->flash = new Flash();
         $this->timestamp = microtime(true);
     }
 
@@ -198,21 +201,22 @@ class ApplicationController
                 $view->csrf($this->session->get('csrf'));
                 $view->main([
                     'app_name' => $this->config->get('title'), 
-                    'version' => $this->config->get('version'),
                     'assets_version' => $this->config->get('version_timestamp'),
-                    'current_user' => $current_user,
-                    'header_nav' => $header_nav,
-                    'notification_count' => $notification_count,
-                    'lesson_invites' => $lesson_invites,
-                    'organization_invites' => $organization_invites,
-                    'user_grades' => $this->getUserGrades($current_user),
-                    'user_assignments' => $this->getUserAssignments($current_user),
-                    'navigation' => $this->getMainNavigation(),
-                    'recovery_mode' => !!$this->request->get('recovery_token'),
-                    'locale' => $this->config->locale,
+                    'compact' => false,
                     'cookie_confirm' => !isset($_COOKIE['life_cookie_confirm']),
+                    'current_user' => $current_user,
                     'email' => $this->config->get('support_email'),
-                    'compact' => false
+                    'flash' => $this->flash->get(),
+                    'header_nav' => $header_nav,
+                    'lesson_invites' => $lesson_invites,
+                    'locale' => $this->config->locale,
+                    'navigation' => $this->getMainNavigation(),
+                    'notification_count' => $notification_count,
+                    'organization_invites' => $organization_invites,
+                    'recovery_mode' => !!$this->request->get('recovery_token'),
+                    'user_assignments' => $this->getUserAssignments($current_user),
+                    'user_grades' => $this->getUserGrades($current_user),
+                    'version' => $this->config->get('version')
                 ]);
             }
         }

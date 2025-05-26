@@ -230,7 +230,7 @@ checklist:
   password:
     letters: Jāsatur vismaz viens lielais un viens mazais burts
     number: Jāsatur vismaz viens cipars
-    symbol_special: Jāsatur vismaz viens īpašais simbols ( - = + _ . ? ! & @ # )
+    symbol_special: 'Jāsatur vismaz viens īpašais simbols ( - = + _ . ? ! & @ # )'
     symbol_count: Jāsatur vismaz 9 simboli
 
 footer:
@@ -482,6 +482,10 @@ organization_user:
   roles:
     teacher: Skolotājs
     admin: Administrators
+  message:
+    error:
+      delete_lesson_user: Jus nevarat izdzēst šo lietotāju, jo viņam ir mācību priekšmets
+      delete_organization_user: Jus nevarat izdzēst šo lietotāju, jo viņš ir grupas audzinatājs
 
 lesson:
   search_placeholder: Priekšmeta nosaukums
