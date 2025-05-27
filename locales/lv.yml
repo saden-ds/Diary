@@ -476,7 +476,7 @@ schedule:
   message:
     error:
       exists: Dotais mācību priekšmets jau eksistē
-      user_busy: Skolotājam %{name} jau ir priekšmets šaja laika
+      user_busy: Skolotājam %{name} šajā laikā jau ir ieplānota cita nodarbība. Lūdzu, izvēlieties citu laiku
 
 organization_user:
   roles:
@@ -484,8 +484,9 @@ organization_user:
     admin: Administrators
   message:
     error:
-      delete_lesson_user: Jus nevarat izdzēst šo lietotāju, jo viņam ir mācību priekšmets
-      delete_organization_user: Jus nevarat izdzēst šo lietotāju, jo viņš ir grupas audzinatājs
+      delete_lesson_user: Lai veiktu dzēšanu, lietotājs vispirms jānoņem no saistītajiem mācību priekšmetiem
+      delete_organization_user: Lietotāja dzēšana nav iespējama, jo viņš pašlaik pilda audzinātāja lomu. Vispirms mainiet audzinātāju attiecīgajā grupā
+      lesson_user_not_teacher: Lai nomainīt lomu, lietotāju vispirms jānoņem no saistītajiem mācību priekšmetiem
 
 lesson:
   search_placeholder: Priekšmeta nosaukums

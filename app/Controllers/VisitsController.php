@@ -123,6 +123,8 @@ class VisitsController extends PrivateController
             }
         }
 
+        $this->flash->notice('Apmeklējumi ir veiksmīgi saglabāti!');
+
         return $view->data([]);
     }
 
@@ -167,6 +169,8 @@ class VisitsController extends PrivateController
 
     private function getLessonVisits($start, $end): ?array
     {
+        $visits = null;
+        
         $db = DataStore::init();
         $data = $db->data('
             select
@@ -227,7 +231,9 @@ class VisitsController extends PrivateController
             $end
         ]);
 
-        $visits = null;
+        if (!$data) {
+            return $visits;
+        }
 
         foreach ($data as $r) {
             if (!isset($visits[$r['group_id']])) {

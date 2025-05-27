@@ -146,6 +146,7 @@ class LessonsController extends PrivateController
         }
 
         if ($lesson->create()) {
+            $this->flash->notice('Mācību priekšmets veiksmīgi izveidots!');
             return $view->data([
                 'lesson_id' => $lesson->lesson_id
             ]);

@@ -65,6 +65,13 @@
                   <var:group_name>, <var:organization_name>
                 </div>
                 </if:organization_name>
+                <ifnot:organization_name>
+                <if:group_name>
+                <div class="data-summary__description">
+                  <var:group_name>
+                </div>
+                </if:group_name>
+                </ifnot:organization_name>
               </div>
               </if:lesson_name>
               <ifnot:lesson_name>

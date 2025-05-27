@@ -32,9 +32,7 @@ class OrganizationUser extends Model
 
     public function delete(): bool
     {
-        $db = DataStore::init();
-
-        if ($db->row('
+        if ($this->db->row('
             select 1 as one
             from lesson
             where user_id = ?
@@ -47,7 +45,7 @@ class OrganizationUser extends Model
             return false;
         }
 
-        if ($db->row('
+        if ($this->db->row('
             select 1 as one
             from `group`
             where organization_user_id = ?
@@ -60,7 +58,7 @@ class OrganizationUser extends Model
             return false;
         }
 
-        return !!$db->query('
+        return !!$this->db->query('
             delete from organization_user 
             where organization_user_id = ? 
         ', $this->organization_user_id);
@@ -73,6 +71,26 @@ class OrganizationUser extends Model
         ]);
 
         $presence->validate($this);
+
+        $this->validateOrganizationUserRoleChange();
+    }
+
+    private function validateOrganizationUserRoleChange(): void
+    {
+        if (!$this->user_id || $this->organization_user_role === 'teacher') {
+            return;
+        }
+
+        if ($this->db->row('
+            select 1 as one
+            from lesson
+            where user_id = ?
+        ', $this->user_id)) {
+            $this->addError(
+                'base',
+                $this->msg->t('organization_user.message.error.lesson_user_not_teacher')
+            );
+        }
     }
 
 }

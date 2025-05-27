@@ -124,6 +124,7 @@ class GroupsController extends ApplicationController
         $group->organization_id = $this->current_user->organization_id;
 
         if ($group->create()) {
+            $this->flash->notice('Grupa veiksmīgi izveidota!');
             return $view->data([
                 'group_id' => $group->group_id
             ]);
@@ -168,7 +169,7 @@ class GroupsController extends ApplicationController
         }
 
         $group->setAttributes($this->request->permit([
-            'organization_user_id'
+            'group_name', 'organization_user_id'
         ]));
         $view = new View();
 

@@ -41,6 +41,7 @@ class InvitesController extends ApplicationController
         }
 
         if ($invite->create()) {
+            $this->flash->notice('Lietotājs veiksmīgi uzaicināts!');
             return $view->data([
                 'organization_invite_id' => $invite->organization_invite_id
             ]);

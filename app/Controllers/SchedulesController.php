@@ -43,6 +43,7 @@ class SchedulesController extends ApplicationController
         }
 
         if ($schedule->create()) {
+            $this->flash->notice('Nodarbība veiksmīgi ieplānota!');
             return $view->data([
                 'schedule_id' => $schedule->schedule_id
             ]);

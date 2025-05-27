@@ -171,6 +171,8 @@ class GradesController extends PrivateController
             }
         }
 
+        $this->flash->notice('Atzīmes ir veiksmīgi saglabātas!');
+
         return $view->data([]);
     }
 

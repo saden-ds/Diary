@@ -39,6 +39,7 @@ class LessonInvitesController extends PrivateController
         }
 
         if ($invite->create()) {
+            $this->flash->notice('Lietotājs veiksmīgi uzaicināts!');
             return $view->data([
                 'lesson_invite_id' => $invite->lesson_invite_id
             ]);

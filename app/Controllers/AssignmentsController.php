@@ -68,6 +68,7 @@ class AssignmentsController extends PrivateController
         $assignment->user_id = $this->current_user->id;
 
         if ($assignment->create()) {
+            $this->flash->notice('Uzdevums veiksmīgi pievienots!');
             return $view->data([
                 'assignment_id' => $assignment->assignment_id
             ]);
@@ -336,12 +337,15 @@ class AssignmentsController extends PrivateController
                 '  from group_user as xgu' .
                 '  join group_lesson as xgl on xgl.group_id = xgu.group_id' .
                 '  where xgl.lesson_id = l.lesson_id' .
+                '    and xgl.group_id = gl.group_id' .
                 ' ),' .
                 ' (select count(xlu.lesson_user_id) from lesson_user as xlu where xlu.lesson_id = l.lesson_id)' .
                 ')) as students_count',
                 '(' .
                 ' select count(xgr.grade_id) from grade as xgr where xgr.assignment_id = a.assignment_id' .
-                ') as grades_count'
+                ') as grades_count',
+                'g.group_name',
+                's.schedule_id'
             )
             ->from('assignment as a')
             ->join('user as u on u.user_id = a.user_id')
@@ -349,11 +353,15 @@ class AssignmentsController extends PrivateController
             ->join('lesson_time as lt on lt.lesson_time_id = s.lesson_time_id')
             ->join('lesson as l on l.lesson_id = s.lesson_id')
             ->leftJoin('lesson_user as lu on lu.lesson_id = l.lesson_id')
-            ->leftJoin('group_lesson as gl on gl.lesson_id = l.lesson_id')
+            ->leftJoin(
+                'group_lesson as gl on gl.lesson_id = l.lesson_id' .
+                ' and gl.group_id = s.group_id'
+            )
             ->leftJoin(
                 'group_user as gu on gu.group_id = gl.group_id' .
                 ' and gu.group_id = s.group_id'
             )
+            ->leftJoin('`group` as g on g.group_id = gl.group_id')
             ->leftJoin(
                 'grade as gr on gr.assignment_id = a.assignment_id' .
                 ' and gr.user_id = ?',
@@ -421,6 +429,7 @@ class AssignmentsController extends PrivateController
                 $assignment_end_count = $this->getAssignmentEndCount($value['assignment_end_datetime']);
                 $assignment_days_text = '';
                 $user_fullname = null;
+                $group_name = null;
 
                 if ($assignment_end_count < 0) {
                     $assignment_days_text = $this->msg->t('assignment.expired');
@@ -442,7 +451,9 @@ class AssignmentsController extends PrivateController
                     ]);
                 }
 
-                if ($value['user_id'] != $this->current_user->id) {
+                if ($value['user_id'] == $this->current_user->id) {
+                    $group_name = $value['group_name'];
+                } else {
                     $user_fullname = $value['user_firstname'] . '  ' . $value['user_lastname'];
                 }
 
@@ -450,6 +461,7 @@ class AssignmentsController extends PrivateController
                     'assignment_row_number' => $key + 1,
                     'assignment_id'=> $value['assignment_id'],
                     'user_fullname' => $user_fullname,
+                    'group_name' => $group_name,
                     'assignment_description' => $value['assignment_description'],
                     'assignment_type' => $this->msg->t('assignment.types.'.$value['assignment_type']),
                     'assignment_end_datetime' => $this->msg->l($value['assignment_end_datetime']),
@@ -461,6 +473,7 @@ class AssignmentsController extends PrivateController
                     'is_owner' => $value['user_id'] == $this->current_user->id,
                     'students_count' => $value['students_count'],
                     'grades_count' => $value['grades_count'],
+                    'schedule_id' => $value['schedule_id'],
                     'grade' => $grade->grade_formatted
                 ];
             }

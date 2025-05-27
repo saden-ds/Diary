@@ -2,7 +2,7 @@
     <div class="modal-section__header _modal_no _modal_holder">
         <h2 class="modal-section__title">
             <if:group_id>
-            <var:group_name>
+            Grupas rediģēšana
             </if:group_id>
             <ifnot:group_id>
             Jauna grupa
@@ -10,12 +10,10 @@
         </h2>
     </div>    
     <div class="modal-section__body _modal_o">
-        <ifnot:group_id>
         <div class="field-block field-block_label">
-            <input id="group_form_name" class="field field_stretch field-block__field" type="text" name="group_name" autofocus>
+            <input id="group_form_name" class="field field_stretch field-block__field" type="text" name="group_name" value="<var:group_name>" autofocus>
             <label for="group_form_name" class="field-block__label">Grupas nosaukums</label>
         </div>
-        </ifnot:group_id>
         <div class="field-block field-block_label">
             <select id="group_form_organization_user" class="field field_stretch field_select field-block__field"  name="organization_user_id">
                 <option value=""></option>
