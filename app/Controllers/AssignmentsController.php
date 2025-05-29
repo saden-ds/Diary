@@ -130,6 +130,7 @@ class AssignmentsController extends PrivateController
         ]));
 
         if ($assignment->update()) {
+            $this->flash->notice('Izmaiņas veiksmīgi saglabātas!');
             return $view->data([
                 'assignment_id' => $assignment->assignment_id
             ]);
@@ -147,6 +148,8 @@ class AssignmentsController extends PrivateController
         }
 
         $assignment->delete();
+
+        $this->flash->notice('Uzdevums veiksmīgi dzēsts!');
 
         return $this->redirect('/');
     }

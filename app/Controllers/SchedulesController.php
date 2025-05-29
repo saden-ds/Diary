@@ -79,6 +79,7 @@ class SchedulesController extends ApplicationController
         ]));
 
         if ($schedule->update()) {
+            $this->flash->notice('Izmaiņas veiksmīgi saglabātas!');
             return $view->data([
                 'schedule_id' => $schedule->schedule_id
             ]);

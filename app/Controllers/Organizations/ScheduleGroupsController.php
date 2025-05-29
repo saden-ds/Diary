@@ -294,9 +294,11 @@ class ScheduleGroupsController extends ApplicationController
         $query = new DataQuery();
 
         $query
-            ->select('*')
-            ->from('schedule')
-            ->where('schedule_date between ? and ?', [$from->format('Y-m-d'), $to->format('Y-m-d')]);
+            ->select('s.*')
+            ->from('schedule as s')
+            ->join('lesson as l on l.lesson_id = s.lesson_id')
+            ->where('schedule_date between ? and ?', [$from->format('Y-m-d'), $to->format('Y-m-d')])
+            ->where('l.organization_id is not null');
 
         $data = $query->fetchAll();
 

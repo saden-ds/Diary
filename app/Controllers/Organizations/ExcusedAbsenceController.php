@@ -55,6 +55,7 @@ class ExcusedAbsenceController extends ApplicationController
         $absence->group_user_id = $data['group_user_id'];
         
         if ($absence->create()) {
+            $this->flash->notice('Attaisnojuma zīme veiksmīgi pievienota!');
             return $view->data([
                 'group_user_id' => $absence->group_user_id
             ]);
@@ -87,6 +88,8 @@ class ExcusedAbsenceController extends ApplicationController
         $absence = new ExcusedAbsence($data, true);
         
         $absence->delete();
+
+        $this->flash->notice('Attaisnojuma zīme veiksmīgi dzēsta!');
 
         return $this->redirect('/groups/' . intval($data['group_id']));
     }

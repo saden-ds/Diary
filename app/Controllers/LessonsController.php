@@ -198,6 +198,7 @@ class LessonsController extends PrivateController
         ]));
 
         if ($lesson->update()) {
+            $this->flash->notice('Izmaiņas veiksmīgi saglabātas!');
             return $view->data([
                 'lesson_id' => $lesson->lesson_id
             ]);

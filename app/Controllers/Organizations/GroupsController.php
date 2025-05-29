@@ -174,6 +174,7 @@ class GroupsController extends ApplicationController
         $view = new View();
 
         if ($group->update()) {
+            $this->flash->notice('Izmaiņas veiksmīgi saglabātas!');
             return $view->data([
                 'group_id' => $group->group_id
             ]);

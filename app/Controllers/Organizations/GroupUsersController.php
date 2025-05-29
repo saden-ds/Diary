@@ -134,6 +134,8 @@ class GroupUsersController extends ApplicationController
 
         $group_user->delete();
 
+        $this->flash->notice('Lietotājs veiksmīgi dzēsts!');
+
         return $this->redirect('/groups/' . $group->group_id);
     }
 
