@@ -85,7 +85,8 @@ class OrganizationUser extends Model
             select 1 as one
             from lesson
             where user_id = ?
-        ', $this->user_id)) {
+                and organization_id = ?
+        ', [$this->user_id, $this->organization_id])) {
             $this->addError(
                 'base',
                 $this->msg->t('organization_user.message.error.lesson_user_not_teacher')

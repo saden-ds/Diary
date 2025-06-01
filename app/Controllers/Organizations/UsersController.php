@@ -74,6 +74,7 @@ class UsersController extends ApplicationController
         ]));
 
         if ($organization_user->update()) {
+            $this->flash->notice('Izmaiņas veiksmīgi saglabātas!');
             return $view->data([
                 'organization_user_id' => $organization_user->organization_user_id
             ]);
@@ -97,6 +98,8 @@ class UsersController extends ApplicationController
         if (!$organization_user->delete()) {
             $this->flash->error($organization_user->getBaseError());
         }
+
+        $this->flash->notice('Lietotājs veiksmīgi dzēsts!');
 
         return $this->redirect('/organizations/users');
     }

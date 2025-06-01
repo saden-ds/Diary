@@ -19,7 +19,7 @@ class GradesController extends PrivateController
             'default' => []
         ]);
         $months = [];
-        $range = 9;
+        $range = 10;
 
         foreach (range(0, $range - 1) as $r) {
             $months[$datetime->format('n')] = [
@@ -41,6 +41,10 @@ class GradesController extends PrivateController
 
                     if ($vv['average_count']) {
                         $lesson_average = round($vv['average_sum'] / $vv['average_count'], 2);
+
+                        if ($lesson_average === 0.0) {
+                            $lesson_average = 'n/v';
+                        }
                     }
 
                     foreach ($months as $index => $month) {
@@ -49,6 +53,10 @@ class GradesController extends PrivateController
  
                             if ($r['average_count']) {
                                 $r['average'] = round($r['average_sum'] / $r['average_count'], 2);
+
+                                if ($r['average'] === 0.0) {
+                                    $r['average'] = 'n/v';
+                                }
                             }
 
                             $r['first'] = $month['first'];
@@ -70,6 +78,11 @@ class GradesController extends PrivateController
 
                                 if ($vvv['average_count']) {
                                     $type_average = round($vvv['average_sum'] / $vvv['average_count'], 2);
+                                    $type_color = null;
+
+                                    if ($type_average === 0.0) {
+                                        $type_average = 'n/v';
+                                    }
                                 }
 
                                 foreach ($months as $index => $month) {
@@ -412,7 +425,7 @@ class GradesController extends PrivateController
 
             $grade = new Grade($r, true);
 
-            if ($grade->isGradeNumeric() && $grade->grade) {
+            if ($grade->isGradeNumeric()) { //  && $grade->grade
                 $grades[$r['group_id']]['lessons'][$r['lesson_id']]['average_sum'] += $grade->grade;
                 $grades[$r['group_id']]['lessons'][$r['lesson_id']]['average_count'] += 1;
                 

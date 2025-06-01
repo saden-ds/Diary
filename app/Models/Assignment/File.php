@@ -5,7 +5,7 @@ namespace App\Models\Assignment;
 use App\Base\DataQuery;
 use App\Base\File as BaseFile;
 use App\Models\Model as Model;
-use App\Validators\LengtH as ValidatorLengtH;
+use App\Validators\Length as ValidatorLength;
 use App\Validators\Presence as ValidatorPresence;
 
 class File extends Model {
@@ -134,7 +134,7 @@ class File extends Model {
         ]);
         $presence->validate($this);
 
-        $length = new ValidatorLengtH([
+        $length = new ValidatorLength([
             'assignment_file_name', 'assignment_file_type'
         ], [
             'maximum' => 190, 'allow_empty' => true

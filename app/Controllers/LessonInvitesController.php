@@ -64,6 +64,8 @@ class LessonInvitesController extends PrivateController
 
         $invite->delete();
 
+        $this->flash->notice('Lietotājs veiksmīgi dzēsts!');
+
         return $this->redirect('/lessons/' . $invite->lesson_id);
     }
 
@@ -90,6 +92,8 @@ class LessonInvitesController extends PrivateController
 
         $invite->delete();
 
+        $this->flash->notice('Uzaicinājums veiksmīgi apstiprināts!');
+
         return $this->redirect('/lessons/' . $lesson_user->lesson_id);
     }
 
@@ -106,6 +110,8 @@ class LessonInvitesController extends PrivateController
         }
 
         $invite->delete();
+
+        $this->flash->notice('Uzaicinājums noraidīts!');
 
         return $this->redirect('/');
     }

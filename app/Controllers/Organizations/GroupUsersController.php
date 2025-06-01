@@ -111,6 +111,7 @@ class GroupUsersController extends ApplicationController
         $view = new View();
 
         if ($group_user->create()) {
+            $this->flash->notice('Lietotājs veiksmīgi pievienots grupai!');
             return $view->data([
                 'group_user_id' => $group_user->group_user_id
             ]);
@@ -134,7 +135,7 @@ class GroupUsersController extends ApplicationController
 
         $group_user->delete();
 
-        $this->flash->notice('Lietotājs veiksmīgi dzēsts!');
+        $this->flash->notice('Lietotājs veiksmīgi dzēsts no grupas!');
 
         return $this->redirect('/groups/' . $group->group_id);
     }

@@ -25,6 +25,8 @@ class LessonUsersController extends PrivateController
 
         $lesson_user->delete();
 
+        $this->flash->notice('Lietotājs veiksmīgi dzēsts!');
+
         return $this->redirect('/lessons/' . $lesson_user->lesson_id);
     }
 }

@@ -31,6 +31,7 @@ class GroupLessonsController extends ApplicationController
         ]));
 
         if ($group_lesson->create()) {
+            $this->flash->notice('Mācību priekšmets veiksmīgi pievienots grupai!');
             return $view->data([
                 'group_lesson_id' => $group_lesson->group_lesson_id
             ]);
@@ -53,6 +54,8 @@ class GroupLessonsController extends ApplicationController
         }
 
         $group_lesson->delete();
+
+        $this->flash->notice('Mācību priekšmets veiksmīgi dzēsts no grupas!');
 
         return $this->redirect('/groups/' . $group->group_id);
     }

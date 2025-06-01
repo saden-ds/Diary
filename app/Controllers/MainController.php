@@ -105,6 +105,7 @@ class MainController extends ApplicationController
                 join lesson_time lt on lt.lesson_time_id = s.lesson_time_id
                 join organization o on o.organization_id = l.organization_id
                 left join group_lesson gl on gl.lesson_id = l.lesson_id
+                    and gl.group_id = s.group_id
                 left join `group` g on g.group_id = gl.group_id
                 where l.user_id = ?
                     and s.schedule_active = 1
@@ -130,8 +131,8 @@ class MainController extends ApplicationController
                 join lesson as l on l.lesson_id = s.lesson_id
                 left join organization o on o.organization_id = l.organization_id
                 left join group_lesson gl on gl.lesson_id = l.lesson_id
+                    and gl.group_id = s.group_id
                 left join group_user gu on gu.group_id = gl.group_id
-                    and gu.group_id = s.group_id
                 left join `group` g on g.group_id = gl.group_id
                 left join lesson_user as lu on lu.lesson_id = l.lesson_id
                 join lesson_time as lt on lt.lesson_time_id = s.lesson_time_id

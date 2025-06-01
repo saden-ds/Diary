@@ -34,6 +34,8 @@ class OrganizationInvitesController extends PrivateController
 
         $invite->delete();
 
+        $this->flash->notice('Uzaicinājums veiksmīgi apstiprināts!');
+
         return $this->redirect('/');
     }
 
@@ -50,6 +52,8 @@ class OrganizationInvitesController extends PrivateController
         }
 
         $invite->delete();
+
+        $this->flash->notice('Uzaicinājums noraidīts!');
 
         return $this->redirect('/');
     }

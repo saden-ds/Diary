@@ -38,6 +38,7 @@ confirm:
   cancel: Atcelt
   delete: Dzēst
   delete_message: Vai jūs tiešam vēlaties dzēst šo ierakstu?
+  delete_confirm: Vai tiešām vēlaties dzēst šo failu?
   message: Vai jūs esat pārliecināti?
   ok: Labi
 
